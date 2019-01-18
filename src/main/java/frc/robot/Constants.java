@@ -7,8 +7,15 @@
 
 package frc.robot;
 
+
+
 /**
- * Add your docs here.
+ * Grizzly Robotics Constant File
+ * Constant variable names should be in Hungarian notation
+ * Example: int kDriveLeftMotorMaster = 0;
+ * Hungarian notation variables start with k
  */
 public class Constants {
+    
+
 }

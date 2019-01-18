@@ -7,8 +7,18 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 /**
- * Add your docs here.
+ * Grizzly Robotics Drivetrain File
+ * robot movment 
  */
 public class DriveTrain {
+
+    TalonSRX leftMaster = new TalonSRX(0);
+    TalonSRX leftFollower = new TalonSRX(1);
+    TalonSRX rightMaster = new TalonSRX(3);
+    TalonSRX rightFollower = new TalonSRX(4);
+
+
+
 }
