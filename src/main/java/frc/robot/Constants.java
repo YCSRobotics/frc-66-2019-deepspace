@@ -21,6 +21,9 @@ public class Constants {
     public static int kRightMotorMaster = 2;
     public static int kRightMoterFollower = 3;
 
+    public static int kDriverController = 0;
+    public static int kControlsController = 1;
+
     public static int kLeftXAxis = 0;
     public static int kLeftYAxis = 1;
     public static int kRightXAxis = 4;

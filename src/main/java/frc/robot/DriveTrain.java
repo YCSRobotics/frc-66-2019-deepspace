@@ -8,18 +8,21 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj.Joystick;
 /**
  * Grizzly Robotics Drivetrain File
  * robot movment
  */
 public class DriveTrain {
 
-    TalonSRX leftMaster = new TalonSRX(Constants.kLeftMotorMaster);
-    TalonSRX leftFollower = new TalonSRX(Constants.kLeftMotorFollower);
-    TalonSRX rightMaster = new TalonSRX(Constants.kRightMotorMaster);
-    TalonSRX rightFollower = new TalonSRX(Constants.kRightMoterFollower);
+    public static TalonSRX leftMaster = new TalonSRX(Constants.kLeftMotorMaster);
+    public static TalonSRX leftFollower = new TalonSRX(Constants.kLeftMotorFollower);
+    public static TalonSRX rightMaster = new TalonSRX(Constants.kRightMotorMaster);
+    public static TalonSRX rightFollower = new TalonSRX(Constants.kRightMoterFollower);
 
-    Joystick 
+    public static Joystick driverController = new Joystick(Constants.kDriverController);
+
 
 
 
