@@ -8,6 +8,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.sun.org.apache.bcel.internal.classfile.Constant;
 
 import edu.wpi.first.wpilibj.Joystick;
 /**
@@ -23,8 +24,26 @@ public class DriveTrain {
 
     public static Joystick driverController = new Joystick(Constants.kDriverController);
 
+    public DriveTrain(){
+        
 
 
+    }
+
+    public void updateDrivetrain(){
+
+        double forwardValue = driverController.getRawAxis(Constants.kRightYAxis);
+        double turnValue = driverController.getRawAxis(Constants.kRightXAxis);
+        
+        if(Math.abs(forwardValue) > Constants.kDeadZone){
+
+        }else{
+
+        }
+
+
+
+    }
 
 
 }

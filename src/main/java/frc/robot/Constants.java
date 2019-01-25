@@ -16,24 +16,26 @@ package frc.robot;
  * Hungarian notation variables start with k
  */
 public class Constants {
-    public static int kLeftMotorMaster = 0;
-    public static int kLeftMotorFollower = 1;
-    public static int kRightMotorMaster = 2;
-    public static int kRightMoterFollower = 3;
+    public final static int kLeftMotorMaster = 0;
+    public final static int kLeftMotorFollower = 1;
+    public final static int kRightMotorMaster = 2;
+    public final static int kRightMoterFollower = 3;
 
-    public static int kDriverController = 0;
-    public static int kControlsController = 1;
+    public final static int kDriverController = 0;
+    public final static int kControlsController = 1;
 
-    public static int kLeftXAxis = 0;
-    public static int kLeftYAxis = 1;
-    public static int kRightXAxis = 4;
-    public static int kRightYAxis = 5;
-    public static int kLeftTrigger = 2;
-    public static int kRightTrigger = 3;
+    public final static int kLeftXAxis = 0;
+    public final static int kLeftYAxis = 1;
+    public final static int kRightXAxis = 4;
+    public final static int kRightYAxis = 5;
+    public final static int kLeftTrigger = 2;
+    public final static int kRightTrigger = 3;
 
-    public static int kAButton = 0;
-    public static int kBButton = 1;
-    public static int kXButton = 2;
-    public static int kYButton = 3;
+    public final static int kAButton = 0;
+    public final static int kBButton = 1;
+    public final static int kXButton = 2;
+    public final static int kYButton = 3;
 
+    //just a filler, needs to be changed
+    public final static double kDeadZone = 0.08;
 }
