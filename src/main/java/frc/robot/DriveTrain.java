@@ -36,7 +36,8 @@ public class DriveTrain {
                                                             Constants.kRightEncoderReversed,
                                                             CounterBase.EncodingType.k4X);
 
-    private static Joystick driverController = new Joystick(Constants.kDriverController);
+    public static Joystick driverController = new Joystick(Constants.kDriverController);
+    public static Joystick operatorController = new Joystick(Constants.kOperatorController);
 
 
     private static double integral = 0; 
