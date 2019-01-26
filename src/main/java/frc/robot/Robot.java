@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 public class Robot extends TimedRobot {
   
   private DriveTrain driveTrain = new DriveTrain();
+  private Dashboard dashboard = new Dashboard();
 
   //called on robot boot
   @Override
@@ -22,6 +23,7 @@ public class Robot extends TimedRobot {
   //called every 20ms regardless of game state, after robot init
   @Override
   public void robotPeriodic() {
+    dashboard.updateDashboard();
 
   }
 
