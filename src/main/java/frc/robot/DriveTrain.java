@@ -7,8 +7,12 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.CounterBase;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 /**
  * Grizzly Robotics Drivetrain File
@@ -16,12 +20,22 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class DriveTrain {
 
-    public static TalonSRX leftMaster = new TalonSRX(Constants.kLeftMotorMaster);
-    public static TalonSRX leftFollower = new TalonSRX(Constants.kLeftMotorFollower);
-    public static TalonSRX rightMaster = new TalonSRX(Constants.kRightMotorMaster);
-    public static TalonSRX rightFollower = new TalonSRX(Constants.kRightMoterFollower);
+    private static TalonSRX leftMaster = new TalonSRX(Constants.kLeftMotorMaster);
+    private static TalonSRX leftFollower = new TalonSRX(Constants.kLeftMotorFollower);
+    private static TalonSRX rightMaster = new TalonSRX(Constants.kRightMotorMaster);
+    private static TalonSRX rightFollower = new TalonSRX(Constants.kRightMoterFollower);
 
-    public static Joystick driverController = new Joystick(Constants.kDriverController);
+    private static Encoder leftWheelEncoder = new Encoder(Constants.kLeftEncoderChannelA, 
+                                                            Constants.kLeftEncoderChannelB,
+                                                            Constants.kLeftEncoderReversed,
+                                                            CounterBase.EncodingType.k4X);
+
+    private static Encoder rightWheelEncoder = new Encoder(Constants.kRightEncoderChannelA, 
+                                                            Constants.kRightEncoderChannelB,
+                                                            Constants.kRightEncoderReversed,
+                                                            CounterBase.EncodingType.k4X);
+
+    private static Joystick driverController = new Joystick(Constants.kDriverController);
 
     public DriveTrain(){
         
@@ -40,7 +54,10 @@ public class DriveTrain {
 
         }
 
+    }
 
+    public boolean motorConnectedStates() {
+        return leftMaster.getTemperature() != 0;
 
     }
 

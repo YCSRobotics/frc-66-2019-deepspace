@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 
 public class Robot extends TimedRobot {
   
-  
+  private DriveTrain driveTrain = new DriveTrain();
 
   //called on robot boot
   @Override
@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
   //called every 20ms during teleop
   @Override
   public void teleopPeriodic() {
-
+    driveTrain.updateDrivetrain();
   }
 
   //called every 20ms during test mode

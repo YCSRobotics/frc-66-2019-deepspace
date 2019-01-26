@@ -8,10 +8,8 @@
 package frc.robot;
 
 /**
- * Add your docs here.
+ * Grizzly Robotics Dashboard Class
+ * Handles creation of Shuffleboard UI
  */
-public class UnitTest {
-    public boolean navConnected() {
-        return SensorData.isNavConnected();
-    }
+public class Dashboard {
 }

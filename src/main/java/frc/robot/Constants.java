@@ -24,6 +24,14 @@ public class Constants {
     public final static int kDriverController = 0;
     public final static int kControlsController = 1;
 
+    public static final boolean kLeftEncoderReversed = false;
+    public static final boolean kRightEncoderReversed = true;
+    
+    public static final int kLeftEncoderChannelA  = 0;
+	public static final int kLeftEncoderChannelB  = 1;
+	public static final int kRightEncoderChannelA = 2;
+	public static final int kRightEncoderChannelB = 3;
+
     public final static int kLeftXAxis = 0;
     public final static int kLeftYAxis = 1;
     public final static int kRightXAxis = 4;
