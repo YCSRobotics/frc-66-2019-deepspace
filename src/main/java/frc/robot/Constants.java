@@ -66,4 +66,7 @@ public class Constants {
 
     //global constants
     public static final int kRobotRate = 20; //20ms per loop
+
+    //pathfinder constants
+    public static final int kMaxVelocity = 60;
 }

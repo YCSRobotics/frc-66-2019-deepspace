@@ -9,6 +9,7 @@ package frc.robot;
 
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -26,19 +27,8 @@ public class DriveTrain {
     private static TalonSRX rightMaster = new TalonSRX(Constants.kRightMotorMaster);
     private static TalonSRX rightFollower = new TalonSRX(Constants.kRightMoterFollower);
 
-    private static Encoder leftWheelEncoder = new Encoder(Constants.kLeftEncoderChannelA, 
-                                                            Constants.kLeftEncoderChannelB,
-                                                            Constants.kLeftEncoderReversed,
-                                                            CounterBase.EncodingType.k4X);
-
-    private static Encoder rightWheelEncoder = new Encoder(Constants.kRightEncoderChannelA, 
-                                                            Constants.kRightEncoderChannelB,
-                                                            Constants.kRightEncoderReversed,
-                                                            CounterBase.EncodingType.k4X);
-
     public static Joystick driverController = new Joystick(Constants.kDriverController);
     public static Joystick operatorController = new Joystick(Constants.kOperatorController);
-
 
     private static double integral = 0; 
 
@@ -49,8 +39,8 @@ public class DriveTrain {
         leftFollower.set(ControlMode.Follower, leftMaster.getDeviceID());
         rightFollower.set(ControlMode.Follower, rightFollower.getDeviceID());
 
-        leftWheelEncoder.setDistancePerPulse(Constants.kEncoderDistancePerPulse);
-        rightWheelEncoder.setDistancePerPulse(Constants.kEncoderDistancePerPulse);
+        leftMaster.setSensorPhase(true);
+		leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 
     }
 
@@ -84,13 +74,18 @@ public class DriveTrain {
 
     }
 
-    public static void setMotorOutput(double motorThrottle, double motorTurn) {
+    public static void setMotorThrottle(double motorThrottle, double motorTurn) {
         double leftOutput = motorThrottle + motorTurn;
         double rightOutput = motorThrottle - motorTurn;
 
         leftMaster.set(ControlMode.PercentOutput, leftOutput);
         rightMaster.set(ControlMode.PercentOutput, rightOutput);
 
+    }
+
+    public static void setMotorOutput(double leftMotorValue, double rightMotorValue) {
+        leftMaster.set(ControlMode.PercentOutput, leftMotorValue);
+        rightMaster.set(ControlMode.PercentOutput, rightMotorValue);
     }
 
     public static void setGoStraight(int distanceInInches) {
@@ -113,25 +108,24 @@ public class DriveTrain {
 
     }
 
-    public static double getLeftWheelDistance() {
-        return leftWheelEncoder.getDistance();
-    }
-
-    public static double getRightWheelDistance() {
-        return rightWheelEncoder.getDistance();
-    }
-
     public static double getAverageDistance() {
-        return (getLeftWheelDistance() + getRightWheelDistance()) / 2;
+        return (getLeftWheelPosition() + getRightWheelPosition()) / 2;
     }
 
     public static void resetLeftWheelEncoder() {
-        leftWheelEncoder.reset();
+        leftMaster.setSelectedSensorPosition(0, 0, 0);
     }
 
     public static void resetRightWheelEncoder() {
-        rightWheelEncoder.reset();
+        rightMaster.setSelectedSensorPosition(0, 0, 0);
     }
 
+    public static int getLeftWheelPosition() {
+        return leftMaster.getSelectedSensorPosition();
+    }
+
+    public static int getRightWheelPosition() {
+        return rightMaster.getSelectedSensorPosition();
+    }
 
 }
