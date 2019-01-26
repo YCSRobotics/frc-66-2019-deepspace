@@ -7,8 +7,9 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.sun.org.apache.bcel.internal.classfile.Constant;
 
 import edu.wpi.first.wpilibj.Joystick;
 /**
@@ -25,9 +26,11 @@ public class DriveTrain {
     public static Joystick driverController = new Joystick(Constants.kDriverController);
 
     public DriveTrain(){
-        
+        leftMaster.setNeutralMode(NeutralMode.Brake);
+        rightMaster.setNeutralMode(NeutralMode.Brake);
 
-
+        leftFollower.set(ControlMode.Follower, leftMaster.getDeviceID());
+        rightFollower.set(ControlMode.Follower, rightFollower.getDeviceID());
     }
 
     public void updateDrivetrain(){
@@ -35,12 +38,24 @@ public class DriveTrain {
         double forwardValue = driverController.getRawAxis(Constants.kRightYAxis);
         double turnValue = driverController.getRawAxis(Constants.kRightXAxis);
         
+        double leftValue = forwardValue + turnValue;
+        double rightValue = forwardValue - turnValue;
+
         if(Math.abs(forwardValue) > Constants.kDeadZone){
-
+            leftMaster.set(ControlMode.PercentOutput, forwardValue);
+            rightMaster.set(ControlMode.PercentOutput, forwardValue);
         }else{
-
+            leftMaster.set(ControlMode.PercentOutput, 0.0);
+            rightMaster.set(ControlMode.PercentOutput, 0.0);
         }
 
+        if(Math.abs(turnValue) > Constants.kDeadZone){
+            leftMaster.set(ControlMode.PercentOutput, leftValue);
+            rightMaster.set(ControlMode.PercentOutput, rightValue);
+        }else{
+            leftMaster.set(ControlMode.PercentOutput, 0.0);
+            rightMaster.set(ControlMode.PercentOutput, 0.0);
+        }
 
 
     }
