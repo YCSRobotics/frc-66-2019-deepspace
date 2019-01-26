@@ -7,8 +7,9 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.CounterBase;
@@ -37,9 +38,18 @@ public class DriveTrain {
 
     private static Joystick driverController = new Joystick(Constants.kDriverController);
 
-    public DriveTrain(){
-        
 
+    private static double integral = 0; 
+
+    public DriveTrain(){
+        leftMaster.setNeutralMode(NeutralMode.Brake);
+        rightMaster.setNeutralMode(NeutralMode.Brake);
+
+        leftFollower.set(ControlMode.Follower, leftMaster.getDeviceID());
+        rightFollower.set(ControlMode.Follower, rightFollower.getDeviceID());
+
+        leftWheelEncoder.setDistancePerPulse(Constants.kEncoderDistancePerPulse);
+        rightWheelEncoder.setDistancePerPulse(Constants.kEncoderDistancePerPulse);
 
     }
 
@@ -48,23 +58,68 @@ public class DriveTrain {
         double forwardValue = driverController.getRawAxis(Constants.kRightYAxis);
         double turnValue = driverController.getRawAxis(Constants.kRightXAxis);
         
+        double leftValue = forwardValue + turnValue;
+        double rightValue = forwardValue - turnValue;
+
         if (Math.abs(forwardValue) > Constants.kDeadZone) {
+            leftMaster.set(ControlMode.PercentOutput, forwardValue);
+            rightMaster.set(ControlMode.PercentOutput, forwardValue);
 
         } else {
+            leftMaster.set(ControlMode.PercentOutput, 0.0);
+            rightMaster.set(ControlMode.PercentOutput, 0.0);
 
+        }
+
+        if (Math.abs(turnValue) > Constants.kDeadZone) {
+            leftMaster.set(ControlMode.PercentOutput, leftValue);
+            rightMaster.set(ControlMode.PercentOutput, rightValue);
+        } else {
+            leftMaster.set(ControlMode.PercentOutput, 0.0);
+            rightMaster.set(ControlMode.PercentOutput, 0.0);
         }
 
     }
 
+    public static void setMotorOutput(double motorThrottle, double motorTurn) {
+        double leftOutput = motorThrottle + motorTurn;
+        double rightOutput = motorThrottle - motorTurn;
+
+        leftMaster.set(ControlMode.PercentOutput, leftOutput);
+        rightMaster.set(ControlMode.PercentOutput, rightOutput);
+
+    }
+
+    public static void setGoStraight(int distanceInInches) {
+        double distanceError = distanceInInches - getAverageDistance();
+
+        integral += distanceError * Constants.kRobotRate;
+
+        //uses black magic to be awesome
+        double motorThrottle = Constants.kDistanceP * distanceError + Constants.kDistanceI + integral;
+
+        //multiple angle by gain (smoothing out the curve) and invert
+        double motorTurn = -1 * (SensorData.getYaw() * Constants.kGyroGain);
+
+        setMotorOutput(motorThrottle, motorTurn);
+
+    }
+
     public static boolean motorTempSuccess() {
-        if (leftMaster.getTemperature() == 0 || leftFollower.getTemperature() == 0 || rightMaster.getTemperature() == 0 || rightFollower.getTemperature() == 0) {
-            return false;
-            
-        } else {
-            return true;
+        return (leftMaster.getTemperature() == 0 || leftFollower.getTemperature() == 0 || rightMaster.getTemperature() == 0 || rightFollower.getTemperature() == 0);
 
-        }
+    }
 
+    public static double getLeftWheelDistance() {
+        return leftWheelEncoder.getDistance();
+    }
+
+    public static double getRightWheelDistance() {
+        return rightWheelEncoder.getDistance();
+    }
+
+    public static double getAverageDistance() {
+        return (getLeftWheelDistance() + getRightWheelDistance()) / 2;
     }
 
 

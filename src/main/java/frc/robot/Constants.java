@@ -16,34 +16,52 @@ package frc.robot;
  * Hungarian notation variables start with k
  */
 public class Constants {
+    //motor constants
     public final static int kLeftMotorMaster = 0;
     public final static int kLeftMotorFollower = 1;
     public final static int kRightMotorMaster = 2;
     public final static int kRightMoterFollower = 3;
 
-    public final static int kDriverController = 0;
-    public final static int kControlsController = 1;
-
+    //encoder constants
     public static final boolean kLeftEncoderReversed = false;
     public static final boolean kRightEncoderReversed = true;
     
     public static final int kLeftEncoderChannelA  = 0;
 	public static final int kLeftEncoderChannelB  = 1;
 	public static final int kRightEncoderChannelA = 2;
-	public static final int kRightEncoderChannelB = 3;
+    public static final int kRightEncoderChannelB = 3;
+    public static final int kEncoderDistancePerPulse = 4096;
 
-    public final static int kLeftXAxis = 0;
-    public final static int kLeftYAxis = 1;
-    public final static int kRightXAxis = 4;
-    public final static int kRightYAxis = 5;
-    public final static int kLeftTrigger = 2;
-    public final static int kRightTrigger = 3;
+    //joystick constants
+    public final static int kDriverController = 0;
+    public final static int kControlsController = 1;
 
-    public final static int kAButton = 0;
-    public final static int kBButton = 1;
-    public final static int kXButton = 2;
-    public final static int kYButton = 3;
+    public static final int kLeftXAxis = 0;
+    public static final int kLeftYAxis = 1;
+    public static final int kRightXAxis = 4;
+    public static final int kRightYAxis = 5;
+    public static final int kLeftTrigger = 2;
+    public static final int kRightTrigger = 3;
+
+    public static final int kAButton = 0;
+    public static final int kBButton = 1;
+    public static final int kXButton = 2;
+    public static final int kYButton = 3;
 
     //just a filler, needs to be changed
-    public final static double kDeadZone = 0.08;
+    public static final double kDeadZone = 0.08;
+
+    //distance PID
+    public static final int kDistanceP = 1;
+    public static final int kDistanceI = 1;
+
+    //go straight PID
+    public static final int kGoStraightP = 1;
+    public static final int kGoStraightI = 1;
+
+    //gains
+    public static final double kGyroGain = 0.08;
+
+    //global constants
+    public static final int kRobotRate = 20; //20ms per loop
 }
