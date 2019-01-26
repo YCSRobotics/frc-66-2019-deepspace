@@ -14,4 +14,8 @@ public class UnitTest {
     public boolean navConnected() {
         return SensorData.isNavConnected();
     }
+
+    public boolean canConnected() {
+        return DriveTrain.motorTempSuccess();
+    }
 }

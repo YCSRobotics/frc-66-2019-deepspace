@@ -56,8 +56,14 @@ public class DriveTrain {
 
     }
 
-    public boolean motorConnectedStates() {
-        return leftMaster.getTemperature() != 0;
+    public static boolean motorTempSuccess() {
+        if (leftMaster.getTemperature() == 0 || leftFollower.getTemperature() == 0 || rightMaster.getTemperature() == 0 || rightFollower.getTemperature() == 0) {
+            return false;
+            
+        } else {
+            return true;
+
+        }
 
     }
 
