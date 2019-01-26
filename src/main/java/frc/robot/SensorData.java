@@ -42,4 +42,24 @@ public class SensorData {
         return navSensor.isConnected();
     }
 
+    public static double leftWheelDistance() {
+        return DriveTrain.getLeftWheelDistance();
+    }
+
+    public static double rightWheelDistance() {
+        return DriveTrain.getRightWheelDistance();
+    }
+
+    public static double averageWheelDistance() {
+        return DriveTrain.getAverageDistance();
+    }
+
+    public static void resetLeftWheelEncoder() {
+        DriveTrain.resetLeftWheelEncoder();
+    }
+
+    public static void resetRightWheelEncoder() {
+        DriveTrain.resetRightWheelEncoder();
+    }
+
 }

@@ -74,9 +74,11 @@ public class DriveTrain {
         if (Math.abs(turnValue) > Constants.kDeadZone) {
             leftMaster.set(ControlMode.PercentOutput, leftValue);
             rightMaster.set(ControlMode.PercentOutput, rightValue);
+
         } else {
             leftMaster.set(ControlMode.PercentOutput, 0.0);
             rightMaster.set(ControlMode.PercentOutput, 0.0);
+
         }
 
     }
@@ -120,6 +122,14 @@ public class DriveTrain {
 
     public static double getAverageDistance() {
         return (getLeftWheelDistance() + getRightWheelDistance()) / 2;
+    }
+
+    public static void resetLeftWheelEncoder() {
+        leftWheelEncoder.reset();
+    }
+
+    public static void resetRightWheelEncoder() {
+        rightWheelEncoder.reset();
     }
 
 
