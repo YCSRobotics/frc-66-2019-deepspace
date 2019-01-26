@@ -10,7 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 
 public class Robot extends TimedRobot {
-  public DriveTrain oof = new DriveTrain();
+  
+  
 
   //called on robot boot
   @Override
@@ -39,7 +40,7 @@ public class Robot extends TimedRobot {
   //called every 20ms during teleop
   @Override
   public void teleopPeriodic() {
-    oof. updateDrivetrain();
+
   }
 
   //called every 20ms during test mode
