@@ -63,9 +63,6 @@ public class Dashboard {
                                     .withWidget("Text View")
                                     .getEntry();    
 
-
-    NetworkTableEntry cameraKey = diagnosticsTab.add();
-
     public void updateDashboard() {
         gyroConnectedKey.setBoolean(unitTest.navConnected());
         motorsConnectedKey.setBoolean(unitTest.canConnected());
