@@ -28,16 +28,16 @@ public class AutoRoutine {
     EncoderFollower rightInput = new EncoderFollower(modifier.getRightTrajectory());
 
     public AutoRoutine() {
-        leftInput.configureEncoder(SensorData.leftWheelDistance(), 4096, 152.4); //6in to mm 
-        rightInput.configureEncoder(SensorData.rightWheelDistance(), 4096, 152.4);
+        leftInput.configureEncoder(DriveTrain.getLeftWheelPosition(), 4096, 152.4); //6in to mm 
+        rightInput.configureEncoder(DriveTrain.getRightWheelPosition(), 4096, 152.4);
 
         leftInput.configurePIDVA(1.0, 0.0, 0.0, 1 / Constants.kMaxVelocity, 0);
         rightInput.configurePIDVA(1.0, 0.0, 0.0, 1 / Constants.kMaxVelocity, 0);
     }
 
     public void updateAuto() {
-        double l = leftInput.calculate(SensorData.leftWheelDistance());
-        double r = rightInput.calculate(SensorData.rightWheelDistance());
+        double l = leftInput.calculate(DriveTrain.getLeftWheelPosition());
+        double r = rightInput.calculate(DriveTrain.getRightWheelPosition());
 
         double gyro_heading = SensorData.getYaw();
         double desired_heading = Pathfinder.r2d(leftInput.getHeading());  // Should also be in degrees

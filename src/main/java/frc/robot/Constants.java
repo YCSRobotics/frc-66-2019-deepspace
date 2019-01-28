@@ -32,7 +32,14 @@ public class Constants {
 	public static final int kLeftEncoderChannelB  = 1;
 	public static final int kRightEncoderChannelA = 2;
     public static final int kRightEncoderChannelB = 3;
-    public static final int kEncoderDistancePerPulse = 4096;
+    public static final int kEncoderDistancePerRevolution = 4096;
+
+    public static final int kWheelDiameter = 6;
+    public static final double kEncoderRotationRate = 5.4;
+
+    public static final double kPi = 3.14159265;
+
+    public static final double kMagMultiplier = (kEncoderDistancePerRevolution * (2 * kPi * kWheelDiameter))/2;
 
     //joystick constants
     public final static int kDriverController = 0;

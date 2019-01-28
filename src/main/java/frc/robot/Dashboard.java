@@ -72,8 +72,8 @@ public class Dashboard {
         navPitchKey.setNumber(SensorData.getPitch());
         navRollKey.setNumber(SensorData.getRoll());
 
-        leftWheelDistanceKey.setNumber(SensorData.leftWheelDistance());
-        rightWheelDistanceKey.setNumber(SensorData.rightWheelDistance());
+        leftWheelDistanceKey.setNumber(DriveTrain.getLeftWheelDistance());
+        rightWheelDistanceKey.setNumber(DriveTrain.getRightWheelDistance());
     }
   
 }

@@ -38,7 +38,7 @@ public class DriveTrain {
         rightFollower.set(ControlMode.Follower, rightFollower.getDeviceID());
 
         leftMaster.setSensorPhase(true);
-		leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 
     }
 
@@ -107,7 +107,7 @@ public class DriveTrain {
     }
 
     public static double getAverageDistance() {
-        return (getLeftWheelPosition() + getRightWheelPosition()) / 2;
+        return (getLeftWheelDistance() + getRightWheelDistance()) / 2;
     }
 
     public static void resetLeftWheelEncoder() {
@@ -124,6 +124,14 @@ public class DriveTrain {
 
     public static int getRightWheelPosition() {
         return rightMaster.getSelectedSensorPosition();
+    }
+
+    public static final double getLeftWheelDistance() {
+        return leftMaster.getSelectedSensorPosition() * Constants.kMagMultiplier;
+    }
+
+    public static final double getRightWheelDistance() {
+        return rightMaster.getSelectedSensorPosition() * Constants.kMagMultiplier;
     }
 
 }
