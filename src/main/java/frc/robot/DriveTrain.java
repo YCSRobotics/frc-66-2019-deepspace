@@ -11,28 +11,35 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.sun.org.apache.xpath.internal.objects.XBoolean;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 /**
  * Grizzly Robotics Drivetrain File
  * robot movment
  */
 public class DriveTrain {
 
-    private static TalonSRX leftMaster = new TalonSRX(Constants.kLeftMotorMaster);
-    private static TalonSRX leftFollower = new TalonSRX(Constants.kLeftMotorFollower);
-    private static TalonSRX rightMaster = new TalonSRX(Constants.kRightMotorMaster);
-    private static TalonSRX rightFollower = new TalonSRX(Constants.kRightMoterFollower);
+    private static WPI_TalonSRX leftMaster = new WPI_TalonSRX(Constants.kLeftMotorMaster);
+    private static WPI_TalonSRX leftFollower = new WPI_TalonSRX(Constants.kLeftMotorFollower);
+    private static WPI_TalonSRX rightMaster = new WPI_TalonSRX(Constants.kRightMotorMaster);
+    private static WPI_TalonSRX rightFollower = new WPI_TalonSRX(Constants.kRightMoterFollower);
 
     public static Joystick driverController = new Joystick(Constants.kDriverController);
     public static Joystick operatorController = new Joystick(Constants.kOperatorController);
 
+    private DifferentialDrive drive = new DifferentialDrive(leftMaster, rightMaster);
+
     private static double integral = 0; 
 
     public DriveTrain(){
+        //set brake mode
         leftMaster.setNeutralMode(NeutralMode.Brake);
         rightMaster.setNeutralMode(NeutralMode.Brake);
+
+        rightMaster.setInverted(Constants.kInvertRightMotor);
 
         leftFollower.set(ControlMode.Follower, leftMaster.getDeviceID());
         rightFollower.set(ControlMode.Follower, rightFollower.getDeviceID());
@@ -43,30 +50,15 @@ public class DriveTrain {
     }
 
     public void updateDrivetrain(){
-
         double forwardValue = driverController.getRawAxis(Constants.kRightYAxis);
         double turnValue = driverController.getRawAxis(Constants.kRightXAxis);
+        boolean isQuickTurn = driverController.getRawButton(Constants.kAButton);
         
-        double leftValue = forwardValue + turnValue;
-        double rightValue = forwardValue - turnValue;
-
         if (Math.abs(forwardValue) > Constants.kDeadZone) {
-            leftMaster.set(ControlMode.PercentOutput, forwardValue);
-            rightMaster.set(ControlMode.PercentOutput, forwardValue);
+            drive.curvatureDrive(forwardValue, turnValue, isQuickTurn);
 
         } else {
-            leftMaster.set(ControlMode.PercentOutput, 0.0);
-            rightMaster.set(ControlMode.PercentOutput, 0.0);
-
-        }
-
-        if (Math.abs(turnValue) > Constants.kDeadZone) {
-            leftMaster.set(ControlMode.PercentOutput, leftValue);
-            rightMaster.set(ControlMode.PercentOutput, rightValue);
-
-        } else {
-            leftMaster.set(ControlMode.PercentOutput, 0.0);
-            rightMaster.set(ControlMode.PercentOutput, 0.0);
+            drive.curvatureDrive(0, 0, isQuickTurn);
 
         }
 

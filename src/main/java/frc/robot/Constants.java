@@ -24,6 +24,8 @@ public class Constants {
     public static final int kFourBarMotorMaster = 4;
     public static final int kFourBarMotorSlave = 5;
 
+    public static final boolean kInvertRightMotor = true;
+
     //encoder constants
     public static final boolean kLeftEncoderReversed = false;
     public static final boolean kRightEncoderReversed = true;
