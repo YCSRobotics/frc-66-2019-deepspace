@@ -69,4 +69,10 @@ public class Constants {
 
     //pathfinder constants
     public static final int kMaxVelocity = 60;
+
+    //camera turret positions
+    public static final double kLowPosition = 0.55;
+    public static final double kMidPosition = 0.62;
+    public static final double kHighPosition = 0.70;
+
 }

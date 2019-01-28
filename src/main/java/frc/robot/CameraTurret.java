@@ -7,8 +7,26 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Servo;
+
 /**
  * Add your docs here.
  */
 public class CameraTurret {
+    private static Servo servo = new Servo(0);
+    private static boolean manualControl = false;
+
+    public void updateCameraTurretTeleop() {
+
+    }
+
+    public static void setTurretPosition(double position) {
+        servo.set(position);
+        manualControl = false;
+
+    }
+
+    public static boolean cameraTurretAlive() {
+        return servo.isAlive();
+    }
 }

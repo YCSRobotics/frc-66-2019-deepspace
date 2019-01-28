@@ -8,7 +8,8 @@
 package frc.robot;
 
 /**
- * Add your docs here.
+ * Grizzly Robotics Unit Test Class
+ * Handles checking if robot components are electrically alive
  */
 public class UnitTest {
     public boolean navConnected() {
@@ -17,5 +18,9 @@ public class UnitTest {
 
     public boolean canConnected() {
         return DriveTrain.motorTempSuccess();
+    }
+    
+    public boolean cameraTurretAlive() {
+        return CameraTurret.cameraTurretAlive();
     }
 }
