@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class LiftControl {
     private static TalonSRX liftMotor = new TalonSRX(Constants.kFourBarMotorMaster);
 
-    Joystick operatorController = DriveTrain.operatorController;
+    //Joystick operatorController = DriveTrain.operatorController;
 
     private boolean manualControl = false;
     private double initLiftPosition = 0;
@@ -42,7 +42,7 @@ public class LiftControl {
 
     }
 
-    public void updateLiftTeleop() {
+    /*public void updateLiftTeleop() {
         double liftThrottle = operatorController.getRawAxis(Constants.kLeftYAxis);
 
         //lift fourbar to position and hold when no more motor output is being applied
@@ -60,7 +60,7 @@ public class LiftControl {
         }
 
         //TODO buttons should set position of both fourbar and elevator control
-    }
+    }*/
 
     public static double getLiftPosition() {
         return liftMotor.getSelectedSensorPosition(0);

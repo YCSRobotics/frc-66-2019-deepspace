@@ -23,8 +23,6 @@ public class FourBarControl {
     private static TalonSRX fourBarMotorMaster = new TalonSRX(Constants.kFourBarMotorMaster);
     private static TalonSRX fourBarMotorFollower = new TalonSRX(Constants.kFourBarMotorSlave);
 
-    Joystick operatorController = DriveTrain.operatorController;
-
     private boolean manualControl = false;
 
     public FourBarControl() {
@@ -44,8 +42,8 @@ public class FourBarControl {
 
     }
 
-    public void updateFourBarTeleop() {
-        double fourBarThrottle = operatorController.getRawAxis(Constants.kLeftYAxis);
+    /*public void updateFourBarTeleop() {
+        //double fourBarThrottle = operatorController.getRawAxis(Constants.kLeftYAxis);
         double initFourBarPosition = 0;
 
         //lift fourbar to position and hold when no more motor output is being applied
@@ -63,7 +61,7 @@ public class FourBarControl {
         }
 
         //TODO buttons should set position of both fourbar and elevator control
-    }
+    }*/
 
     public static double getFourBarPosition() {
         return fourBarMotorMaster.getSelectedSensorPosition(0);

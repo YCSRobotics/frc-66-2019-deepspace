@@ -63,6 +63,16 @@ public class Dashboard {
                                     .withWidget("Text View")
                                     .getEntry();    
 
+    NetworkTableEntry leftMotorPosition = diagnosticsTab
+    .add("Left Motor Position", 0.0)
+    .withWidget("Text View")
+    .getEntry();    
+
+    NetworkTableEntry rightMotorPosition = diagnosticsTab
+    .add("Right Motor Position", 0.0)
+    .withWidget("Text View")
+    .getEntry();    
+
     public void updateDashboard() {
         gyroConnectedKey.setBoolean(unitTest.navConnected());
         motorsConnectedKey.setBoolean(unitTest.canConnected());
@@ -74,6 +84,9 @@ public class Dashboard {
 
         leftWheelDistanceKey.setNumber(DriveTrain.getLeftWheelDistance());
         rightWheelDistanceKey.setNumber(DriveTrain.getRightWheelDistance());
+
+        leftMotorPosition.setNumber(DriveTrain.getLeftWheelPosition());
+        rightMotorPosition.setNumber(DriveTrain.getRightWheelPosition());
     }
   
 }

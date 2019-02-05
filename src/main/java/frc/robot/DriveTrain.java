@@ -11,9 +11,11 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 /**
  * Grizzly Robotics Drivetrain File
@@ -21,15 +23,15 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  */
 public class DriveTrain {
 
-    private static WPI_TalonSRX leftMaster = new WPI_TalonSRX(Constants.kLeftMotorMaster);
-    private static WPI_TalonSRX leftFollower = new WPI_TalonSRX(Constants.kLeftMotorFollower);
-    private static WPI_TalonSRX rightMaster = new WPI_TalonSRX(Constants.kRightMotorMaster);
-    private static WPI_TalonSRX rightFollower = new WPI_TalonSRX(Constants.kRightMoterFollower);
+    private static TalonSRX leftMaster = new TalonSRX(Constants.kLeftMotorMaster);
+    private static TalonSRX leftFollower = new TalonSRX(Constants.kLeftMotorFollower);
+    private static TalonSRX rightFollower = new TalonSRX(Constants.kRightMotorFollower);
+    private static TalonSRX rightMaster = new TalonSRX(Constants.kRightMotorMaster);
 
-    public static Joystick driverController = new Joystick(Constants.kDriverController);
-    public static Joystick operatorController = new Joystick(Constants.kOperatorController);
+    public static Joystick driverController = new Joystick(0);
+    //public static Joystick operatorController = new Joystick(Constants.kOperatorController);
 
-    private DifferentialDrive drive = new DifferentialDrive(leftMaster, rightMaster);
+    ///private DifferentialDrive drive = new DifferentialDrive(leftMaster, rightMaster);
 
     private static double integral = 0; 
 
@@ -39,36 +41,51 @@ public class DriveTrain {
         rightMaster.setNeutralMode(NeutralMode.Brake);
 
         rightMaster.setInverted(Constants.kInvertRightMotor);
+        rightFollower.setInverted(Constants.kInvertRightMotor);
 
+        leftMaster.setInverted(Constants.kInvertLeftMotor);
+        leftFollower.setInverted(Constants.kInvertLeftMotor);
+
+        
         leftFollower.set(ControlMode.Follower, leftMaster.getDeviceID());
-        rightFollower.set(ControlMode.Follower, rightFollower.getDeviceID());
+        rightFollower.set(ControlMode.Follower, rightMaster.getDeviceID());
 
         leftMaster.setSensorPhase(true);
         leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 
+        rightMaster.setSensorPhase(true);
+        rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+
+        leftMaster.setSelectedSensorPosition(0, 0, 0);
+        rightMaster.setSelectedSensorPosition(0, 0, 0);
+
     }
 
     public void updateDrivetrain(){
-        double forwardValue = driverController.getRawAxis(Constants.kRightYAxis);
+        double leftOutput = getThrottleInput() + getTurnInput();
+        double rightOutput = getThrottleInput() - getTurnInput();
+
+        leftMaster.set(ControlMode.PercentOutput, leftOutput);
+        rightMaster.set(ControlMode.PercentOutput, rightOutput);
+
+    }
+
+    public static double getThrottleInput() {
+        double forwardValue = driverController.getRawAxis(Constants.kLeftYAxis);
+
+        return (Math.abs(forwardValue) > Constants.kDeadZone ? -(forwardValue) : 0.0);
+    }
+
+    public static double getTurnInput() {
         double turnValue = driverController.getRawAxis(Constants.kRightXAxis);
-        boolean isQuickTurn = driverController.getRawButton(Constants.kAButton);
-        
-        if (Math.abs(forwardValue) > Constants.kDeadZone) {
-            drive.curvatureDrive(forwardValue, turnValue, isQuickTurn);
 
-        } else {
-            drive.curvatureDrive(0, 0, isQuickTurn);
-
-        }
-
+        return(turnValue >= 0 ? (turnValue*turnValue) : -(turnValue*turnValue));
     }
 
     public static void setMotorThrottle(double motorThrottle, double motorTurn) {
         double leftOutput = motorThrottle + motorTurn;
         double rightOutput = motorThrottle - motorTurn;
 
-        leftMaster.set(ControlMode.PercentOutput, leftOutput);
-        rightMaster.set(ControlMode.PercentOutput, rightOutput);
 
     }
 
@@ -114,15 +131,15 @@ public class DriveTrain {
     }
 
     public static int getRightWheelPosition() {
-        return rightMaster.getSelectedSensorPosition();
+        return rightMaster.getSelectedSensorPosition() * Constants.kInvertRightMotorMultiplier;
     }
 
-    public static final double getLeftWheelDistance() {
-        return leftMaster.getSelectedSensorPosition() * Constants.kMagMultiplier;
+    public static double getLeftWheelDistance() {
+        return leftMaster.getSelectedSensorPosition() / Constants.kMagMultiplier;
     }
 
-    public static final double getRightWheelDistance() {
-        return rightMaster.getSelectedSensorPosition() * Constants.kMagMultiplier;
+    public static double getRightWheelDistance() {
+        return (rightMaster.getSelectedSensorPosition() / Constants.kMagMultiplier) * Constants.kInvertRightMotorMultiplier;
     }
 
 }

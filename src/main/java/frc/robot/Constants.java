@@ -20,11 +20,14 @@ public class Constants {
     public static final int kLeftMotorMaster = 0;
     public static final int kLeftMotorFollower = 1;
     public static final int kRightMotorMaster = 2;
-    public static final int kRightMoterFollower = 3;
+    public static final int kRightMotorFollower = 3;
     public static final int kFourBarMotorMaster = 4;
     public static final int kFourBarMotorSlave = 5;
 
-    public static final boolean kInvertRightMotor = true;
+    public static final boolean kInvertRightMotor = false;
+    public static final boolean kInvertLeftMotor = true;
+
+    public static final int kInvertRightMotorMultiplier = -1;
 
     //encoder constants
     public static final boolean kLeftEncoderReversed = false;
@@ -41,7 +44,7 @@ public class Constants {
 
     public static final double kPi = 3.14159265;
 
-    public static final double kMagMultiplier = (kEncoderDistancePerRevolution * (2 * kPi * kWheelDiameter))/2;
+    public static final double kMagMultiplier = ((kEncoderDistancePerRevolution*kEncoderRotationRate)/(kPi * kWheelDiameter));
 
     //joystick constants
     public final static int kDriverController = 0;
