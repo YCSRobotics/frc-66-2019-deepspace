@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveTrain.updateDrivetrain();
+
   }
 
   //called every 20ms during test mode

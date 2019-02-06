@@ -13,10 +13,8 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
 /**
  * Grizzly Robotics Drivetrain File
  * robot movment
@@ -80,13 +78,6 @@ public class DriveTrain {
         double turnValue = driverController.getRawAxis(Constants.kRightXAxis);
 
         return(turnValue >= 0 ? (turnValue*turnValue) : -(turnValue*turnValue));
-    }
-
-    public static void setMotorThrottle(double motorThrottle, double motorTurn) {
-        double leftOutput = motorThrottle + motorTurn;
-        double rightOutput = motorThrottle - motorTurn;
-
-
     }
 
     public static void setMotorOutput(double leftMotorValue, double rightMotorValue) {

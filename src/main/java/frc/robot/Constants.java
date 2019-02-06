@@ -77,10 +77,10 @@ public class Constants {
     public static final double kGyroGain = 0.08;
 
     //global constants
-    public static final int kRobotRate = 20; //20ms per loop
+    public static final int kRobotRate = 5; //20ms per loop
 
-    //pathfinder constants
-    public static final int kMaxVelocity = 60;
+    //autonomous constants
+    
 
     //camera turret positions
     public static final double kLowPosition = 0.55;
