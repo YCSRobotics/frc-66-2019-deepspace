@@ -74,7 +74,7 @@ public class Constants {
     public static final int kRobotRate = 5; //20ms per loop
 
     //autonomous constants
-    
+    public static final String kVisionCam = "10.0.66.12:1181/stream.mjpg";
 
     //camera turret positions
     public static final double kLowPosition = 0.55;

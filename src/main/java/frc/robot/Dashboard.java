@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.HttpCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -74,6 +75,18 @@ public class Dashboard {
                                     .withWidget("Text View")
                                     .getEntry();
 
+    private HttpCamera httpCamera = new HttpCamera("VisionCam", Constants.kVisionCam);
+
+    private NetworkTableEntry leftWheelDistanceKeyDriver = diagnosticsTab
+                                    .add("Left Wheel Distance", 0.0)
+                                    .withWidget("Text View")
+                                    .getEntry();
+
+    private NetworkTableEntry rightWheelDistanceKeyDriver = diagnosticsTab
+            .add("Right Wheel Distance", 0.0)
+            .withWidget("Text View")
+            .getEntry();
+
     public void updateDiagDashboard() {
         gyroConnectedKey.setBoolean(unitTest.navConnected());
         motorsConnectedKey.setBoolean(unitTest.canConnected());
@@ -91,7 +104,11 @@ public class Dashboard {
     }
 
     public void updateDriverDashboard() {
+        CameraServer.getInstance().addCamera(httpCamera);
+        driverDisplay.add(httpCamera).withSize(4, 4);
 
+        leftWheelDistanceKeyDriver.setNumber(DriveTrain.getLeftWheelDistance());
+        rightWheelDistanceKeyDriver.setNumber(DriveTrain.getRightWheelDistance());
     }
   
 }
