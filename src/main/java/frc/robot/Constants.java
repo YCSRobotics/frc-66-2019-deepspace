@@ -76,6 +76,12 @@ public class Constants {
     //autonomous constants
     public static final String kVisionCam = "10.0.66.12:1181/stream.mjpg";
 
+    //slow mode max speed
+    public static final double kSlowMaxSpeed = 0.5;
+
+    //solenoids
+    public static final int kShifterSolenoid = 0;
+
     //camera turret positions
     public static final double kLowPosition = 0.55;
     public static final double kMidPosition = 0.62;

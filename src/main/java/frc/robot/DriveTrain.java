@@ -14,10 +14,11 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Solenoid;
 
 /**
  * Grizzly Robotics Drivetrain File
- * robot movment
+ * Robot Movement
  */
 public class DriveTrain {
 
@@ -26,8 +27,10 @@ public class DriveTrain {
     private static TalonSRX rightFollower = new TalonSRX(Constants.kRightMotorFollower);
     private static TalonSRX rightMaster = new TalonSRX(Constants.kRightMotorMaster);
 
-    public static Joystick driverController = new Joystick(0);
+    public static Joystick driverController = new Joystick(Constants.kDriverController);
     public static Joystick operatorController = new Joystick(Constants.kOperatorController);
+
+    private static Solenoid speedyMode = new Solenoid(Constants.kShifterSolenoid);
 
     private static double integral = 0; 
 
@@ -63,15 +66,31 @@ public class DriveTrain {
         double leftOutput = throttle + turn;
         double rightOutput = throttle - turn;
 
+        boolean shiftState = operatorController.getRawAxis(Constants.kRightTrigger) > 0;
+
+        if (shiftState) {
+            setSpeedyMode(true);
+        } else {
+            setSpeedyMode(false);
+        }
+
         leftMaster.set(ControlMode.PercentOutput, leftOutput);
         rightMaster.set(ControlMode.PercentOutput, rightOutput);
 
     }
 
+    public static void setSpeedyMode(boolean state) {
+        speedyMode.set(state);
+    }
+
     public static double getThrottleInput() {
         double forwardValue = driverController.getRawAxis(Constants.kLeftYAxis);
 
-        return (Math.abs(forwardValue) > Constants.kDeadZone ? -(forwardValue) : 0.0);
+        //TODO slow mode on left trigger
+        boolean slowModeActive = false;
+
+        double throttle = (Math.abs(forwardValue) > Constants.kDeadZone ? -(forwardValue) : 0.0);
+        return slowModeActive ? throttle * Constants.kSlowMaxSpeed : throttle;
     }
 
     public static double getTurnInput() {
@@ -101,7 +120,8 @@ public class DriveTrain {
     }
 
     public static boolean motorTempSuccess() {
-        return (leftMaster.getTemperature() == 0 || leftFollower.getTemperature() == 0 || rightMaster.getTemperature() == 0 || rightFollower.getTemperature() == 0);
+        return (leftMaster.getTemperature() == 0 || leftFollower.getTemperature() == 0 ||
+                rightMaster.getTemperature() == 0 || rightFollower.getTemperature() == 0);
 
     }
 
