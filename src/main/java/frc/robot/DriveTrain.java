@@ -27,9 +27,7 @@ public class DriveTrain {
     private static TalonSRX rightMaster = new TalonSRX(Constants.kRightMotorMaster);
 
     public static Joystick driverController = new Joystick(0);
-    //public static Joystick operatorController = new Joystick(Constants.kOperatorController);
-
-    ///private DifferentialDrive drive = new DifferentialDrive(leftMaster, rightMaster);
+    public static Joystick operatorController = new Joystick(Constants.kOperatorController);
 
     private static double integral = 0; 
 
@@ -60,8 +58,10 @@ public class DriveTrain {
     }
 
     public void updateDrivetrain(){
-        double leftOutput = getThrottleInput() + getTurnInput();
-        double rightOutput = getThrottleInput() - getTurnInput();
+        double throttle = getThrottleInput();
+        double turn = getTurnInput();
+        double leftOutput = throttle + turn;
+        double rightOutput = throttle - turn;
 
         leftMaster.set(ControlMode.PercentOutput, leftOutput);
         rightMaster.set(ControlMode.PercentOutput, rightOutput);

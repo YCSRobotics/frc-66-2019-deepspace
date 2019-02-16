@@ -20,60 +20,61 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class Dashboard {
     private UnitTest unitTest = new UnitTest();
 
-    ShuffleboardTab driverDisplay = Shuffleboard.getTab("DriverDisplay");
-    ShuffleboardTab diagnosticsTab = Shuffleboard.getTab("Diagnostics");
+    private ShuffleboardTab driverDisplay = Shuffleboard.getTab("DriverDisplay");
+
+    private ShuffleboardTab diagnosticsTab = Shuffleboard.getTab("Diagnostics");
     
-    NetworkTableEntry gyroConnectedKey = diagnosticsTab
+    private NetworkTableEntry gyroConnectedKey = diagnosticsTab
                                     .add("Gyro Connected?", false)
                                     .withWidget("Boolean Box")
                                     .getEntry();
 
-    NetworkTableEntry motorsConnectedKey = diagnosticsTab
+    private NetworkTableEntry motorsConnectedKey = diagnosticsTab
                                     .add("CAN Working?", false)
                                     .withWidget("Boolean Box")
                                     .getEntry();
 
-    NetworkTableEntry cameraTurretKey = diagnosticsTab
+    private NetworkTableEntry cameraTurretKey = diagnosticsTab
                                     .add("Camera Turret Alive?", false)
                                     .withWidget("Boolean Box")
                                     .getEntry();
 
-    NetworkTableEntry leftWheelDistanceKey = diagnosticsTab
+    private NetworkTableEntry leftWheelDistanceKey = diagnosticsTab
                                     .add("Left Wheel Distance", 0.0)
                                     .withWidget("Text View")
                                     .getEntry();    
                                     
-    NetworkTableEntry rightWheelDistanceKey = diagnosticsTab
+    private NetworkTableEntry rightWheelDistanceKey = diagnosticsTab
                                     .add("Right Wheel Distance", 0.0)
                                     .withWidget("Text View")
                                     .getEntry();      
 
-    NetworkTableEntry navYawKey = diagnosticsTab
+    private NetworkTableEntry navYawKey = diagnosticsTab
                                     .add("NavX Yaw", 0.0)
                                     .withWidget("Text View")
                                     .getEntry();      
 
-    NetworkTableEntry navRollKey = diagnosticsTab
+    private NetworkTableEntry navRollKey = diagnosticsTab
                                     .add("NavX Roll", 0.0)
                                     .withWidget("Text View")
                                     .getEntry();
                                     
-    NetworkTableEntry navPitchKey = diagnosticsTab
+    private NetworkTableEntry navPitchKey = diagnosticsTab
                                     .add("NavX Pitch", 0.0)
                                     .withWidget("Text View")
-                                    .getEntry();    
+                                    .getEntry();
 
-    NetworkTableEntry leftMotorPosition = diagnosticsTab
-    .add("Left Motor Position", 0.0)
-    .withWidget("Text View")
-    .getEntry();    
+    private NetworkTableEntry leftMotorPosition = diagnosticsTab
+                                    .add("Left Motor Position", 0.0)
+                                    .withWidget("Text View")
+                                    .getEntry();
 
-    NetworkTableEntry rightMotorPosition = diagnosticsTab
-    .add("Right Motor Position", 0.0)
-    .withWidget("Text View")
-    .getEntry();    
+    private NetworkTableEntry rightMotorPosition = diagnosticsTab
+                                    .add("Right Motor Position", 0.0)
+                                    .withWidget("Text View")
+                                    .getEntry();
 
-    public void updateDashboard() {
+    public void updateDiagDashboard() {
         gyroConnectedKey.setBoolean(unitTest.navConnected());
         motorsConnectedKey.setBoolean(unitTest.canConnected());
         cameraTurretKey.setBoolean(unitTest.cameraTurretAlive());
@@ -87,6 +88,10 @@ public class Dashboard {
 
         leftMotorPosition.setNumber(DriveTrain.getLeftWheelPosition());
         rightMotorPosition.setNumber(DriveTrain.getRightWheelPosition());
+    }
+
+    public void updateDriverDashboard() {
+
     }
   
 }

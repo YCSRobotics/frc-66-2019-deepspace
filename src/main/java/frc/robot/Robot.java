@@ -13,6 +13,9 @@ public class Robot extends TimedRobot {
   
   private DriveTrain driveTrain = new DriveTrain();
   private Dashboard dashboard = new Dashboard();
+  private FourBarControl fourBarControl = new FourBarControl();
+  private Intake intake = new Intake();
+  private LiftControl liftControl = new LiftControl();
 
   //called on robot boot
   @Override
@@ -23,7 +26,7 @@ public class Robot extends TimedRobot {
   //called every 20ms regardless of game state, after robot init
   @Override
   public void robotPeriodic() {
-    dashboard.updateDashboard();
+    dashboard.updateDiagDashboard();
 
   }
 
@@ -43,6 +46,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveTrain.updateDrivetrain();
+    fourBarControl.updateFourBarTeleop();
+    liftControl.updateLiftTeleop();
+    intake.updateIntake();
 
   }
 

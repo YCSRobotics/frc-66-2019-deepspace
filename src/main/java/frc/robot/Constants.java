@@ -23,6 +23,7 @@ public class Constants {
     public static final int kRightMotorFollower = 3;
     public static final int kFourBarMotorMaster = 4;
     public static final int kFourBarMotorSlave = 5;
+    public static final int kIntakeMotor = 6;
 
     public static final boolean kInvertRightMotor = false;
     public static final boolean kInvertLeftMotor = true;
@@ -30,13 +31,6 @@ public class Constants {
     public static final int kInvertRightMotorMultiplier = -1;
 
     //encoder constants
-    public static final boolean kLeftEncoderReversed = false;
-    public static final boolean kRightEncoderReversed = true;
-    
-    public static final int kLeftEncoderChannelA  = 0;
-	public static final int kLeftEncoderChannelB  = 1;
-	public static final int kRightEncoderChannelA = 2;
-    public static final int kRightEncoderChannelB = 3;
     public static final int kEncoderDistancePerRevolution = 4096;
 
     public static final int kWheelDiameter = 6;
