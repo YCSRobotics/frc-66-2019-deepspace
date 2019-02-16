@@ -90,7 +90,7 @@ public class DriveTrain {
         boolean slowModeActive = false;
 
         double throttle = (Math.abs(forwardValue) > Constants.kDeadZone ? -(forwardValue) : 0.0);
-        return slowModeActive ? throttle * Constants.kSlowMaxSpeed : throttle;
+        return slowModeActive ? throttle * Constants.kDriveSlowMaxSpeed : throttle;
     }
 
     public static double getTurnInput() {

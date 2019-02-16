@@ -28,8 +28,14 @@ public class Intake {
         double intakeIn = operatorController.getRawAxis(Constants.kLeftTrigger);
         double intakeOut = operatorController.getRawAxis(Constants.kRightTrigger);
 
+        //TODO implement slow mode on intake
+        boolean slowModeActive = false;
+
         if (manualControl) {
-            intakeMotor.set(ControlMode.PercentOutput, intakeIn > 0 ? intakeIn : intakeOut > 0 ? intakeOut : 0);
+            double intakeValue =  intakeIn > 0 ? intakeIn : intakeOut > 0 ? intakeOut : 0;
+            double intakeValueSlow = slowModeActive ? intakeValue : intakeValue * Constants.kIntakeSlowMaxSpeed;
+
+            intakeMotor.set(ControlMode.PercentOutput, intakeValueSlow);
         }
 
     }
