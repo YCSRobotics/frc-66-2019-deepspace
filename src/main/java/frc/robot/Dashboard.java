@@ -7,11 +7,8 @@
 
 package frc.robot;
 
-import edu.wpi.cscore.HttpCamera;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
@@ -19,26 +16,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
  */
 
 public class Dashboard {
-    private UnitTest unitTest = new UnitTest();
-
     private ShuffleboardTab driverDisplay = Shuffleboard.getTab("DriverDisplay");
 
     private ShuffleboardTab diagnosticsTab = Shuffleboard.getTab("Diagnostics");
-    
-    private NetworkTableEntry gyroConnectedKey = diagnosticsTab
-                                    .add("Gyro Connected?", false)
-                                    .withWidget("Boolean Box")
-                                    .getEntry();
-
-    private NetworkTableEntry motorsConnectedKey = diagnosticsTab
-                                    .add("CAN Working?", false)
-                                    .withWidget("Boolean Box")
-                                    .getEntry();
-
-    private NetworkTableEntry cameraTurretKey = diagnosticsTab
-                                    .add("Camera Turret Alive?", false)
-                                    .withWidget("Boolean Box")
-                                    .getEntry();
 
     private NetworkTableEntry leftWheelDistanceKey = diagnosticsTab
                                     .add("Left Wheel Distance", 0.0)
@@ -75,22 +55,25 @@ public class Dashboard {
                                     .withWidget("Text View")
                                     .getEntry();
 
-    private HttpCamera httpCamera = new HttpCamera("VisionCam", Constants.kVisionCam);
-
-    private NetworkTableEntry leftWheelDistanceKeyDriver = diagnosticsTab
+    /*private NetworkTableEntry leftWheelDistanceKeyDriver = diagnosticsTab
                                     .add("Left Wheel Distance", 0.0)
                                     .withWidget("Text View")
+                                    .getEntry();*/
+
+    private NetworkTableEntry crossBoxSensor = diagnosticsTab
+                                    .add("Cross Bar Sensor", false)
+                                    .withWidget("Boolean Box")
                                     .getEntry();
 
-    private NetworkTableEntry rightWheelDistanceKeyDriver = diagnosticsTab
+    /*private NetworkTableEntry rightWheelDistanceKeyDriver = diagnosticsTab
             .add("Right Wheel Distance", 0.0)
             .withWidget("Text View")
-            .getEntry();
+            .getEntry();*/
+
+    public Dashboard() {
+    }
 
     public void updateDiagDashboard() {
-        gyroConnectedKey.setBoolean(unitTest.navConnected());
-        motorsConnectedKey.setBoolean(unitTest.canConnected());
-        cameraTurretKey.setBoolean(unitTest.cameraTurretAlive());
 
         navYawKey.setNumber(SensorData.getYaw());
         navPitchKey.setNumber(SensorData.getPitch());
@@ -101,14 +84,13 @@ public class Dashboard {
 
         leftMotorPosition.setNumber(DriveTrain.getLeftWheelPosition());
         rightMotorPosition.setNumber(DriveTrain.getRightWheelPosition());
+
+        crossBoxSensor.setBoolean(SensorData.getBallSensorState());
     }
 
     public void updateDriverDashboard() {
-        CameraServer.getInstance().addCamera(httpCamera);
-        driverDisplay.add(httpCamera).withSize(4, 4);
-
-        leftWheelDistanceKeyDriver.setNumber(DriveTrain.getLeftWheelDistance());
-        rightWheelDistanceKeyDriver.setNumber(DriveTrain.getRightWheelDistance());
+        //leftWheelDistanceKeyDriver.setNumber(DriveTrain.getLeftWheelDistance());
+        //rightWheelDistanceKeyDriver.setNumber(DriveTrain.getRightWheelDistance());
     }
   
 }

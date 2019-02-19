@@ -66,13 +66,13 @@ public class DriveTrain {
         double leftOutput = throttle + turn;
         double rightOutput = throttle - turn;
 
-        boolean shiftState = operatorController.getRawAxis(Constants.kRightTrigger) > 0;
+        /*boolean shiftState = operatorController.getRawAxis(Constants.kRightTrigger) > 0;
 
         if (shiftState) {
             setSpeedyMode(true);
         } else {
             setSpeedyMode(false);
-        }
+        }*/
 
         leftMaster.set(ControlMode.PercentOutput, leftOutput);
         rightMaster.set(ControlMode.PercentOutput, rightOutput);
@@ -116,12 +116,6 @@ public class DriveTrain {
         double motorTurn = -1 * (SensorData.getYaw() * Constants.kGyroGain);
 
         setMotorOutput(motorThrottle, motorTurn);
-
-    }
-
-    public static boolean motorTempSuccess() {
-        return (leftMaster.getTemperature() == 0 || leftFollower.getTemperature() == 0 ||
-                rightMaster.getTemperature() == 0 || rightFollower.getTemperature() == 0);
 
     }
 

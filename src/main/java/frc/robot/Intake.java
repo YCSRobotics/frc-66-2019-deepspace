@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
  * Add your docs here.
  */
 public class Intake {
-    private final static TalonSRX intakeMotor = new TalonSRX(Constants.kIntakeMotor);
+    private final static TalonSRX intakeMotor = new TalonSRX(1);
     private Joystick operatorController = DriveTrain.operatorController;
 
     private static boolean manualControl = true;
@@ -28,12 +28,22 @@ public class Intake {
         double intakeIn = operatorController.getRawAxis(Constants.kLeftTrigger);
         double intakeOut = operatorController.getRawAxis(Constants.kRightTrigger);
 
-        //TODO implement slow mode on intake
-        boolean slowModeActive = false;
+        boolean slowModeActive = SensorData.getBallSensorState();
 
         if (manualControl) {
-            double intakeValue =  intakeIn > 0 ? intakeIn : intakeOut > 0 ? intakeOut : 0;
-            double intakeValueSlow = slowModeActive ? intakeValue : intakeValue * Constants.kIntakeSlowMaxSpeed;
+
+            double intakeValue = 0.0;
+            double intakeValueSlow = 0.0;
+
+            if (intakeIn > 0.05) {
+                intakeValue = -intakeIn;
+                intakeValueSlow = slowModeActive ? intakeValue : intakeValue * Constants.kIntakeSlowMaxSpeed;
+            }
+
+            if (intakeOut > 0.05) {
+                intakeValue = intakeOut;
+                intakeValueSlow = intakeValue;
+            }
 
             intakeMotor.set(ControlMode.PercentOutput, intakeValueSlow);
         }

@@ -78,7 +78,7 @@ public class Constants {
 
     //slow mode max speed
     public static final double kDriveSlowMaxSpeed = 0.5;
-    public static final double kIntakeSlowMaxSpeed = 0.3;
+    public static final double kIntakeSlowMaxSpeed = 0.1;
 
     //solenoids
     public static final int kShifterSolenoid = 0;
