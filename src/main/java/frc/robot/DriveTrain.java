@@ -21,9 +21,10 @@ import edu.wpi.first.wpilibj.Solenoid;
  * Robot Movement
  */
 public class DriveTrain {
-
     private static TalonSRX leftMaster = new TalonSRX(Constants.kLeftMotorMaster);
+
     private static TalonSRX leftFollower = new TalonSRX(Constants.kLeftMotorFollower);
+
     private static TalonSRX rightFollower = new TalonSRX(Constants.kRightMotorFollower);
     private static TalonSRX rightMaster = new TalonSRX(Constants.kRightMotorMaster);
 
@@ -36,20 +37,16 @@ public class DriveTrain {
 
     public DriveTrain(){
         //set brake mode
-        leftMaster.setNeutralMode(NeutralMode.Brake);
-        rightMaster.setNeutralMode(NeutralMode.Brake);
-
         rightMaster.setInverted(Constants.kInvertRightMotor);
         rightFollower.setInverted(Constants.kInvertRightMotor);
 
         leftMaster.setInverted(Constants.kInvertLeftMotor);
         leftFollower.setInverted(Constants.kInvertLeftMotor);
 
-        
         leftFollower.set(ControlMode.Follower, leftMaster.getDeviceID());
         rightFollower.set(ControlMode.Follower, rightMaster.getDeviceID());
 
-        leftMaster.setSensorPhase(true);
+        leftMaster.setSensorPhase(false);
         leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 
         rightMaster.setSensorPhase(true);
@@ -65,14 +62,13 @@ public class DriveTrain {
         double turn = getTurnInput();
         double leftOutput = throttle + turn;
         double rightOutput = throttle - turn;
-
-        /*boolean shiftState = operatorController.getRawAxis(Constants.kRightTrigger) > 0;
+        boolean shiftState = driverController.getRawAxis(Constants.kRightTrigger) > 0;
 
         if (shiftState) {
             setSpeedyMode(true);
         } else {
             setSpeedyMode(false);
-        }*/
+        }
 
         leftMaster.set(ControlMode.PercentOutput, leftOutput);
         rightMaster.set(ControlMode.PercentOutput, rightOutput);
@@ -89,7 +85,7 @@ public class DriveTrain {
         //TODO slow mode on left trigger
         boolean slowModeActive = false;
 
-        double throttle = (Math.abs(forwardValue) > Constants.kDeadZone ? -(forwardValue) : 0.0);
+        double throttle = (Math.abs(forwardValue) > Constants.kDeadZone ? -forwardValue : 0.0);
         return slowModeActive ? throttle * Constants.kDriveSlowMaxSpeed : throttle;
     }
 

@@ -17,12 +17,12 @@ package frc.robot;
  */
 public class Constants {
     //motor constants
-    public static final int kLeftMotorMaster = 0;
     public static final int kLeftMotorFollower = 1;
+    public static final int kLeftMotorMaster = 0;
     public static final int kRightMotorMaster = 2;
     public static final int kRightMotorFollower = 3;
-    public static final int kFourBarMotorMaster = 4;
-    public static final int kFourBarMotorSlave = 5;
+    public static final int kElevatorMotor = 4;
+    public static final int kFourBarMotor = 5;
     public static final int kIntakeMotor = 6;
 
     public static final boolean kInvertRightMotor = false;

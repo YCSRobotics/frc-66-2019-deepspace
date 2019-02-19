@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
  * Add your docs here.
  */
 public class Intake {
-    private final static TalonSRX intakeMotor = new TalonSRX(1);
+    private final static TalonSRX intakeMotor = new TalonSRX(Constants.kIntakeMotor);
     private Joystick operatorController = DriveTrain.operatorController;
 
     private static boolean manualControl = true;

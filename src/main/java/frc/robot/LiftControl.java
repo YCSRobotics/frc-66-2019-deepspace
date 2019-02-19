@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.Joystick;
  * Handles controlling the robot lift
  */
 public class LiftControl {
-    private static TalonSRX liftMotor = new TalonSRX(Constants.kFourBarMotorMaster);
+    private static TalonSRX liftMotor = new TalonSRX(Constants.kElevatorMotor);
 
     private Joystick operatorController = DriveTrain.operatorController;
 

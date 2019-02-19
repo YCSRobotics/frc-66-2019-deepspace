@@ -20,12 +20,12 @@ import edu.wpi.first.wpilibj.Joystick;
  * Handles controlling the robot fourbar
  */
 public class FourBarControl {
-    private static TalonSRX fourBarMotorMaster = new TalonSRX(Constants.kFourBarMotorMaster);
-    private static TalonSRX fourBarMotorFollower = new TalonSRX(Constants.kFourBarMotorSlave);
+    private static TalonSRX fourBarMotorMaster = new TalonSRX(Constants.kFourBarMotor);
 
     private Joystick operatorController = DriveTrain.operatorController;
 
     private boolean manualControl = false;
+    private double fourBarPosition = 0.0;
 
     public FourBarControl() {
         //configure sensor boiz
@@ -33,8 +33,6 @@ public class FourBarControl {
 		fourBarMotorMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 		fourBarMotorMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
         fourBarMotorMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
-        
-        fourBarMotorFollower.set(ControlMode.Follower, fourBarMotorMaster.getDeviceID());
 
         fourBarMotorMaster.selectProfileSlot(0, 0);
 		fourBarMotorMaster.config_kP(0, 0.2, 10);
@@ -46,18 +44,18 @@ public class FourBarControl {
 
     public void updateFourBarTeleop() {
         double fourBarThrottle = operatorController.getRawAxis(Constants.kLeftYAxis);
-        double initFourBarPosition = 0;
 
         //lift fourbar to position and hold when no more motor output is being applied
         //manual fourbar contrl
         if (Math.abs(fourBarThrottle) > Constants.kDeadZone) {
+            fourBarPosition = getFourBarPosition();
             fourBarMotorMaster.set(ControlMode.PercentOutput, fourBarThrottle);
-            initFourBarPosition = getFourBarPosition();
 
             manualControl = true;
 
         } else {
-            fourBarMotorMaster.set(ControlMode.Position, initFourBarPosition);
+            System.out.println("Grabbed Position: "  + fourBarPosition);
+            fourBarMotorMaster.set(ControlMode.Position, fourBarPosition);
             manualControl = false;
 
         }
