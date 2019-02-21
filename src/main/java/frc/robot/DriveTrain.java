@@ -33,7 +33,8 @@ public class DriveTrain {
 
     private static Solenoid speedyMode = new Solenoid(Constants.kShifterSolenoid);
 
-    private static double integral = 0; 
+    private static double integral = 0;
+    private static boolean invertMode = false;
 
     public DriveTrain(){
         //set brake mode
@@ -68,6 +69,7 @@ public class DriveTrain {
 
         boolean shiftState = driverController.getRawAxis(Constants.kRightTrigger) > 0;
         boolean slowMode = driverController.getRawAxis(Constants.kLeftTrigger) > 0;
+        boolean invertButtonPressed = driverController.getRawButton(Constants.kAButton);
 
         if (shiftState) {
             setSpeedyMode(true);
@@ -85,6 +87,19 @@ public class DriveTrain {
         if (LiftControl.getLiftPosition() > Constants.kElevatorDriveFinesseLimit) {
             leftOutput = leftOutput * Constants.kElevatorDriveMaxSpeed;
             rightOutput = rightOutput * Constants.kElevatorDriveMaxSpeed;
+        }
+
+        //invert drivetrain
+        if(invertMode) {
+            leftOutput = -leftOutput;
+            rightOutput = -rightOutput;
+
+            if (invertButtonPressed) {
+                invertMode = false;
+            }
+
+        } else {
+            invertMode = invertButtonPressed;
         }
 
         leftMaster.set(ControlMode.PercentOutput, leftOutput);
