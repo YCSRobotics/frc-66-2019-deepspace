@@ -35,7 +35,7 @@ public class FourBarControl {
         fourBarMotorMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
 
         fourBarMotorMaster.selectProfileSlot(0, 0);
-		fourBarMotorMaster.config_kP(0, 0.2, 10);
+		fourBarMotorMaster.config_kP(0, 0.7, 10);
 		fourBarMotorMaster.config_kI(0, 0, 10);
 		fourBarMotorMaster.config_kD(0, 0, 10);
         fourBarMotorMaster.config_kF(0, 0, 10);
@@ -43,7 +43,7 @@ public class FourBarControl {
     }
 
     public void updateFourBarTeleop() {
-        double fourBarThrottle = operatorController.getRawAxis(Constants.kLeftYAxis);
+        double fourBarThrottle = -operatorController.getRawAxis(Constants.kRightYAxis);
 
         //lift fourbar to position and hold when no more motor output is being applied
         //manual fourbar contrl
@@ -54,7 +54,6 @@ public class FourBarControl {
             manualControl = true;
 
         } else {
-            System.out.println("Grabbed Position: "  + fourBarPosition);
             fourBarMotorMaster.set(ControlMode.Position, fourBarPosition);
             manualControl = false;
 

@@ -43,7 +43,7 @@ public class LiftControl {
     }
 
     public void updateLiftTeleop() {
-        double liftThrottle = operatorController.getRawAxis(Constants.kLeftYAxis);
+        double liftThrottle = -operatorController.getRawAxis(Constants.kLeftYAxis);
 
         //update lift to specified position
         if (Math.abs(liftThrottle) > Constants.kDeadZone) {

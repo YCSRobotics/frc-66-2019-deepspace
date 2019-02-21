@@ -55,6 +55,9 @@ public class DriveTrain {
         leftMaster.setSelectedSensorPosition(0, 0, 0);
         rightMaster.setSelectedSensorPosition(0, 0, 0);
 
+        leftMaster.configOpenloopRamp(Constants.kDriveRampRate);
+        rightMaster.configOpenloopRamp(Constants.kDriveRampRate);
+
     }
 
     public void updateDrivetrain(){
@@ -62,12 +65,26 @@ public class DriveTrain {
         double turn = getTurnInput();
         double leftOutput = throttle + turn;
         double rightOutput = throttle - turn;
+
         boolean shiftState = driverController.getRawAxis(Constants.kRightTrigger) > 0;
+        boolean slowMode = driverController.getRawAxis(Constants.kLeftTrigger) > 0;
 
         if (shiftState) {
             setSpeedyMode(true);
         } else {
             setSpeedyMode(false);
+        }
+
+        //slow mode button
+        if(slowMode) {
+            leftOutput = leftOutput * Constants.kSlowModeSpeed;
+            rightOutput = rightOutput * Constants.kSlowModeSpeed;
+        }
+
+        //slow drivetrain when elevator lifted
+        if (LiftControl.getLiftPosition() > Constants.kElevatorDriveFinesseLimit) {
+            leftOutput = leftOutput * Constants.kElevatorDriveMaxSpeed;
+            rightOutput = rightOutput * Constants.kElevatorDriveMaxSpeed;
         }
 
         leftMaster.set(ControlMode.PercentOutput, leftOutput);

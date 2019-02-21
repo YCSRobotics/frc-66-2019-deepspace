@@ -30,6 +30,8 @@ public class Constants {
 
     public static final int kInvertRightMotorMultiplier = -1;
 
+    public static final double kDriveRampRate = 1.5;
+
     //encoder constants
     public static final int kEncoderDistancePerRevolution = 4096;
 
@@ -88,4 +90,11 @@ public class Constants {
     public static final double kMidPosition = 0.62;
     public static final double kHighPosition = 0.70;
 
+    //elevator
+    public static final double kElevatorDriveFinesseLimit = 20000;
+    public static final double kElevatorDriveMaxSpeed = 0.2;
+
+
+    //drivetrain
+    public static final double kSlowModeSpeed = 0.4;
 }
