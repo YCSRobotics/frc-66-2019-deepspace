@@ -40,6 +40,8 @@ public class LiftControl {
 		liftMotor.config_kD(0, 0, 10);
         liftMotor.config_kF(0, 0, 10);
 
+        liftMotor.configOpenloopRamp(Constants.kElevatorRamp);
+
     }
 
     public void updateLiftTeleop() {

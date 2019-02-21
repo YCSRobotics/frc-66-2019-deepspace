@@ -40,6 +40,7 @@ public class FourBarControl {
 		fourBarMotorMaster.config_kD(0, 0, 10);
         fourBarMotorMaster.config_kF(0, 0, 10);
 
+        fourBarMotorMaster.configOpenloopRamp(Constants.kFourBarRamp);
     }
 
     public void updateFourBarTeleop() {

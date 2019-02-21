@@ -93,8 +93,12 @@ public class Constants {
     //elevator
     public static final double kElevatorDriveFinesseLimit = 20000;
     public static final double kElevatorDriveMaxSpeed = 0.2;
+    public static final double kElevatorRamp = 0.8;
 
+    //fourbar
+    public static final double kFourBarRamp = 0.8;
 
     //drivetrain
     public static final double kSlowModeSpeed = 0.4;
+
 }
