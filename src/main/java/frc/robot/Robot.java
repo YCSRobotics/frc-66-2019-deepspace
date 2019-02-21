@@ -40,6 +40,10 @@ public class Robot extends TimedRobot {
   //called every 20ms during auton, after auto init
   @Override
   public void autonomousPeriodic() {
+    driveTrain.updateDrivetrain();
+    fourBarControl.updateFourBarTeleop();
+    liftControl.updateLiftTeleop();
+    intake.updateIntake();
 
   }
 
