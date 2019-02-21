@@ -70,11 +70,20 @@ public class Dashboard {
             .withWidget("Text View")
             .getEntry();*/
 
+    private NetworkTableEntry elevatorPosition = diagnosticsTab
+            .add("Elevator Position", 0)
+            .withWidget("Text View")
+            .getEntry();
+
+    private NetworkTableEntry fourBarPosition = diagnosticsTab
+            .add("Fourbar Position", 0)
+            .withWidget("Text View")
+            .getEntry();
+
     public Dashboard() {
     }
 
     public void updateDiagDashboard() {
-
         navYawKey.setNumber(SensorData.getYaw());
         navPitchKey.setNumber(SensorData.getPitch());
         navRollKey.setNumber(SensorData.getRoll());
@@ -86,6 +95,9 @@ public class Dashboard {
         rightMotorPosition.setNumber(DriveTrain.getRightWheelPosition());
 
         crossBoxSensor.setBoolean(SensorData.getBallSensorState());
+        elevatorPosition.setNumber(LiftControl.getLiftPosition());
+        fourBarPosition.setNumber(FourBarControl.getFourBarPosition());
+
     }
 
     public void updateDriverDashboard() {
