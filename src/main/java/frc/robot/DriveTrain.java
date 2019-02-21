@@ -89,17 +89,14 @@ public class DriveTrain {
             rightOutput = rightOutput * Constants.kElevatorDriveMaxSpeed;
         }
 
-        //invert drivetrain
-        if(invertMode) {
+        //invert mode boiz
+        if (invertButtonPressed) {
+            invertMode = !invertMode;
+        }
+
+        if (invertMode) {
             leftOutput = -leftOutput;
             rightOutput = -rightOutput;
-
-            if (invertButtonPressed) {
-                invertMode = false;
-            }
-
-        } else {
-            invertMode = invertButtonPressed;
         }
 
         leftMaster.set(ControlMode.PercentOutput, leftOutput);
