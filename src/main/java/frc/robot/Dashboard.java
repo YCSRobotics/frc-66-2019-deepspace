@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
- * Grizzly Robotics Dashboard Class Handles creation of Shuffleboard UI
+ * Grizzly Robotics Dashboard Class
+ * Handles creation of Shuffleboard UI
  */
 
 public class Dashboard {
@@ -95,7 +96,7 @@ public class Dashboard {
         rightMotorPosition.setNumber(DriveTrain.getRightWheelPosition());
 
         crossBoxSensor.setBoolean(SensorData.getBallSensorState());
-        elevatorPosition.setNumber(LiftControl.getLiftPosition());
+        elevatorPosition.setNumber(ElevatorControl.getLiftPosition());
         fourBarPosition.setNumber(FourBarControl.getFourBarPosition());
 
     }

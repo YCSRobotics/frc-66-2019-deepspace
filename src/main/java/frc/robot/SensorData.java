@@ -36,22 +36,6 @@ public class SensorData {
         return navSensor.getRoll();
     }
 
-    public static void resetNavYaw() {
-        navSensor.reset();
-    }
-
-    public static boolean isNavConnected() {
-        return navSensor.isConnected();
-    }
-
-    public static void resetLeftWheelEncoder() {
-        DriveTrain.resetLeftWheelEncoder();
-    }
-
-    public static void resetRightWheelEncoder() {
-        DriveTrain.resetRightWheelEncoder();
-    }
-
     public static boolean getBallSensorState() { return bannerSensor.get(); }
 
 }

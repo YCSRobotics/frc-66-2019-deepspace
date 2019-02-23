@@ -57,6 +57,10 @@ public class Constants {
     public static final int kBButton = 1;
     public static final int kXButton = 2;
     public static final int kYButton = 3;
+    public static final int kLeftBumper = 4;
+    public static final int kRightBumper = 5;
+    public static final int kSelectButton = 6;
+    public static final int kStartButton = 7;
 
     //just a filler, needs to be changed
     public static final double kDeadZone = 0.08;
@@ -93,7 +97,8 @@ public class Constants {
     //elevator
     public static final double kElevatorDriveFinesseLimit = 20000;
     public static final double kElevatorDriveMaxSpeed = 0.2;
-    public static final double kElevatorRamp = 0.8;
+    public static final double kElevatorOpenRamp = 0.8;
+    public static final double kElevatorClosedRamp = 0.3;
 
     //fourbar
     public static final double kFourBarRamp = 0.8;

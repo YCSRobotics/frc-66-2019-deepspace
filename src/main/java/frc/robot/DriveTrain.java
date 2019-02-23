@@ -10,7 +10,6 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -84,7 +83,7 @@ public class DriveTrain {
         }
 
         //slow drivetrain when elevator lifted
-        if (LiftControl.getLiftPosition() > Constants.kElevatorDriveFinesseLimit) {
+        if (ElevatorControl.getLiftPosition() > Constants.kElevatorDriveFinesseLimit) {
             leftOutput = leftOutput * Constants.kElevatorDriveMaxSpeed;
             rightOutput = rightOutput * Constants.kElevatorDriveMaxSpeed;
         }

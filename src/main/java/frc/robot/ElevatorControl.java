@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.Joystick;
  * Grizzly Robotics Lift Class
  * Handles controlling the robot lift
  */
-public class LiftControl {
+public class ElevatorControl {
     private static TalonSRX liftMotor = new TalonSRX(Constants.kElevatorMotor);
 
     private Joystick operatorController = DriveTrain.operatorController;
@@ -27,7 +27,7 @@ public class LiftControl {
     private boolean manualControl = false;
     private double initLiftPosition = 0;
 
-    public LiftControl() {
+    public ElevatorControl() {
         //configure sensor boiz
 		liftMotor.setSensorPhase(true);
 		liftMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
@@ -40,7 +40,8 @@ public class LiftControl {
 		liftMotor.config_kD(0, 0, 10);
         liftMotor.config_kF(0, 0, 10);
 
-        liftMotor.configOpenloopRamp(Constants.kElevatorRamp);
+        liftMotor.configOpenloopRamp(Constants.kElevatorOpenRamp);
+        liftMotor.configClosedloopRamp(Constants.kElevatorClosedRamp);
 
     }
 

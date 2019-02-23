@@ -15,7 +15,7 @@ public class Robot extends TimedRobot {
   private Dashboard dashboard = new Dashboard();
   private FourBarControl fourBarControl = new FourBarControl();
   private Intake intake = new Intake();
-  private LiftControl liftControl = new LiftControl();
+  private ElevatorControl elevatorControl = new ElevatorControl();
 
   //called on robot boot
   @Override
@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     driveTrain.updateDrivetrain();
     fourBarControl.updateFourBarTeleop();
-    liftControl.updateLiftTeleop();
+    elevatorControl.updateLiftTeleop();
     intake.updateIntake();
 
   }
@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     driveTrain.updateDrivetrain();
     fourBarControl.updateFourBarTeleop();
-    liftControl.updateLiftTeleop();
+    elevatorControl.updateLiftTeleop();
     intake.updateIntake();
 
   }

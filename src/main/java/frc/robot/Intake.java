@@ -12,7 +12,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- * Add your docs here.
+ * Grizzly Robotics Intake File
+ * Handles code to actuate intake
  */
 public class Intake {
     private final static TalonSRX intakeMotor = new TalonSRX(Constants.kIntakeMotor);
