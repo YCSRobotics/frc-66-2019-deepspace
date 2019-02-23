@@ -30,9 +30,7 @@ public class Constants {
 
     public static final int kInvertRightMotorMultiplier = -1;
 
-    public static final double kDriveRampRate = 1.5;
-
-    public static final double kSkimGain = 0.15;
+    public static final double kDriveRampRate = 0.3;
 
     //encoder constants
     public static final int kEncoderDistancePerRevolution = 4096;
@@ -99,13 +97,14 @@ public class Constants {
     //elevator
     public static final double kElevatorDriveFinesseLimit = 20000;
     public static final double kElevatorDriveMaxSpeed = 0.2;
-    public static final double kElevatorOpenRamp = 0.8;
-    public static final double kElevatorClosedRamp = 0.3;
+    public static final double kElevatorOpenRamp = 0.3;
+    public static final double kElevatorClosedRamp = 0.1;
 
     //fourbar
-    public static final double kFourBarRamp = 0.8;
+    public static final double kFourBarRamp = 0.3;
 
     //drivetrain
     public static final double kSlowModeSpeed = 0.4;
+    public static final double kSkimGain = 0.015;
 
 }

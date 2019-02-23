@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Grizzly Robotics Drivetrain File
@@ -31,6 +32,9 @@ public class DriveTrain {
     public static Joystick operatorController = new Joystick(Constants.kOperatorController);
 
     private static Solenoid speedyMode = new Solenoid(Constants.kShifterSolenoid);
+
+    private static Timer timer = new Timer();
+
 
     private static double integral = 0;
     private static boolean invertMode = false;
@@ -58,6 +62,7 @@ public class DriveTrain {
         leftMaster.configOpenloopRamp(Constants.kDriveRampRate);
         rightMaster.configOpenloopRamp(Constants.kDriveRampRate);
 
+        timer.start();
     }
 
     public void updateDrivetrain(){
@@ -68,7 +73,7 @@ public class DriveTrain {
 
         boolean shiftState = driverController.getRawAxis(Constants.kRightTrigger) > 0;
         boolean slowMode = driverController.getRawAxis(Constants.kLeftTrigger) > 0;
-        boolean invertButtonPressed = driverController.getRawButton(Constants.kLeftBumper);
+        boolean invertButtonPressed = driverController.getRawButton(Constants.kStartButton);
 
         if (shiftState) {
             setSpeedyMode(true);
@@ -89,8 +94,10 @@ public class DriveTrain {
         }
 
         //invert mode boiz
-        if (invertButtonPressed) {
+        if (invertButtonPressed && timer.get() > 0.5) {
             invertMode = !invertMode;
+            timer.reset();
+
         }
 
         if (invertMode) {
