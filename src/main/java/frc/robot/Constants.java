@@ -32,6 +32,8 @@ public class Constants {
 
     public static final double kDriveRampRate = 1.5;
 
+    public static final double kSkimGain = 0.15;
+
     //encoder constants
     public static final int kEncoderDistancePerRevolution = 4096;
 

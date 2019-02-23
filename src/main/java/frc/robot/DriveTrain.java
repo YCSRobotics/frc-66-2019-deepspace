@@ -98,8 +98,23 @@ public class DriveTrain {
             rightOutput = -rightOutput;
         }
 
+        //apply our skim gains to smooth turning
+        leftOutput = leftOutput + trim(rightOutput);
+        rightOutput = rightOutput + trim(leftOutput);
+
         leftMaster.set(ControlMode.PercentOutput, leftOutput);
         rightMaster.set(ControlMode.PercentOutput, rightOutput);
+
+    }
+
+    private double trim(double input) {
+        if (input > 1.0) {
+            return -((input - 1.0) * Constants.kSkimGain);
+
+        } else if (input < -1.0) {
+            return -((input + 1.0) * Constants.kSkimGain);
+
+        } return 0;
 
     }
 
