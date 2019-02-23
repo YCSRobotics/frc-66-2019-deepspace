@@ -68,7 +68,7 @@ public class DriveTrain {
 
         boolean shiftState = driverController.getRawAxis(Constants.kRightTrigger) > 0;
         boolean slowMode = driverController.getRawAxis(Constants.kLeftTrigger) > 0;
-        boolean invertButtonPressed = driverController.getRawButton(Constants.kAButton);
+        boolean invertButtonPressed = driverController.getRawButton(Constants.kLeftBumper);
 
         if (shiftState) {
             setSpeedyMode(true);
