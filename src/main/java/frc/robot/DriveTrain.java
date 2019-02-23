@@ -132,11 +132,9 @@ public class DriveTrain {
     public static double getThrottleInput() {
         double forwardValue = driverController.getRawAxis(Constants.kLeftYAxis);
 
-        //TODO slow mode on left trigger
-        boolean slowModeActive = false;
 
         double throttle = (Math.abs(forwardValue) > Constants.kDeadZone ? -forwardValue : 0.0);
-        return slowModeActive ? throttle * Constants.kDriveSlowMaxSpeed : throttle;
+        return throttle;
     }
 
     public static double getTurnInput() {
