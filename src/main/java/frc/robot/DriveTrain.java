@@ -59,8 +59,8 @@ public class DriveTrain {
         leftMaster.setSelectedSensorPosition(0, 0, 0);
         rightMaster.setSelectedSensorPosition(0, 0, 0);
 
-        leftMaster.configOpenloopRamp(Constants.kDriveRampRate);
-        rightMaster.configOpenloopRamp(Constants.kDriveRampRate);
+        //leftMaster.configOpenloopRamp(Constants.kDriveRampRate);
+        //rightMaster.configOpenloopRamp(Constants.kDriveRampRate);
 
         timer.start();
     }

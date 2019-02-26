@@ -44,7 +44,7 @@ public class FourBarControl {
     }
 
     public void updateFourBarTeleop() {
-        double fourBarThrottle = -operatorController.getRawAxis(Constants.kRightYAxis);
+        double fourBarThrottle = operatorController.getRawAxis(Constants.kRightYAxis);
 
         //lift fourbar to position and hold when no more motor output is being applied
         //manual fourbar contrl

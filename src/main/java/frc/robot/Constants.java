@@ -30,7 +30,7 @@ public class Constants {
 
     public static final int kInvertRightMotorMultiplier = -1;
 
-    public static final double kDriveRampRate = 0.3;
+    public static final double kDriveRampRate = 0.08;
 
     //encoder constants
     public static final int kEncoderDistancePerRevolution = 4096;
@@ -105,6 +105,6 @@ public class Constants {
 
     //drivetrain
     public static final double kSlowModeSpeed = 0.4;
-    public static final double kSkimGain = 0.015;
+    public static final double kSkimGain = 0.15;
 
 }
