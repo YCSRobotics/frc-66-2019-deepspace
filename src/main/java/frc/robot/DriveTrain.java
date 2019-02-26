@@ -72,7 +72,7 @@ public class DriveTrain {
         double rightOutput = throttle - turn;
 
         boolean shiftState = driverController.getRawAxis(Constants.kRightTrigger) > 0;
-        boolean slowMode = driverController.getRawAxis(Constants.kLeftTrigger) > 0;
+        boolean speedyMode = driverController.getRawAxis(Constants.kLeftTrigger) > 0;
         boolean invertButtonPressed = driverController.getRawButton(Constants.kStartButton);
 
         if (shiftState) {
@@ -82,9 +82,9 @@ public class DriveTrain {
         }
 
         //slow mode button
-        if(slowMode) {
-            leftOutput = leftOutput * Constants.kSlowModeSpeed;
-            rightOutput = rightOutput * Constants.kSlowModeSpeed;
+        if(!speedyMode) {
+            leftOutput = leftOutput * Constants.kDriveSpeed;
+            rightOutput = rightOutput * Constants.kDriveSpeed;
         }
 
         //slow drivetrain when elevator lifted

@@ -104,7 +104,7 @@ public class Constants {
     public static final double kFourBarRamp = 0.3;
 
     //drivetrain
-    public static final double kSlowModeSpeed = 0.4;
     public static final double kSkimGain = 0.15;
+    public static final double kDriveSpeed = 0.4;
 
 }
