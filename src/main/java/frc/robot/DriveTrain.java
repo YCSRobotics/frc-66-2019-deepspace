@@ -59,8 +59,8 @@ public class DriveTrain {
         leftMaster.setSelectedSensorPosition(0, 0, 0);
         rightMaster.setSelectedSensorPosition(0, 0, 0);
 
-        //leftMaster.configOpenloopRamp(Constants.kDriveRampRate);
-        //rightMaster.configOpenloopRamp(Constants.kDriveRampRate);
+        leftMaster.configOpenloopRamp(Constants.kDriveRampRate);
+        rightMaster.configOpenloopRamp(Constants.kDriveRampRate);
 
         timer.start();
     }
@@ -132,6 +132,9 @@ public class DriveTrain {
     public static double getThrottleInput() {
         double forwardValue = driverController.getRawAxis(Constants.kLeftYAxis);
 
+        if (Math.abs(forwardValue) > Constants.kDeadZone) {
+            return 0;
+        }
 
         double throttle = (Math.abs(forwardValue) > Constants.kDeadZone ? -forwardValue : 0.0);
         return throttle;
@@ -139,6 +142,10 @@ public class DriveTrain {
 
     public static double getTurnInput() {
         double turnValue = driverController.getRawAxis(Constants.kRightXAxis);
+
+        if (Math.abs(turnValue) > Constants.kDeadZone) {
+            return 0;
+        }
 
         return(turnValue >= 0 ? (turnValue*turnValue) : -(turnValue*turnValue));
     }
