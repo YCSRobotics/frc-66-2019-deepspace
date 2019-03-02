@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Grizzly Robotics Dashboard Class
@@ -17,9 +18,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
  */
 
 public class Dashboard {
-    private ShuffleboardTab driverDisplay = Shuffleboard.getTab("DriverDisplay");
+    public static ShuffleboardTab driverDisplay = Shuffleboard.getTab("DriverDisplay");
 
-    private ShuffleboardTab diagnosticsTab = Shuffleboard.getTab("Diagnostics");
+    private static ShuffleboardTab diagnosticsTab = Shuffleboard.getTab("Diagnostics");
 
     private NetworkTableEntry leftWheelDistanceKey = diagnosticsTab
                                     .add("Left Wheel Distance", 0.0)
@@ -85,6 +86,8 @@ public class Dashboard {
     }
 
     public void updateDiagDashboard() {
+        Shuffleboard.selectTab("Diagnostics");
+
         navYawKey.setNumber(SensorData.getYaw());
         navPitchKey.setNumber(SensorData.getPitch());
         navRollKey.setNumber(SensorData.getRoll());

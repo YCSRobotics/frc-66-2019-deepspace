@@ -34,10 +34,10 @@ public class FourBarControl {
         fourBarMotorMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
 
         fourBarMotorMaster.selectProfileSlot(0, 0);
-		fourBarMotorMaster.config_kP(0, 3.2, 10);
+		fourBarMotorMaster.config_kP(0, 4, 10);
 		fourBarMotorMaster.config_kI(0, 0, 10);
-		fourBarMotorMaster.config_kD(0, 320, 10);
-        fourBarMotorMaster.config_kF(0, 0.4, 10);
+		fourBarMotorMaster.config_kD(0, 400, 10);
+        fourBarMotorMaster.config_kF(0, 0, 10);
 
         //max outputs
         fourBarMotorMaster.configPeakOutputForward(Constants.kFourBarMaxForward);
@@ -54,6 +54,13 @@ public class FourBarControl {
         SmartDashboard.putNumber("Four Bar Set Position", fourBarPosition);
 
         fourBarPosition = getFourBarPosition();
+
+        //implement feedforward depending on power
+        if(fourBarThrottle > Constants.kFourBarDeadZone) {
+            fourBarMotorMaster.config_kF(0, 1, 10);
+        } else if(fourBarThrottle < -Constants.kFourBarDeadZone) {
+            fourBarMotorMaster.config_kF(0, 0, 10);
+        }
 
         //lift fourbar to position and hold when no more motor output is being applied
         //manual fourbar contrl

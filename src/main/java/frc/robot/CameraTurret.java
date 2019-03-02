@@ -7,22 +7,40 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Servo;
 
 /**
- * Add your docs here.
+ * Handles camera interactions
+ * TODO, move to raspberry pi
  */
 public class CameraTurret {
     private static Servo servo = new Servo(0);
-    private static boolean manualControl = false;
+    private static Joystick driverJoystick = DriveTrain.driverController;
+    private static double currentPosition = -1.0;
 
-    public void updateCameraTurretTeleop() {
+    public CameraTurret() {
+        UsbCamera cameraServer = CameraServer.getInstance().startAutomaticCapture();
+        cameraServer.setResolution(640, 480);
+
+        //add camera to display
+        Dashboard.driverDisplay.add(cameraServer).withSize(3,3);
 
     }
 
-    public static void setTurretPosition(double position) {
-        servo.set(position);
-        manualControl = false;
+    public void updateCameraTurretTeleop() {
+        boolean upwardThrottle = driverJoystick.getPOV() == 0;
+        boolean downwardThrottle = driverJoystick.getPOV() == 180;
+
+        if (upwardThrottle) {
+            currentPosition += 0.1;
+        } else if (downwardThrottle) {
+            currentPosition -= 0.1;
+        }
+
+        servo.set(currentPosition);
 
     }
 

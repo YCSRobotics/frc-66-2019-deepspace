@@ -16,6 +16,7 @@ public class Robot extends TimedRobot {
   private FourBarControl fourBarControl = new FourBarControl();
   private Intake intake = new Intake();
   private ElevatorControl elevatorControl = new ElevatorControl();
+  private CameraTurret turret = new CameraTurret();
 
   //called on robot boot
   @Override
@@ -44,6 +45,7 @@ public class Robot extends TimedRobot {
     fourBarControl.updateFourBarTeleop();
     elevatorControl.updateLiftTeleop();
     intake.updateIntake();
+    turret.updateCameraTurretTeleop();
 
   }
 
@@ -54,6 +56,7 @@ public class Robot extends TimedRobot {
     fourBarControl.updateFourBarTeleop();
     elevatorControl.updateLiftTeleop();
     intake.updateIntake();
+    turret.updateCameraTurretTeleop();
 
   }
 

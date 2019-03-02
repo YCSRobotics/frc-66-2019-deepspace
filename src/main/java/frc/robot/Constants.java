@@ -109,7 +109,7 @@ public class Constants {
     //drivetrain
     public static final double kSkimGain = 0.15;
     public static final double kDriveSpeed = 0.4;
-    public static final double kTurnGain = 1.0;
+    public static final double kTurnGain = 0.7;
     public static final double kTurnFinesseGain = 0.65;
 
 }

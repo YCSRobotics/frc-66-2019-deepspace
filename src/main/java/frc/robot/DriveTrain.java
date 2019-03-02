@@ -37,7 +37,7 @@ public class DriveTrain {
     private static Timer timer = new Timer();
 
 
-    private static double integral = 0;
+    private static boolean manualControl = true;
     private static boolean invertMode = false;
 
     public DriveTrain(){
@@ -74,6 +74,14 @@ public class DriveTrain {
 
         boolean shiftState = driverController.getRawAxis(Constants.kRightTrigger) > 0;
         boolean invertButtonPressed = driverController.getRawButton(Constants.kStartButton);
+
+        //if 'A' button is held down, activate go straight mode
+        goStraight();
+
+        //check if manual control is disabled
+        if (!manualControl) {
+            return;
+        }
 
         if (shiftState) {
             setSpeedyMode(true);
@@ -161,19 +169,22 @@ public class DriveTrain {
         rightMaster.set(ControlMode.PercentOutput, rightMotorValue);
     }
 
-    public static void setGoStraight(int distanceInInches) {
-        double distanceError = distanceInInches - getAverageDistance();
-
-        integral += distanceError * Constants.kRobotRate;
-
-        //uses black magic to be awesome
-        double motorThrottle = Constants.kDistanceP * distanceError + Constants.kDistanceI + integral;
+    public static void goStraight() {
+        double motorThrottle = getThrottleInput();
 
         //multiple angle by gain (smoothing out the curve) and invert
         double motorTurn = -1 * (SensorData.getYaw() * Constants.kGyroGain);
 
-        setMotorOutput(motorThrottle, motorTurn);
+        //uses black magic to be awesome
+        if (driverController.getRawButton(Constants.kAButton)) {
+            setMotorOutput(motorThrottle, motorTurn);
+            manualControl = false;
+        } else {
+            manualControl = true;
+            return;
+        }
 
+        setMotorOutput(motorThrottle, motorTurn);
     }
 
     public static double getAverageDistance() {
