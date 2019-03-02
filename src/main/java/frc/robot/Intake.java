@@ -10,6 +10,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Solenoid;
 
 /**
  * Grizzly Robotics Intake File
@@ -18,6 +19,8 @@ import edu.wpi.first.wpilibj.Joystick;
 public class Intake {
     private final static TalonSRX intakeMotor = new TalonSRX(Constants.kIntakeMotor);
     private Joystick operatorController = DriveTrain.operatorController;
+
+    private Solenoid gearIntakeBoi = new Solenoid(Constants.kGearIntakeSolenoid);
 
     private static boolean manualControl = true;
 
@@ -30,6 +33,14 @@ public class Intake {
         double intakeOut = operatorController.getRawAxis(Constants.kRightTrigger);
 
         boolean slowModeActive = SensorData.getBallSensorState();
+
+        if (operatorController.getRawButton(Constants.kBButton)) {
+            gearIntakeBoi.set(true);
+
+        } else {
+            gearIntakeBoi.set(false);
+
+        }
 
         if (manualControl) {
 

@@ -87,6 +87,7 @@ public class Constants {
 
     //solenoids
     public static final int kShifterSolenoid = 0;
+    public static final int kGearIntakeSolenoid = 1;
 
     //camera turret positions
     public static final double kLowPosition = 100;
