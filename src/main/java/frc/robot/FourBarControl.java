@@ -7,13 +7,11 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Grizzly Robotics Lift Class
@@ -26,6 +24,7 @@ public class FourBarControl {
 
     private boolean manualControl = false;
     private double fourBarPosition = 0.0;
+    private double setPosition = 0.0;
 
     public FourBarControl() {
         //configure sensor boiz
@@ -35,33 +34,50 @@ public class FourBarControl {
         fourBarMotorMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
 
         fourBarMotorMaster.selectProfileSlot(0, 0);
-		fourBarMotorMaster.config_kP(0, 0.7, 10);
+		fourBarMotorMaster.config_kP(0, 3.2, 10);
 		fourBarMotorMaster.config_kI(0, 0, 10);
-		fourBarMotorMaster.config_kD(0, 0, 10);
-        fourBarMotorMaster.config_kF(0, 0, 10);
+		fourBarMotorMaster.config_kD(0, 320, 10);
+        fourBarMotorMaster.config_kF(0, 0.4, 10);
+
+        //max outputs
+        fourBarMotorMaster.configPeakOutputForward(Constants.kFourBarMaxForward);
+        fourBarMotorMaster.configPeakOutputReverse(Constants.kFourBarMaxReverse);
 
         fourBarMotorMaster.configOpenloopRamp(Constants.kFourBarRamp);
+        fourBarMotorMaster.setNeutralMode(NeutralMode.Brake);
     }
 
     public void updateFourBarTeleop() {
         double fourBarThrottle = -operatorController.getRawAxis(Constants.kRightYAxis);
+        SmartDashboard.putNumber("Current Fourbar Output", fourBarMotorMaster.getMotorOutputPercent());
+        SmartDashboard.putNumber("Operator Fourbar", fourBarThrottle);
+        SmartDashboard.putNumber("Four Bar Set Position", fourBarPosition);
+
+        fourBarPosition = getFourBarPosition();
 
         //lift fourbar to position and hold when no more motor output is being applied
         //manual fourbar contrl
-        if (Math.abs(fourBarThrottle) > Constants.kDeadZone) {
-            fourBarPosition = getFourBarPosition();
+        if (Math.abs(fourBarThrottle) > Constants.kFourBarDeadZone) {
+            setPosition = fourBarPosition;
+
             fourBarMotorMaster.set(ControlMode.PercentOutput, fourBarThrottle);
 
             manualControl = true;
 
+        } else if (operatorController.getRawButton(Constants.kLeftBumper)) {
+            setPosition = 750;
+
+            fourBarMotorMaster.set(ControlMode.Position, setPosition);
+
         } else {
-            fourBarMotorMaster.set(ControlMode.Position, fourBarPosition);
+            fourBarMotorMaster.set(ControlMode.Position, setPosition);
             manualControl = false;
 
         }
 
         //TODO buttons should set position of both fourbar and elevator control
     }
+
 
     public static double getFourBarPosition() {
         return fourBarMotorMaster.getSelectedSensorPosition(0);

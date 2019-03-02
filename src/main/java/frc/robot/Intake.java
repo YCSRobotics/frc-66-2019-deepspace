@@ -34,7 +34,7 @@ public class Intake {
         if (manualControl) {
 
             double intakeValue = 0.0;
-            double intakeValueSlow = 0.0;
+            double intakeValueSlow = -0.10;
 
             if (intakeIn > 0.05) {
                 intakeValue = -intakeIn;

@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-
-
 /**
  * Grizzly Robotics Constant File
  * Constant variable names should be in Hungarian notation
@@ -63,7 +61,8 @@ public class Constants {
     public static final int kStartButton = 7;
 
     //just a filler, needs to be changed
-    public static final double kDeadZone = 0.08;
+    public static final double kDeadZone = 0.05;
+    public static final double kFourBarDeadZone = 0.2;
 
     //distance PID
     public static final int kDistanceP = 1;
@@ -90,9 +89,9 @@ public class Constants {
     public static final int kShifterSolenoid = 0;
 
     //camera turret positions
-    public static final double kLowPosition = 0.55;
-    public static final double kMidPosition = 0.62;
-    public static final double kHighPosition = 0.70;
+    public static final double kLowPosition = 100;
+    public static final double kMidPosition = 1000;
+    public static final double kHighPositionElevator = 1000;
 
     //elevator
     public static final double kElevatorDriveFinesseLimit = 20000;
@@ -102,9 +101,15 @@ public class Constants {
 
     //fourbar
     public static final double kFourBarRamp = 0.3;
+    public static final double kFourBarMaxForward = 0.6;
+    public static final double kFourBarMaxReverse = -(kFourBarMaxForward/2);
+    public static final int kFourBarAcceleration = 20;
+    public static final int kFourBarCruise = 5;
 
     //drivetrain
     public static final double kSkimGain = 0.15;
     public static final double kDriveSpeed = 0.4;
+    public static final double kTurnGain = 1.0;
+    public static final double kTurnFinesseGain = 0.65;
 
 }

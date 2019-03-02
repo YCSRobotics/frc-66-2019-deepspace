@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Grizzly Robotics Drivetrain File
@@ -72,19 +73,12 @@ public class DriveTrain {
         double rightOutput = throttle - turn;
 
         boolean shiftState = driverController.getRawAxis(Constants.kRightTrigger) > 0;
-        boolean speedyMode = driverController.getRawAxis(Constants.kLeftTrigger) > 0;
         boolean invertButtonPressed = driverController.getRawButton(Constants.kStartButton);
 
         if (shiftState) {
             setSpeedyMode(true);
         } else {
             setSpeedyMode(false);
-        }
-
-        //slow mode button
-        if(!speedyMode) {
-            leftOutput = leftOutput * Constants.kDriveSpeed;
-            rightOutput = rightOutput * Constants.kDriveSpeed;
         }
 
         //slow drivetrain when elevator lifted
@@ -109,6 +103,9 @@ public class DriveTrain {
         leftOutput = leftOutput + trim(rightOutput);
         rightOutput = rightOutput + trim(leftOutput);
 
+        SmartDashboard.putNumber("Left Motor Output", leftOutput);
+        SmartDashboard.putNumber("Right Motor Output", rightOutput);
+
         leftMaster.set(ControlMode.PercentOutput, leftOutput);
         rightMaster.set(ControlMode.PercentOutput, rightOutput);
 
@@ -131,9 +128,15 @@ public class DriveTrain {
 
     public static double getThrottleInput() {
         double forwardValue = driverController.getRawAxis(Constants.kLeftYAxis);
+        boolean speedyMode = driverController.getRawAxis(Constants.kLeftTrigger) > 0;
 
-        if (Math.abs(forwardValue) > Constants.kDeadZone) {
+        if (Math.abs(forwardValue) < Constants.kDeadZone) {
             return 0;
+        }
+
+        //slow mode button
+        if(!speedyMode) {
+            forwardValue = forwardValue * Constants.kDriveSpeed;
         }
 
         double throttle = (Math.abs(forwardValue) > Constants.kDeadZone ? -forwardValue : 0.0);
@@ -143,11 +146,14 @@ public class DriveTrain {
     public static double getTurnInput() {
         double turnValue = driverController.getRawAxis(Constants.kRightXAxis);
 
-        if (Math.abs(turnValue) > Constants.kDeadZone) {
-            return 0;
+        if (Math.abs(getThrottleInput()) > Constants.kDeadZone) {
+            turnValue = turnValue * Constants.kTurnGain;
+
+        } else {
+            turnValue = turnValue * Constants.kTurnFinesseGain;
         }
 
-        return(turnValue >= 0 ? (turnValue*turnValue) : -(turnValue*turnValue));
+        return turnValue;
     }
 
     public static void setMotorOutput(double leftMotorValue, double rightMotorValue) {
