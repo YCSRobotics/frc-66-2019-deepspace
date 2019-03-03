@@ -34,7 +34,7 @@ public class Intake {
 
         boolean slowModeActive = SensorData.getBallSensorState();
 
-        if (operatorController.getRawButton(Constants.kBButton)) {
+        if (operatorController.getRawButton(Constants.kLeftBumper)) {
             gearIntakeBoi.set(true);
 
         } else {

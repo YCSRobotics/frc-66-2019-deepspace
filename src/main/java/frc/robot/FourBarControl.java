@@ -71,8 +71,8 @@ public class FourBarControl {
 
             manualControl = true;
 
-        } else if (operatorController.getRawButton(Constants.kLeftBumper)) {
-            setPosition = 750;
+        } else if (operatorController.getRawButton(Constants.kYButton)) {
+            setPosition = Constants.kMidPosition;
 
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
 
