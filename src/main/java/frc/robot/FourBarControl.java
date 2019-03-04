@@ -75,13 +75,14 @@ public class FourBarControl {
             isOffsetPressed = false;
             manualControl = true;
 
-        } else if ((operatorController.getRawButton(Constants.kRightBumper)) &&
-                   (!isOffsetPressed)) {
-            isOffsetPressed = true;
-            setPosition = fourBarPosition - Constants.kFourBarPosOffset;
-
-            fourBarMotorMaster.set(ControlMode.Position, setPosition);
-
+        } else if (operatorController.getRawButton(Constants.kRightBumper)) {
+            
+            if(!isOffsetPressed){
+                isOffsetPressed = true;
+                setPosition = fourBarPosition - Constants.kFourBarPosOffset;
+                fourBarMotorMaster.set(ControlMode.Position, setPosition);
+            }
+            else{}//Do nothing, only act on rising edge
         }
         else if (operatorController.getRawButton(Constants.kAButton)) {
             isOffsetPressed = false;
@@ -104,6 +105,7 @@ public class FourBarControl {
 
         } else {
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
+            isOffsetPressed = false;
             manualControl = false;
         }
 
