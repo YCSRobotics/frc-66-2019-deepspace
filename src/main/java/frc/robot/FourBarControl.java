@@ -25,6 +25,7 @@ public class FourBarControl {
     private boolean manualControl = false;
     private double fourBarPosition = 0.0;
     private double setPosition = 0.0;
+    private boolean isOffsetPressed = false;
 
     public FourBarControl() {
         //configure sensor boiz
@@ -32,6 +33,9 @@ public class FourBarControl {
 		fourBarMotorMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 		fourBarMotorMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
         fourBarMotorMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+
+        //Zero sensor position on initialization
+        fourBarMotorMaster.setSelectedSensorPosition(0);
 
         fourBarMotorMaster.selectProfileSlot(0, 0);
 		fourBarMotorMaster.config_kP(0, 4, 10);
@@ -68,18 +72,39 @@ public class FourBarControl {
             setPosition = fourBarPosition;
 
             fourBarMotorMaster.set(ControlMode.PercentOutput, fourBarThrottle);
-
+            isOffsetPressed = false;
             manualControl = true;
 
-        } else if (operatorController.getRawButton(Constants.kLeftBumper)) {
-            setPosition = 750;
+        } else if ((operatorController.getRawButton(Constants.kRightBumper)) &&
+                   (!isOffsetPressed)) {
+            isOffsetPressed = true;
+            setPosition = fourBarPosition - Constants.kFourBarPosOffset;
 
+            fourBarMotorMaster.set(ControlMode.Position, setPosition);
+
+        }
+        else if (operatorController.getRawButton(Constants.kAButton)) {
+            isOffsetPressed = false;
+            setPosition = Constants.kFourBarPos1;
+
+            fourBarMotorMaster.set(ControlMode.Position, setPosition);
+
+        }
+        else if (operatorController.getRawButton(Constants.kBButton)) {
+            setPosition = Constants.kFourBarPos2;
+            isOffsetPressed = false;
+
+            fourBarMotorMaster.set(ControlMode.Position, setPosition);
+
+        }
+        else if (operatorController.getRawButton(Constants.kYButton)) {
+            setPosition = Constants.kFourBarPos3;
+            isOffsetPressed = false;
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
 
         } else {
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
             manualControl = false;
-
         }
 
         //TODO buttons should set position of both fourbar and elevator control

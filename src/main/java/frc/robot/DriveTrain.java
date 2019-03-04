@@ -89,12 +89,6 @@ public class DriveTrain {
             setSpeedyMode(false);
         }
 
-        //slow drivetrain when elevator lifted
-        if (ElevatorControl.getLiftPosition() > Constants.kElevatorDriveFinesseLimit) {
-            leftOutput = leftOutput * Constants.kElevatorDriveMaxSpeed;
-            rightOutput = rightOutput * Constants.kElevatorDriveMaxSpeed;
-        }
-
         //invert mode boiz
         if (invertButtonPressed && timer.get() > 0.5) {
             invertMode = !invertMode;
@@ -141,11 +135,16 @@ public class DriveTrain {
         if (Math.abs(forwardValue) < Constants.kDeadZone) {
             return 0;
         }
-
+        
+        //slow drivetrain when elevator lifted
+        if (ElevatorControl.getLiftPosition() > Constants.kElevatorDriveFinesseLimit) {
+            forwardValue = forwardValue * Constants.kElevatorDriveMaxSpeed;
+        }
         //slow mode button
-        if(!speedyMode) {
+        else if(!speedyMode) {
             forwardValue = forwardValue * Constants.kDriveSpeed;
         }
+        else{}
 
         double throttle = (Math.abs(forwardValue) > Constants.kDeadZone ? -forwardValue : 0.0);
         return throttle;

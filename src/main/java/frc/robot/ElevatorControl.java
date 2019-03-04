@@ -25,7 +25,8 @@ public class ElevatorControl {
     private Joystick operatorController = DriveTrain.operatorController;
 
     private boolean manualControl = false;
-    private double initLiftPosition = 0;
+    private double liftPosition = 0;
+    private double setElvtrPosition = 0.0;
 
     public ElevatorControl() {
         //configure sensor boiz
@@ -34,8 +35,11 @@ public class ElevatorControl {
 		liftMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
         liftMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
 
+        //Zero sensor position on initialization
+        liftMotor.setSelectedSensorPosition(0);
+
         liftMotor.selectProfileSlot(0, 0);
-		liftMotor.config_kP(0, 0.2, 10);
+		liftMotor.config_kP(0, 1.0, 10);
 		liftMotor.config_kI(0, 0, 10);
 		liftMotor.config_kD(0, 0, 10);
         liftMotor.config_kF(0, 0, 10);
@@ -47,16 +51,36 @@ public class ElevatorControl {
 
     public void updateLiftTeleop() {
         double liftThrottle = -operatorController.getRawAxis(Constants.kLeftYAxis);
+        liftPosition = getLiftPosition();
 
         //update lift to specified position
         if (Math.abs(liftThrottle) > Constants.kDeadZone) {
             liftMotor.set(ControlMode.PercentOutput, liftThrottle);
-            initLiftPosition = getLiftPosition();
+
+            setElvtrPosition = liftPosition;
 
             manualControl = true;
 
+        } 
+        else if (operatorController.getRawButton(Constants.kAButton)) {
+            setElvtrPosition = Constants.kElevatorPos1;
+
+            liftMotor.set(ControlMode.Position, setElvtrPosition);
+
+        }
+        else if (operatorController.getRawButton(Constants.kBButton)) {
+            setElvtrPosition = Constants.kElevatorPos2;
+
+            liftMotor.set(ControlMode.Position, setElvtrPosition);
+
+        }
+        else if (operatorController.getRawButton(Constants.kYButton)) {
+            setElvtrPosition = Constants.kElevatorPos3;
+
+            liftMotor.set(ControlMode.Position, setElvtrPosition);
+
         } else {
-            liftMotor.set(ControlMode.Position, initLiftPosition);
+            liftMotor.set(ControlMode.Position, setElvtrPosition);
             manualControl = false;
 
         }

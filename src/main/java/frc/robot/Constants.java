@@ -51,14 +51,14 @@ public class Constants {
     public static final int kLeftTrigger = 2;
     public static final int kRightTrigger = 3;
 
-    public static final int kAButton = 0;
-    public static final int kBButton = 1;
-    public static final int kXButton = 2;
-    public static final int kYButton = 3;
-    public static final int kLeftBumper = 4;
-    public static final int kRightBumper = 5;
-    public static final int kSelectButton = 6;
-    public static final int kStartButton = 7;
+    public static final int kAButton = 1;
+    public static final int kBButton = 2;
+    public static final int kXButton = 3;
+    public static final int kYButton = 4;
+    public static final int kLeftBumper = 5;
+    public static final int kRightBumper = 6;
+    public static final int kSelectButton = 7;
+    public static final int kStartButton = 8;
 
     //just a filler, needs to be changed
     public static final double kDeadZone = 0.05;
@@ -96,9 +96,12 @@ public class Constants {
 
     //elevator
     public static final double kElevatorDriveFinesseLimit = 20000;
-    public static final double kElevatorDriveMaxSpeed = 0.2;
+    public static final double kElevatorDriveMaxSpeed = 0.5;
     public static final double kElevatorOpenRamp = 0.3;
     public static final double kElevatorClosedRamp = 0.1;
+    public static final int kElevatorPos1 = 50;
+    public static final int kElevatorPos2 = 50;
+    public static final int kElevatorPos3 = 15000;
 
     //fourbar
     public static final double kFourBarRamp = 0.3;
@@ -107,10 +110,15 @@ public class Constants {
     public static final int kFourBarAcceleration = 20;
     public static final int kFourBarCruise = 5;
 
+    public static final int kFourBarPos1 = 305;
+    public static final int kFourBarPos2 = 990;
+    public static final int kFourBarPos3 = 1380;
+    public static final int kFourBarPosOffset = 50;
+
     //drivetrain
     public static final double kSkimGain = 0.15;
-    public static final double kDriveSpeed = 0.4;
-    public static final double kTurnGain = 0.7;
-    public static final double kTurnFinesseGain = 0.65;
+    public static final double kDriveSpeed = 0.5;
+    public static final double kTurnGain = 0.6;
+    public static final double kTurnFinesseGain = 0.5;
 
 }
