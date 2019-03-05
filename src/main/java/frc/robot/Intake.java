@@ -23,6 +23,8 @@ public class Intake {
     private Solenoid gearIntakeBoi = new Solenoid(Constants.kGearIntakeSolenoid);
 
     private static boolean manualControl = true;
+    private static boolean isGripButtonPressed = false;
+    private static boolean isExtended = false;
 
     public Intake() {
 
@@ -34,12 +36,21 @@ public class Intake {
 
         boolean slowModeActive = SensorData.getBallSensorState();
 
-        if (operatorController.getRawButton(Constants.kLeftBumper)) {
-            gearIntakeBoi.set(true);
-
-        } else {
-            gearIntakeBoi.set(false);
-
+        if ((operatorController.getRawButton(Constants.kLeftBumper)) && (!isGripButtonPressed)) {
+            isGripButtonPressed = true;
+            
+            if(!isExtended){
+                gearIntakeBoi.set(true);
+            } else {
+                gearIntakeBoi.set(false);
+            }
+            
+            isExtended = !isExtended;
+        } else if (operatorController.getRawButton(Constants.kLeftBumper)){
+            //Do Nothing, button still pressed
+        }
+        else {
+            isGripButtonPressed = false;
         }
 
         if (manualControl) {

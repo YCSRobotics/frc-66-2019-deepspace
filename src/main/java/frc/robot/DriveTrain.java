@@ -39,6 +39,13 @@ public class DriveTrain {
 
     private static boolean manualControl = true;
     private static boolean invertMode = false;
+    private static boolean isYawZeroed = false;
+
+    private static double throttleValue;
+    private static double turnValue;
+
+    private static double leftOutput;
+    private static double rightOutput;
 
     public DriveTrain(){
         //set brake mode
@@ -67,27 +74,30 @@ public class DriveTrain {
     }
 
     public void updateDrivetrain(){
-        double throttle = getThrottleInput();
-        double turn = getTurnInput();
-        double leftOutput = throttle + turn;
-        double rightOutput = throttle - turn;
-
         boolean shiftState = driverController.getRawAxis(Constants.kRightTrigger) > 0;
         boolean invertButtonPressed = driverController.getRawButton(Constants.kStartButton);
-
-        //if 'A' button is held down, activate go straight mode
-        goStraight();
-
-        //check if manual control is disabled
-        if (!manualControl) {
-            return;
-        }
 
         if (shiftState) {
             setSpeedyMode(true);
         } else {
             setSpeedyMode(false);
         }
+        
+        if ((driverController.getRawButton(Constants.kAButton)) && (!isYawZeroed)) {
+            //A-button rising edge, zero sensor and wait one loop for sensor to zero
+            SensorData.resetYaw();
+            isYawZeroed = true;
+        
+        } else if (driverController.getRawButton(Constants.kAButton)) {
+            //A-button still pressed, sensor now zeroed, calculate drive outputs for Go-Straight
+            goStraight();
+        
+        } else {
+            throttleValue = getThrottleInput();//Scaled Throttle Input
+            turnValue = getTurnInput();//Scaled Turn Input
+        }
+
+        calculateMotorOutputs(throttleValue, turnValue);
 
         //invert mode boiz
         if (invertButtonPressed && timer.get() > 0.5) {
@@ -97,20 +107,15 @@ public class DriveTrain {
         }
 
         if (invertMode) {
+            //TODO check this code
             leftOutput = -leftOutput;
             rightOutput = -rightOutput;
         }
 
-        //apply our skim gains to smooth turning
-        leftOutput = leftOutput + trim(rightOutput);
-        rightOutput = rightOutput + trim(leftOutput);
-
         SmartDashboard.putNumber("Left Motor Output", leftOutput);
         SmartDashboard.putNumber("Right Motor Output", rightOutput);
 
-        leftMaster.set(ControlMode.PercentOutput, leftOutput);
-        rightMaster.set(ControlMode.PercentOutput, rightOutput);
-
+        setMotorOutput(leftOutput, rightOutput);
     }
 
     private double trim(double input) {
@@ -129,6 +134,7 @@ public class DriveTrain {
     }
 
     public static double getThrottleInput() {
+        //Returns throttle value already scaled for slow mode, elevator up, etc
         double forwardValue = driverController.getRawAxis(Constants.kLeftYAxis);
         boolean speedyMode = driverController.getRawAxis(Constants.kLeftTrigger) > 0;
 
@@ -151,6 +157,7 @@ public class DriveTrain {
     }
 
     public static double getTurnInput() {
+        //Returns scaled turn input
         double turnValue = driverController.getRawAxis(Constants.kRightXAxis);
 
         if (Math.abs(getThrottleInput()) > Constants.kDeadZone) {
@@ -163,31 +170,21 @@ public class DriveTrain {
         return turnValue;
     }
 
+    private void calculateMotorOutputs(double throttle, double turn){
+        //apply our skim gains to smooth turning
+        leftOutput = leftOutput + trim(rightOutput);
+        rightOutput = rightOutput + trim(leftOutput);
+    }
+
     public static void setMotorOutput(double leftMotorValue, double rightMotorValue) {
         leftMaster.set(ControlMode.PercentOutput, leftMotorValue);
         rightMaster.set(ControlMode.PercentOutput, rightMotorValue);
     }
 
     public static void goStraight() {
-        double motorThrottle = getThrottleInput();
-
-        if (manualControl) {
-            SensorData.resetYaw();
-        }
-
-        //multiple angle by gain (smoothing out the curve) and invert
-        double motorTurn = (-1 * (0 - SensorData.getYaw() )) * Constants.kGyroGain;
-
-        //uses black magic to be awesome
-        if (driverController.getRawButton(Constants.kAButton)) {
-            setMotorOutput(motorThrottle, motorTurn);
-            manualControl = false;
-        } else {
-            manualControl = true;
-            return;
-        }
-
-        setMotorOutput(motorThrottle, motorTurn);
+        //sets throttle value based on throttle input and turn value based on heading error
+        throttleValue = getThrottleInput();
+        turnValue = (-1 * (0 - SensorData.getYaw() )) * Constants.kGyroGain;
     }
 
     public static double getAverageDistance() {
