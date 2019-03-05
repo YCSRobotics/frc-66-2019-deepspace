@@ -20,9 +20,7 @@ public class SensorData {
     private static AHRS navSensor = new AHRS(SPI.Port.kMXP);
     private static DigitalInput bannerSensor = new DigitalInput(2);
 
-    public static double getHorizontalAngle() {
-        return navSensor.getAngle();
-    }
+    public static void resetYaw() { navSensor.reset(); }
 
     public static double getYaw() {
         return navSensor.getYaw();

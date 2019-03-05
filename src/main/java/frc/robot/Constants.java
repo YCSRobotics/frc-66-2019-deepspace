@@ -73,7 +73,7 @@ public class Constants {
     public static final int kGoStraightI = 1;
 
     //gains
-    public static final double kGyroGain = 0.08;
+    public static final double kGyroGain = 0.05;
 
     //global constants
     public static final int kRobotRate = 5; //20ms per loop

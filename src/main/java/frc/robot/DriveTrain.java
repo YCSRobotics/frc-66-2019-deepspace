@@ -171,8 +171,12 @@ public class DriveTrain {
     public static void goStraight() {
         double motorThrottle = getThrottleInput();
 
+        if (manualControl) {
+            SensorData.resetYaw();
+        }
+
         //multiple angle by gain (smoothing out the curve) and invert
-        double motorTurn = -1 * (SensorData.getYaw() * Constants.kGyroGain);
+        double motorTurn = (-1 * (0 - SensorData.getYaw() )) * Constants.kGyroGain;
 
         //uses black magic to be awesome
         if (driverController.getRawButton(Constants.kAButton)) {
