@@ -22,7 +22,6 @@ public class FourBarControl {
 
     private Joystick operatorController = DriveTrain.operatorController;
 
-    private boolean manualControl = false;
     private double fourBarPosition = 0.0;
     private double setPosition = 0.0;
     private boolean isOffsetPressed = false;
@@ -75,7 +74,6 @@ public class FourBarControl {
 
             fourBarMotorMaster.set(ControlMode.PercentOutput, fourBarThrottle);
             isOffsetPressed = false;
-            manualControl = true;
 
         } else if (operatorController.getRawButton(Constants.kRightBumper)) {
             if(!isOffsetPressed){
@@ -104,7 +102,7 @@ public class FourBarControl {
         } else {
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
             isOffsetPressed = false;
-            manualControl = false;
+
         }
 
     }

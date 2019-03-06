@@ -57,30 +57,20 @@ public class Dashboard {
                                     .withWidget("Text View")
                                     .getEntry();
 
-    /*private NetworkTableEntry leftWheelDistanceKeyDriver = diagnosticsTab
-                                    .add("Left Wheel Distance", 0.0)
-                                    .withWidget("Text View")
-                                    .getEntry();*/
-
     private NetworkTableEntry crossBoxSensor = diagnosticsTab
                                     .add("Cross Bar Sensor", false)
                                     .withWidget("Boolean Box")
                                     .getEntry();
 
-    /*private NetworkTableEntry rightWheelDistanceKeyDriver = diagnosticsTab
-            .add("Right Wheel Distance", 0.0)
-            .withWidget("Text View")
-            .getEntry();*/
-
     private NetworkTableEntry elevatorPosition = diagnosticsTab
-            .add("Elevator Position", 0)
-            .withWidget("Text View")
-            .getEntry();
+                                    .add("Elevator Position", 0)
+                                    .withWidget("Text View")
+                                    .getEntry();
 
     private NetworkTableEntry fourBarPosition = diagnosticsTab
-            .add("Fourbar Position", 0)
-            .withWidget("Text View")
-            .getEntry();
+                                    .add("Fourbar Position", 0)
+                                    .withWidget("Text View")
+                                    .getEntry();
 
     public Dashboard() {
     }

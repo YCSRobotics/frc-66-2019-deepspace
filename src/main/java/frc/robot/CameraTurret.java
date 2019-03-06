@@ -46,7 +46,4 @@ public class CameraTurret {
 
     }
 
-    public static boolean cameraTurretAlive() {
-        return servo.isAlive();
-    }
 }

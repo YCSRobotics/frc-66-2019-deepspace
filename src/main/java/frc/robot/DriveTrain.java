@@ -36,8 +36,6 @@ public class DriveTrain {
 
     private static Timer timer = new Timer();
 
-
-    private static boolean manualControl = true;
     private static boolean invertMode = false;
     private static boolean isYawZeroed = false;
 
@@ -75,7 +73,7 @@ public class DriveTrain {
 
     public void updateDrivetrain(){
         boolean shiftState = driverController.getRawAxis(Constants.kRightTrigger) > 0;
-        boolean invertButtonPressed = driverController.getRawButton(Constants.kStartButton);
+        boolean invertButtonPressed = driverController.getRawButton(Constants.kSelectButton);
 
         if (shiftState) {
             setSpeedyMode(true);
@@ -114,6 +112,13 @@ public class DriveTrain {
             //TODO check this code
             leftOutput = -leftOutput;
             rightOutput = -rightOutput;
+
+            var tempVar = leftOutput;
+
+            //switch the sides
+            leftOutput = rightOutput;
+            rightOutput = tempVar;
+
         }
 
         SmartDashboard.putNumber("Left Motor Output", leftOutput);
@@ -149,15 +154,13 @@ public class DriveTrain {
         //slow drivetrain when elevator lifted
         if (ElevatorControl.getLiftPosition() > Constants.kElevatorDriveFinesseLimit) {
             forwardValue = forwardValue * Constants.kElevatorDriveMaxSpeed;
-        }
-        //slow mode button
-        else if(!speedyMode) {
-            forwardValue = forwardValue * Constants.kDriveSpeed;
-        }
-        else{}
 
-        double throttle = (Math.abs(forwardValue) > Constants.kDeadZone ? -forwardValue : 0.0);
-        return throttle;
+        } else if(!speedyMode) {
+            forwardValue = forwardValue * Constants.kDriveSpeed;
+
+        }
+
+        return (Math.abs(forwardValue) > Constants.kDeadZone ? -forwardValue : 0.0);
     }
 
     public static double getTurnInput() {
