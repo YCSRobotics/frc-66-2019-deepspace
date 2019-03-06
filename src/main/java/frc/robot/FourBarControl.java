@@ -59,11 +59,13 @@ public class FourBarControl {
 
         fourBarPosition = getFourBarPosition();
 
-        //implement feedforward depending on power
+        //implement fake arbitrary feedforward depending on power
         if(fourBarThrottle > Constants.kFourBarDeadZone) {
             fourBarMotorMaster.config_kF(0, 1, 10);
+
         } else if(fourBarThrottle < -Constants.kFourBarDeadZone) {
             fourBarMotorMaster.config_kF(0, 0, 10);
+
         }
 
         //lift fourbar to position and hold when no more motor output is being applied
@@ -76,29 +78,25 @@ public class FourBarControl {
             manualControl = true;
 
         } else if (operatorController.getRawButton(Constants.kRightBumper)) {
-            
             if(!isOffsetPressed){
                 isOffsetPressed = true;
                 setPosition = fourBarPosition - Constants.kFourBarPosOffset;
                 fourBarMotorMaster.set(ControlMode.Position, setPosition);
             }
-            else{}//Do nothing, only act on rising edge
-        }
-        else if (operatorController.getRawButton(Constants.kAButton)) {
+
+        } else if (operatorController.getRawButton(Constants.kAButton)) {
             isOffsetPressed = false;
             setPosition = Constants.kFourBarPos1;
 
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
 
-        }
-        else if (operatorController.getRawButton(Constants.kBButton)) {
+        } else if (operatorController.getRawButton(Constants.kBButton)) {
             setPosition = Constants.kFourBarPos2;
             isOffsetPressed = false;
 
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
 
-        }
-        else if (operatorController.getRawButton(Constants.kYButton)) {
+        } else if (operatorController.getRawButton(Constants.kYButton)) {
             setPosition = Constants.kFourBarPos3;
             isOffsetPressed = false;
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
@@ -109,7 +107,6 @@ public class FourBarControl {
             manualControl = false;
         }
 
-        //TODO buttons should set position of both fourbar and elevator control
     }
 
 
