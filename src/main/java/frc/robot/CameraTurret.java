@@ -19,11 +19,12 @@ import edu.wpi.first.wpilibj.Servo;
 public class CameraTurret {
     private static Servo servo = new Servo(0);
     private static Joystick driverJoystick = DriveTrain.driverController;
-    private static double currentPosition = -1.0;
+    private static double currentPosition = 0.5;
 
     public CameraTurret() {
         UsbCamera cameraServer = CameraServer.getInstance().startAutomaticCapture();
-        cameraServer.setResolution(640, 480);
+        cameraServer.setResolution(426, 240);
+        cameraServer.setFPS(20);
 
         //add camera to display
         Dashboard.driverDisplay.add(cameraServer).withSize(3,3);
@@ -34,11 +35,12 @@ public class CameraTurret {
         boolean upwardThrottle = driverJoystick.getPOV() == 0;
         boolean downwardThrottle = driverJoystick.getPOV() == 180;
 
-        if (upwardThrottle) {
-            currentPosition += 0.1;
-        } else if (downwardThrottle) {
-            currentPosition -= 0.1;
+        if (upwardThrottle && currentPosition <= 1.0) {
+            currentPosition += 0.05;
+        } else if (downwardThrottle && currentPosition >= 0) {
+            currentPosition -= 0.05;
         }
+
 
         servo.set(currentPosition);
 

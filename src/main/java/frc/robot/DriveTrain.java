@@ -95,7 +95,11 @@ public class DriveTrain {
         } else {
             throttleValue = getThrottleInput();//Scaled Throttle Input
             turnValue = getTurnInput();//Scaled Turn Input
+            isYawZeroed = false;
         }
+
+        SmartDashboard.putNumber("Joystick Throttle", throttleValue);
+        SmartDashboard.putNumber("Turn Value", turnValue);
 
         calculateMotorOutputs(throttleValue, turnValue);
 
@@ -171,6 +175,9 @@ public class DriveTrain {
     }
 
     private void calculateMotorOutputs(double throttle, double turn){
+        leftOutput = throttle + turn;
+        rightOutput = throttle - turn;
+
         //apply our skim gains to smooth turning
         leftOutput = leftOutput + trim(rightOutput);
         rightOutput = rightOutput + trim(leftOutput);
@@ -184,7 +191,7 @@ public class DriveTrain {
     public static void goStraight() {
         //sets throttle value based on throttle input and turn value based on heading error
         throttleValue = getThrottleInput();
-        turnValue = (-1 * (0 - SensorData.getYaw() )) * Constants.kGyroGain;
+        turnValue = (0 - SensorData.getYaw() ) * Constants.kGyroGain;
     }
 
     public static double getAverageDistance() {
