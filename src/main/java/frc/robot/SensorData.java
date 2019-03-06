@@ -9,6 +9,9 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -19,6 +22,9 @@ import edu.wpi.first.wpilibj.SPI;
 public class SensorData {
     private static AHRS navSensor = new AHRS(SPI.Port.kMXP);
     private static DigitalInput bannerSensor = new DigitalInput(2);
+
+    private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
+    private static NetworkTable table = instance.getTable("PiData");
 
     public static void resetYaw() { navSensor.reset(); }
 
@@ -36,4 +42,11 @@ public class SensorData {
 
     public static boolean getBallSensorState() { return bannerSensor.get(); }
 
+    public static double angleToVisionTarget() {
+        return table.getEntry("AngleToTarget").getDouble(0.0);
+    }
+
+    public static double distanceToVisionTarget() {
+        return table.getEntry("DistanceToTarget").getDouble(0.0);
+    }
 }

@@ -71,7 +71,7 @@ public class DriveTrain {
         timer.start();
     }
 
-    public void updateDrivetrain(){
+    public void updateDrivetrain() {
         boolean shiftState = driverController.getRawAxis(Constants.kRightTrigger) > 0;
         boolean invertButtonPressed = driverController.getRawButton(Constants.kSelectButton);
 
@@ -80,16 +80,20 @@ public class DriveTrain {
         } else {
             setSpeedyMode(false);
         }
-        
+
         if ((driverController.getRawButton(Constants.kAButton)) && (!isYawZeroed)) {
             //A-button rising edge, zero sensor and wait one loop for sensor to zero
             SensorData.resetYaw();
             isYawZeroed = true;
-        
+
         } else if (driverController.getRawButton(Constants.kAButton)) {
             //A-button still pressed, sensor now zeroed, calculate drive outputs for Go-Straight
             goStraight();
-        
+
+        } else if (driverController.getRawButton(Constants.kBButton)) {
+            //go straight to vision target
+            goStraightVisionTarget();
+
         } else {
             throttleValue = getThrottleInput();//Scaled Throttle Input
             turnValue = getTurnInput();//Scaled Turn Input
@@ -125,6 +129,15 @@ public class DriveTrain {
         SmartDashboard.putNumber("Right Motor Output", rightOutput);
 
         setMotorOutput(leftOutput, rightOutput);
+    }
+
+    private void goStraightVisionTarget() {
+        throttleValue = getThrottleInput();
+
+        double targetAngleVision = SensorData.angleToVisionTarget();
+
+        turnValue = (0 - targetAngleVision) * Constants.kGyroGain;
+
     }
 
     private double trim(double input) {
