@@ -22,22 +22,16 @@ public class Constants {
     public static final int kElevatorMotor = 4;
     public static final int kFourBarMotor = 5;
     public static final int kIntakeMotor = 6;
-
     public static final boolean kInvertRightMotor = false;
     public static final boolean kInvertLeftMotor = true;
-
     public static final int kInvertRightMotorMultiplier = -1;
-
     public static final double kDriveRampRate = 0.08;
 
     //encoder constants
     public static final int kEncoderDistancePerRevolution = 4096;
-
     public static final int kWheelDiameter = 6;
     public static final double kEncoderRotationRate = 5.4;
-
     public static final double kPi = 3.14159265;
-
     public static final double kMagMultiplier = ((kEncoderDistancePerRevolution*kEncoderRotationRate)/(kPi * kWheelDiameter));
 
     //joystick constants
@@ -60,39 +54,20 @@ public class Constants {
     public static final int kSelectButton = 7;
     public static final int kStartButton = 8;
 
-    //just a filler, needs to be changed
+    //drive and fourbar deadzones
     public static final double kDeadZone = 0.05;
     public static final double kFourBarDeadZone = 0.2;
-
-    //distance PID
-    public static final int kDistanceP = 1;
-    public static final int kDistanceI = 1;
-
-    //go straight PID
-    public static final int kGoStraightP = 1;
-    public static final int kGoStraightI = 1;
 
     //gains
     public static final double kGyroGain = 0.02;
 
-    //global constants
-    public static final int kRobotRate = 5; //20ms per loop
-
     //autonomous constants
     public static final String kVisionCam = "10.0.66.12:1181/stream.mjpg";
-
-    //slow mode max speed
-    public static final double kDriveSlowMaxSpeed = 0.5;
-    public static final double kIntakeSlowMaxSpeed = 0.1;
 
     //solenoids
     public static final int kShifterSolenoid = 0;
     public static final int kGearIntakeSolenoid = 1;
-
-    //camera turret positions
-    public static final double kLowPosition = 100;
-    public static final double kMidPosition = 1000;
-    public static final double kHighPositionElevator = 1000;
+    public static final double kIntakeSlowMaxSpeed = 0.1;
 
     //elevator
     public static final double kElevatorDriveFinesseLimit = 20000;
@@ -107,8 +82,6 @@ public class Constants {
     public static final double kFourBarRamp = 0.3;
     public static final double kFourBarMaxForward = 0.6;
     public static final double kFourBarMaxReverse = -(kFourBarMaxForward/2);
-    public static final int kFourBarAcceleration = 20;
-    public static final int kFourBarCruise = 5;
 
     public static final int kFourBarPos1 = 305;
     public static final int kFourBarPos2 = 990;
