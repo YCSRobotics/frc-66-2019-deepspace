@@ -7,7 +7,10 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.HttpCamera;
 import edu.wpi.first.wpilibj.TimedRobot;
+
+import java.util.Map;
 
 public class Robot extends TimedRobot {
   
@@ -21,7 +24,12 @@ public class Robot extends TimedRobot {
   //called on robot boot
   @Override
   public void robotInit() {
+    HttpCamera cameraServer = new HttpCamera("CoProcessorCamera", Constants.kVisionCam);
+    cameraServer.setResolution(426, 240);
+    cameraServer.setFPS(15);
 
+    //add camera to display
+    Dashboard.diagnosticsTab.add(cameraServer).withSize(3,4).withProperties(Map.of("Rotation", "QUARTER_CCW"));
   }
 
   //called every 20ms regardless of game state, after robot init

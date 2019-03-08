@@ -7,10 +7,15 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.CameraServerJNI;
+import edu.wpi.cscore.HttpCamera;
+import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Servo;
+
+import java.util.Map;
 
 /**
  * Handles camera interactions
@@ -19,26 +24,22 @@ import edu.wpi.first.wpilibj.Servo;
 public class CameraTurret {
     private static Servo servo = new Servo(0);
     private static Joystick driverJoystick = DriveTrain.driverController;
-    private static double currentPosition = 0.5;
+    private static double currentPosition = 0.6;
 
     public CameraTurret() {
-        UsbCamera cameraServer = CameraServer.getInstance().startAutomaticCapture();
-        cameraServer.setResolution(426, 240);
-        cameraServer.setFPS(20);
-
-        //add camera to display
-        Dashboard.driverDisplay.add(cameraServer).withSize(3,3);
+        //do camera initialization to shuffleboard in robotinit
+        servo.set(currentPosition);
 
     }
 
     public void updateCameraTurretTeleop() {
-        boolean upwardThrottle = driverJoystick.getPOV() == 0;
-        boolean downwardThrottle = driverJoystick.getPOV() == 180;
+        boolean upwardThrottle = driverJoystick.getRawButton(Constants.kRightBumper);
+        boolean downwardThrottle = driverJoystick.getRawButton(Constants.kLeftBumper);
 
         if (upwardThrottle && currentPosition <= 1.0) {
-            currentPosition += 0.05;
+            currentPosition += 0.02;
         } else if (downwardThrottle && currentPosition >= 0) {
-            currentPosition -= 0.05;
+            currentPosition -= 0.02;
         }
 
 

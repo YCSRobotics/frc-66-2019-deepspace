@@ -18,9 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 
 public class Dashboard {
-    public static ShuffleboardTab driverDisplay = Shuffleboard.getTab("DriverDisplay");
-
-    private static ShuffleboardTab diagnosticsTab = Shuffleboard.getTab("Diagnostics");
+    public static ShuffleboardTab diagnosticsTab = Shuffleboard.getTab("Diagnostics");
 
     private NetworkTableEntry leftWheelDistanceKey = diagnosticsTab
                                     .add("Left Wheel Distance", 0.0)
