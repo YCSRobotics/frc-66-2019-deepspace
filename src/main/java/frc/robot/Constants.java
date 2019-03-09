@@ -75,16 +75,16 @@ public class Constants {
     public static final double kElevatorOpenRamp = 0.3;
     public static final double kElevatorClosedRamp = 0.1;
     public static final int kElevatorPos1 = 50;
-    public static final int kElevatorPos2 = 50;
-    public static final int kElevatorPos3 = 15000;
+    public static final int kElevatorPos2 = 14000;
+    public static final int kElevatorPos3 = 10000;
 
     //fourbar
     public static final double kFourBarRamp = 0.3;
     public static final double kFourBarMaxForward = 0.6;
     public static final double kFourBarMaxReverse = -(kFourBarMaxForward/2);
 
-    public static final int kFourBarPos1 = 305;
-    public static final int kFourBarPos2 = 990;
+    public static final int kFourBarPos1 = 150;
+    public static final int kFourBarPos2 = 275;
     public static final int kFourBarPos3 = 1380;
     public static final int kFourBarPosOffset = 50;
 

@@ -7,9 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.cscore.CameraServerJNI;
-import edu.wpi.cscore.HttpCamera;
-import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
@@ -27,7 +24,12 @@ public class CameraTurret {
     private static double currentPosition = 0.6;
 
     public CameraTurret() {
-        //do camera initialization to shuffleboard in robotinit
+        UsbCamera cameraServer = CameraServer.getInstance().startAutomaticCapture();
+        cameraServer.setResolution(426, 240);
+        cameraServer.setFPS(15);
+
+        //add camera to display
+        Dashboard.diagnosticsTab.add(cameraServer).withSize(3,4).withProperties(Map.of("Rotation", "QUARTER_CCW"));
         servo.set(currentPosition);
 
     }
