@@ -48,7 +48,7 @@ public class CameraTurret {
         server.setSource(cameraServer);
 
         //add camera to display
-        Dashboard.diagnosticsTab.add(cameraServer).withSize(3,4).withProperties(Map.of("Rotation", "QUARTER_CCW"));
+        Dashboard.diagnosticsTab.add(cameraServer).withSize(3,4);
 
         servo.set(currentPosition);
         timer.reset();

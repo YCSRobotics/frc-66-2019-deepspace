@@ -81,7 +81,7 @@ public class Constants {
     //fourbar
     public static final double kFourBarRamp = 0.3;
     public static final double kFourBarMaxForward = 0.6;
-    public static final double kFourBarMaxReverse = -(kFourBarMaxForward/2);
+    public static final double kFourBarMaxReverse = -0.49;
 
     public static final int kFourBarPos1 = 150;
     public static final int kFourBarPos2 = 275;
@@ -92,6 +92,6 @@ public class Constants {
     public static final double kSkimGain = 0.15;
     public static final double kDriveSpeed = 0.5;
     public static final double kTurnGain = 0.6;
-    public static final double kTurnFinesseGain = 0.5;
+    public static final double kTurnFinesseGain = 0.4;
 
 }
