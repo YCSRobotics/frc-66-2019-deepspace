@@ -24,7 +24,10 @@ public class ElevatorControl {
 
     private Joystick operatorController = DriveTrain.operatorController;
 
+    private double liftPosition = 0.0;
     private double setElevatorPosition = 0.0;
+    
+    private boolean isOffsetPressed = false;
 
     public ElevatorControl() {
         //configure sensor boiz
@@ -49,36 +52,41 @@ public class ElevatorControl {
 
     public void updateLiftTeleop() {
         double liftThrottle = -operatorController.getRawAxis(Constants.kLeftYAxis);
-        double liftPosition = getLiftPosition();
+        liftPosition = getLiftPosition();
 
         //update lift to specified position
         if (Math.abs(liftThrottle) > Constants.kDeadZone) {
             liftMotor.set(ControlMode.PercentOutput, liftThrottle);
-
+            isOffsetPressed = false;
             setElevatorPosition = liftPosition;
-
-
-        } 
+        }
+        else if (operatorController.getRawButton(Constants.kRightBumper)) {
+            if(!isOffsetPressed){
+                isOffsetPressed = true;
+                setElevatorPosition = liftPosition - Constants.kElevatorPosOffset;
+                liftMotor.set(ControlMode.Position, setElevatorPosition);
+            }
+        }
         else if (operatorController.getRawButton(Constants.kAButton)) {
             setElevatorPosition = Constants.kElevatorPos1;
-
+            isOffsetPressed = false;
             liftMotor.set(ControlMode.Position, setElevatorPosition);
 
         }
         else if (operatorController.getRawButton(Constants.kBButton)) {
             setElevatorPosition = Constants.kElevatorPos2;
-
+            isOffsetPressed = false;
             liftMotor.set(ControlMode.Position, setElevatorPosition);
 
         }
         else if (operatorController.getRawButton(Constants.kYButton)) {
             setElevatorPosition = Constants.kElevatorPos3;
-
+            isOffsetPressed = false;
             liftMotor.set(ControlMode.Position, setElevatorPosition);
 
         } else {
             liftMotor.set(ControlMode.Position, setElevatorPosition);
-
+            isOffsetPressed = false;
         }
 
         //TODO buttons should set position of both fourbar and elevator control
