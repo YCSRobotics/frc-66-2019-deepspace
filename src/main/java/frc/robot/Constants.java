@@ -77,6 +77,7 @@ public class Constants {
     public static final int kElevatorPos1 = 50;
     public static final int kElevatorPos2 = 14000;
     public static final int kElevatorPos3 = 10000;
+    public static final int kElevatorPosOffset = 50;
 
     //fourbar
     public static final double kFourBarRamp = 0.3;

@@ -24,7 +24,6 @@ public class FourBarControl {
 
     private double fourBarPosition = 0.0;
     private double setPosition = 0.0;
-    private boolean isOffsetPressed = false;
 
     public FourBarControl() {
         //configure sensor boiz
@@ -71,38 +70,19 @@ public class FourBarControl {
         //manual fourbar contrl
         if (Math.abs(fourBarThrottle) > Constants.kFourBarDeadZone) {
             setPosition = fourBarPosition;
-
             fourBarMotorMaster.set(ControlMode.PercentOutput, fourBarThrottle);
-            isOffsetPressed = false;
-
-        } else if (operatorController.getRawButton(Constants.kRightBumper)) {
-            if(!isOffsetPressed){
-                isOffsetPressed = true;
-                setPosition = fourBarPosition - Constants.kFourBarPosOffset;
-                fourBarMotorMaster.set(ControlMode.Position, setPosition);
-            }
-
         } else if (operatorController.getRawButton(Constants.kAButton)) {
-            isOffsetPressed = false;
             setPosition = Constants.kFourBarPos1;
-
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
-
         } else if (operatorController.getRawButton(Constants.kBButton)) {
             setPosition = Constants.kFourBarPos2;
-            isOffsetPressed = false;
-
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
 
         } else if (operatorController.getRawButton(Constants.kYButton)) {
             setPosition = Constants.kFourBarPos3;
-            isOffsetPressed = false;
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
-
         } else {
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
-            isOffsetPressed = false;
-
         }
 
     }
