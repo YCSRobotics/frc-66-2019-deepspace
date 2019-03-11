@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -32,10 +33,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default - Manual", kDefaultAuto);
-    m_chooser.addOption("Center Start -> Front Bay Right", kCenterFrontBayRight);
-    m_chooser.addOption("Center Start -> Front Bay Left", kCenterFrontBayLeft);
+    m_chooser.addOption("Center - Ship Right", kCenterFrontBayRight);
+    m_chooser.addOption("Center - Ship Left", kCenterFrontBayLeft);
 
-    SmartDashboard.putData("Sandstorm Choices", m_chooser);
+    Dashboard.diagnosticsTab.add(m_chooser).withSize(2,2).withPosition(3,0);
   }
   
   @Override

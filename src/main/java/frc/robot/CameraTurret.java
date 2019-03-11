@@ -48,7 +48,7 @@ public class CameraTurret {
         server.setSource(cameraServer);
 
         //add camera to display
-        Dashboard.diagnosticsTab.add(cameraServer).withSize(3,4);
+        Dashboard.driverDisplayTab.add(cameraServer).withSize(3,4).withPosition(0,0);
 
         servo.set(currentPosition);
         timer.reset();

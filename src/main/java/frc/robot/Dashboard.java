@@ -18,6 +18,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 
 public class Dashboard {
+
+    //driverdisplay tab keys
+    public static ShuffleboardTab driverDisplayTab = Shuffleboard.getTab("DriverDisplay");
+
+    //diagnostics tab keys
     public static ShuffleboardTab diagnosticsTab = Shuffleboard.getTab("Diagnostics");
 
     private NetworkTableEntry leftWheelDistanceKey = diagnosticsTab
@@ -71,6 +76,7 @@ public class Dashboard {
                                     .getEntry();
 
     public Dashboard() {
+
     }
 
     public void updateDiagDashboard() {
@@ -93,8 +99,7 @@ public class Dashboard {
     }
 
     public void updateDriverDashboard() {
-        //leftWheelDistanceKeyDriver.setNumber(DriveTrain.getLeftWheelDistance());
-        //rightWheelDistanceKeyDriver.setNumber(DriveTrain.getRightWheelDistance());
+
     }
   
 }

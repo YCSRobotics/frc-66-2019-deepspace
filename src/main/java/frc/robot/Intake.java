@@ -23,8 +23,6 @@ public class Intake {
     private Solenoid gearIntakeBoi = new Solenoid(Constants.kGearIntakeSolenoid);
 
     private static boolean manualControl = true;
-    private static boolean isGripButtonPressed = false;
-    private static boolean isExtended = false;
 
     public Intake() {
 

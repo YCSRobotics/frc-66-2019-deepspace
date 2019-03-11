@@ -59,27 +59,26 @@ public class ElevatorControl {
             liftMotor.set(ControlMode.PercentOutput, liftThrottle);
             isOffsetPressed = false;
             setElevatorPosition = liftPosition;
-        }
-        else if (operatorController.getRawButton(Constants.kRightBumper)) {
+
+        } else if (operatorController.getRawButton(Constants.kRightBumper)) {
             if(!isOffsetPressed){
                 isOffsetPressed = true;
                 setElevatorPosition = liftPosition - Constants.kElevatorPosOffset;
                 liftMotor.set(ControlMode.Position, setElevatorPosition);
+
             }
-        }
-        else if (operatorController.getRawButton(Constants.kAButton)) {
+
+        } else if (operatorController.getRawButton(Constants.kAButton)) {
             setElevatorPosition = Constants.kElevatorPos1;
             isOffsetPressed = false;
             liftMotor.set(ControlMode.Position, setElevatorPosition);
 
-        }
-        else if (operatorController.getRawButton(Constants.kBButton)) {
+        } else if (operatorController.getRawButton(Constants.kBButton)) {
             setElevatorPosition = Constants.kElevatorPos2;
             isOffsetPressed = false;
             liftMotor.set(ControlMode.Position, setElevatorPosition);
 
-        }
-        else if (operatorController.getRawButton(Constants.kYButton)) {
+        } else if (operatorController.getRawButton(Constants.kYButton)) {
             setElevatorPosition = Constants.kElevatorPos3;
             isOffsetPressed = false;
             liftMotor.set(ControlMode.Position, setElevatorPosition);
@@ -89,7 +88,6 @@ public class ElevatorControl {
             isOffsetPressed = false;
         }
 
-        //TODO buttons should set position of both fourbar and elevator control
     }
 
     public static double getLiftPosition() {
