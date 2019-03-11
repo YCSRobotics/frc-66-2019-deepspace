@@ -8,14 +8,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default - Manual";
-  private static final String kCenterFrontBayRight = "Center Start -> Front Bay Right";
-  private static final String kCenterFrontBayLeft = "Center Start -> Front Bay Left";
+  private static final String kCenterFrontBayRight = "Center - Ship Right";
+  private static final String kCenterFrontBayLeft = "Center - Ship Left";
   private static final String kRgtRocketLvl1 = "Right Rocket Level 1";
   private static final String kLftRocketLvl1 = "Left Rocket Level 1";
   
@@ -39,12 +37,6 @@ public class Robot extends TimedRobot {
 
     Dashboard.diagnosticsTab.add(m_chooser).withSize(2,2).withPosition(3,0);
   }
-  
-  @Override
-  public void disabledPeriodic() {
-    SmartDashboard.putData("Sandstorm Choices", m_chooser);
-  }
-
 
   //called every 20ms regardless of game state, after robot init
   @Override
@@ -67,7 +59,6 @@ public class Robot extends TimedRobot {
 			  autonomous.setSelectedAutonRoutine(AutoRoutine.DO_NOTHING);
       break;
     }
-
 
   }
 
