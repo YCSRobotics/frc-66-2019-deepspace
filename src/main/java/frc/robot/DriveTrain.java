@@ -257,13 +257,11 @@ public class DriveTrain {
 		
 		//enableDrivetrainDynamicBraking(true);
 		
-		if(Math.abs(targetDistance) > Constants.kTargetDistanceThreshold)
-		{
+		if(Math.abs(targetDistance) > Constants.kTargetDistanceThreshold) {
     		isMovingDistance = true;
     		throttleValue = throttle;
 		}
-    	else
-    	{
+    	else {
     		isMovingDistance = false;
     		throttleValue = 0.0;
     	}
@@ -290,14 +288,12 @@ public class DriveTrain {
 				isMovingDistance = false;
 			}
 			else if((targetDistance <= 0) && 
-					(distance_error >= -Constants.kTargetDistanceThreshold))
-			{
+					(distance_error >= -Constants.kTargetDistanceThreshold)){
 				//Robot has reached target
 				throttleValue = 0.0;
 				isMovingDistance = false;
 			}
-			else
-			{
+			else {
 				//Have not reached target
 			}
 
@@ -305,24 +301,19 @@ public class DriveTrain {
 		}
 		else if(isTurning)
 		{			
-			if(Math.abs(SensorData.getYaw()) >= turnAngle)
-			{
+			if(Math.abs(SensorData.getYaw()) >= turnAngle){
 				throttleValue = 0.0;
 				turnValue = 0.0;
 				isTurning = false;
-			}
-			else
-			{
+			} else {
 				//Do Nothing while turning
 			}
 		}
-		else{
+		else {
 			//No Auton move in progress
 			throttleValue = 0.0;
 			turnValue = 0.0;
 		}
 	}
-
-    }
 
 }
