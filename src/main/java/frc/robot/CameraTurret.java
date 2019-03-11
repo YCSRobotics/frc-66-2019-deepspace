@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.HttpCamera;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
@@ -39,23 +40,11 @@ public class CameraTurret {
             return;
         }
 
-        UsbCamera cameraServer = CameraServer.getInstance().startAutomaticCapture(0);
-        UsbCamera cameraServer2 = CameraServer.getInstance().startAutomaticCapture(1);
-        VideoSink server = CameraServer.getInstance().getServer();
-
-        cameraServer.setResolution(426, 240);
-        cameraServer.setFPS(15);
-
-        cameraServer.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
-        cameraServer2.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
-
-        cameraServer2.setResolution(426, 240);
-        cameraServer2.setFPS(15);
-
-        server.setSource(cameraServer);
+        HttpCamera camera = new HttpCamera("PiCam", Constants.kVisionCam);
+        CameraServer.getInstance().addCamera(camera);
 
         //add camera to display
-        Dashboard.driverDisplayTab.add(cameraServer).withSize(3,4).withPosition(0,0);
+        Dashboard.driverDisplayTab.add(camera).withSize(3,4).withPosition(0,0);
 
         servo.set(currentPosition);
         timer.reset();
