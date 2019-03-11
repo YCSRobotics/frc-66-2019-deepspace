@@ -32,10 +32,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default - Manual", kDefaultAuto);
+    m_chooser.setName("Sandstorm Auto");
     m_chooser.addOption("Center - Ship Right", kCenterFrontBayRight);
     m_chooser.addOption("Center - Ship Left", kCenterFrontBayLeft);
 
-    Dashboard.diagnosticsTab.add(m_chooser).withSize(2,2).withPosition(3,0);
+    Dashboard.driverDisplayTab.add(m_chooser).withSize(2,1).withPosition(0,0);
   }
 
   //called every 20ms regardless of game state, after robot init

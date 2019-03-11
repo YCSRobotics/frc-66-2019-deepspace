@@ -13,6 +13,7 @@ import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoSource;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,13 +30,19 @@ public class CameraTurret {
     private static double currentPosition = 0.6;
     private static boolean secondaryCamera = false;
 
-    private UsbCamera cameraServer = CameraServer.getInstance().startAutomaticCapture(0);
-    private UsbCamera cameraServer2 = CameraServer.getInstance().startAutomaticCapture(1);
-
-    private VideoSink server = CameraServer.getInstance().getServer();
     private Timer timer = new Timer();
 
     public CameraTurret() {
+        //don't initialize camera server in initialization
+        //causes crashes
+        if (RobotBase.isSimulation()) {
+            return;
+        }
+
+        UsbCamera cameraServer = CameraServer.getInstance().startAutomaticCapture(0);
+        UsbCamera cameraServer2 = CameraServer.getInstance().startAutomaticCapture(1);
+        VideoSink server = CameraServer.getInstance().getServer();
+
         cameraServer.setResolution(426, 240);
         cameraServer.setFPS(15);
 

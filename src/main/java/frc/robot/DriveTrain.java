@@ -110,8 +110,8 @@ public class DriveTrain {
             isYawZeroed = false;
         }
 
-        SmartDashboard.putNumber("Joystick Throttle", throttleValue);
-        SmartDashboard.putNumber("Turn Value", turnValue);
+        Dashboard.diagnosticsTab.add("Joy Throttle", throttleValue);
+        Dashboard.diagnosticsTab.add("Turn Value", turnValue);
 
         calculateMotorOutputs(throttleValue, turnValue);
 
@@ -123,7 +123,6 @@ public class DriveTrain {
         }
 
         if ((invertMode) && (!isMovingDistance) && (!isTurning)) {
-            //TODO check this code
             leftOutput = -leftOutput;
             rightOutput = -rightOutput;
 
@@ -135,8 +134,8 @@ public class DriveTrain {
 
         }
 
-        SmartDashboard.putNumber("Left Motor Output", leftOutput);
-        SmartDashboard.putNumber("Right Motor Output", rightOutput);
+        Dashboard.diagnosticsTab.add("Left Output", leftOutput);
+        Dashboard.diagnosticsTab.add("Right Output", rightOutput);
 
         setMotorOutput(leftOutput, rightOutput);
     }
