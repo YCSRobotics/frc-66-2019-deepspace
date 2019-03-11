@@ -63,6 +63,7 @@ public class Constants {
 
     //autonomous constants
     public static final String kVisionCam = "10.0.66.12:1181/stream.mjpg";
+    public static final double kTargetDistanceThreshold = 6.0;
 
     //solenoids
     public static final int kShifterSolenoid = 0;

@@ -38,9 +38,15 @@ public class DriveTrain {
 
     private static boolean invertMode = false;
     private static boolean isYawZeroed = false;
+    private static boolean isMovingDistance = false;
+    private static boolean isTurning = false;
 
     private static double throttleValue;
     private static double turnValue;
+
+    private static double targetDistance;
+    private static double turnPower;
+    private static double turnAngle;
 
     private static double leftOutput;
     private static double rightOutput;
@@ -81,7 +87,11 @@ public class DriveTrain {
             setSpeedyMode(false);
         }
 
-        if ((driverController.getRawButton(Constants.kAButton)) && (!isYawZeroed)) {
+        
+        if ((isMovingDistance)||(isTurning)){
+            driveAutonomous();
+
+        } else if ((driverController.getRawButton(Constants.kAButton)) && (!isYawZeroed)) {
             //A-button rising edge, zero sensor and wait one loop for sensor to zero
             SensorData.resetYaw();
             isYawZeroed = true;
@@ -112,7 +122,7 @@ public class DriveTrain {
 
         }
 
-        if (invertMode) {
+        if ((invertMode) && (!isMovingDistance) && (!isTurning)) {
             //TODO check this code
             leftOutput = -leftOutput;
             rightOutput = -rightOutput;
@@ -236,6 +246,83 @@ public class DriveTrain {
 
     public static double getRightWheelDistance() {
         return (rightMaster.getSelectedSensorPosition() / Constants.kMagMultiplier) * Constants.kInvertRightMotorMultiplier;
+    }
+
+    public static void setMoveDistance(double distance, double throttle){
+		
+		leftMaster.setSelectedSensorPosition(0, 0, 0);
+		rightMaster.setSelectedSensorPosition(0, 0, 0);
+		
+		targetDistance = distance;
+		
+		//enableDrivetrainDynamicBraking(true);
+		
+		if(Math.abs(targetDistance) > Constants.kTargetDistanceThreshold)
+		{
+    		isMovingDistance = true;
+    		throttleValue = throttle;
+		}
+    	else
+    	{
+    		isMovingDistance = false;
+    		throttleValue = 0.0;
+    	}
+    }
+
+    public static void setTurnToTarget(double turn_power, double angle){
+		isTurning = true;
+		turnAngle = Math.abs(angle);//angle must always be positive 
+		turnPower = turn_power;//Turn power
+	}
+    
+    public static void driveAutonomous(){
+        double distance_error;
+		
+		if(isMovingDistance){
+			//Move distance without tracking vision target
+			distance_error = targetDistance - getAverageDistance();
+			
+			//Check Distance
+			if((targetDistance > 0) && 
+			   (distance_error <= Constants.kTargetDistanceThreshold)){
+				//Robot has reached target
+				throttleValue = 0.0;
+				isMovingDistance = false;
+			}
+			else if((targetDistance <= 0) && 
+					(distance_error >= -Constants.kTargetDistanceThreshold))
+			{
+				//Robot has reached target
+				throttleValue = 0.0;
+				isMovingDistance = false;
+			}
+			else
+			{
+				//Have not reached target
+			}
+
+			turnValue = (0 - SensorData.getYaw() ) * Constants.kGyroGain;
+		}
+		else if(isTurning)
+		{			
+			if(Math.abs(SensorData.getYaw()) >= turnAngle)
+			{
+				throttleValue = 0.0;
+				turnValue = 0.0;
+				isTurning = false;
+			}
+			else
+			{
+				//Do Nothing while turning
+			}
+		}
+		else{
+			//No Auton move in progress
+			throttleValue = 0.0;
+			turnValue = 0.0;
+		}
+	}
+
     }
 
 }

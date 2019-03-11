@@ -19,6 +19,7 @@ public class Robot extends TimedRobot {
   private static final String kRgtRocketLvl1 = "Right Rocket Level 1";
   private static final String kLftRocketLvl1 = "Left Rocket Level 1";
   
+  private AutoRoutine autonomous = new AutoRoutine();
   private DriveTrain driveTrain = new DriveTrain();
   private Dashboard dashboard = new Dashboard();
   private FourBarControl fourBarControl = new FourBarControl();
@@ -63,6 +64,7 @@ public class Robot extends TimedRobot {
     switch(m_autonSelected){
       case kDefaultAuto:
       default:
+			  autonomous.setSelectedAutonRoutine(AutoRoutine.DO_NOTHING);
       break;
     }
 
