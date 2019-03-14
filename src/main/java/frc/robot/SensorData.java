@@ -24,7 +24,7 @@ public class SensorData {
     private static DigitalInput bannerSensor = new DigitalInput(2);
 
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
-    private static NetworkTable table = instance.getTable("PiData");
+    private static NetworkTable table = instance.getTable("ChickenVision");
 
     public static void resetYaw() { navSensor.reset(); }
 
@@ -42,11 +42,11 @@ public class SensorData {
 
     public static boolean getBallSensorState() { return bannerSensor.get(); }
 
-    public static double angleToVisionTarget() {
-        return table.getEntry("AngleToTarget").getDouble(0.0);
-    }
+    //TODO apply angle offset
+    public static double angleToVisionTarget() { return table.getEntry("tapeYaw").getDouble(0.0); }
 
-    public static double distanceToVisionTarget() {
-        return table.getEntry("DistanceToTarget").getDouble(0.0);
-    }
+    public static double distanceToVisionTarget() { return table.getEntry("tapeDistance").getDouble(0.0); }
+
+    public static boolean tapeDetected() { return table.getEntry("tapeDetected").getBoolean(false); }
 }
+

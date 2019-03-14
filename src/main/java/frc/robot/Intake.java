@@ -56,6 +56,10 @@ public class Intake {
                 intakeValueSlow = intakeValue;
             }
 
+            if (SensorData.getBallSensorState()) {
+                intakeValueSlow *= 0.2;
+            }
+
             intakeMotor.set(ControlMode.PercentOutput, intakeValueSlow);
         }
 

@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -110,9 +111,6 @@ public class DriveTrain {
             isYawZeroed = false;
         }
 
-        Dashboard.diagnosticsTab.add("Joy Throttle", throttleValue);
-        Dashboard.diagnosticsTab.add("Turn Value", turnValue);
-
         calculateMotorOutputs(throttleValue, turnValue);
 
         //invert mode boiz
@@ -134,9 +132,6 @@ public class DriveTrain {
 
         }
 
-        Dashboard.diagnosticsTab.add("Left Output", leftOutput);
-        Dashboard.diagnosticsTab.add("Right Output", rightOutput);
-
         setMotorOutput(leftOutput, rightOutput);
     }
 
@@ -145,7 +140,7 @@ public class DriveTrain {
 
         double targetAngleVision = SensorData.angleToVisionTarget();
 
-        turnValue = (0 - targetAngleVision) * Constants.kGyroGain;
+        turnValue = -((0 - targetAngleVision) * Constants.kGyroGain);
 
     }
 

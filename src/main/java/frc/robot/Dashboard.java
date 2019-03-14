@@ -75,12 +75,27 @@ public class Dashboard {
                                     .withWidget("Text View")
                                     .getEntry();
 
+    private NetworkTableEntry tapeYaw = diagnosticsTab
+                                    .add("Tape Yaw", 0)
+                                    .withWidget("Text View")
+                                    .getEntry();
+
+    private NetworkTableEntry tapeDetected = diagnosticsTab
+                                    .add("Tape Detected", 0)
+                                    .withWidget("Boolean Box")
+                                    .getEntry();
+
+    private NetworkTableEntry tapeDistance = diagnosticsTab
+                                    .add("Tape Distance", 0)
+                                    .withWidget("Text View")
+                                    .getEntry();
+
     public Dashboard() {
 
     }
 
     public void updateDiagDashboard() {
-        Shuffleboard.selectTab("Diagnostics");
+        Shuffleboard.selectTab("DriverDisplay");
 
         navYawKey.setNumber(SensorData.getYaw());
         navPitchKey.setNumber(SensorData.getPitch());
@@ -95,6 +110,10 @@ public class Dashboard {
         crossBoxSensor.setBoolean(SensorData.getBallSensorState());
         elevatorPosition.setNumber(ElevatorControl.getLiftPosition());
         fourBarPosition.setNumber(FourBarControl.getFourBarPosition());
+
+        tapeDetected.setBoolean(SensorData.tapeDetected());
+        tapeDistance.setNumber(SensorData.distanceToVisionTarget());
+        tapeYaw.setNumber(SensorData.angleToVisionTarget());
 
     }
 

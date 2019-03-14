@@ -7,11 +7,7 @@
 
 package frc.robot;
 
-import edu.wpi.cscore.HttpCamera;
-import edu.wpi.cscore.MjpegServer;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoSink;
-import edu.wpi.cscore.VideoSource;
+import edu.wpi.cscore.*;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -19,11 +15,8 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.util.Map;
-
 /**
  * Handles camera interactions
- * TODO, move to raspberry pi
  */
 public class CameraTurret {
     private static Servo servo = new Servo(0);
@@ -32,23 +25,29 @@ public class CameraTurret {
     private static boolean secondaryCamera = false;
 
     private Timer timer = new Timer();
+    private AxisCamera camera = CameraServer.getInstance().addAxisCamera("PiCam", "10.0.66.12:1181/stream.mjpg");
+    private AxisCamera camera2 = CameraServer.getInstance().addAxisCamera("PiCam2", "10.0.66.12:1182/stream.mjpg");
+
+    private MjpegServer server = CameraServer.getInstance().addServer("Server");
 
     public CameraTurret() {
+
         //don't initialize camera server in initialization
         //causes crashes
         if (RobotBase.isSimulation()) {
             return;
         }
 
-        HttpCamera camera = new HttpCamera("PiCam", Constants.kVisionCam);
-        CameraServer.getInstance().addCamera(camera);
+        CameraServer.getInstance().addServer(server);
 
         //add camera to display
-        Dashboard.driverDisplayTab.add(camera).withSize(3,4).withPosition(0,0);
+        Dashboard.driverDisplayTab.add(camera).withSize(4,3).withPosition(2,0);
+
+        server.setSource(camera);
 
         servo.set(currentPosition);
         timer.reset();
-        //timer.start();
+        timer.start();
 
     }
 
@@ -62,7 +61,7 @@ public class CameraTurret {
             currentPosition -= 0.02;
         }
 
-        /*if (driverJoystick.getRawButton(Constants.kYButton) &&  timer.get() > 0.5) {
+        if (driverJoystick.getRawButton(Constants.kYButton) &&  timer.get() > 0.5) {
             secondaryCamera = !secondaryCamera;
 
             timer.reset();
@@ -70,11 +69,11 @@ public class CameraTurret {
             SmartDashboard.putBoolean("Primary Camera?", !secondaryCamera);
 
             if (secondaryCamera) {
-                server.setSource(cameraServer2);
+                server.setSource(camera2);
             } else {
-                server.setSource(cameraServer);
-            }
-        }*/
+                server.setSource(camera);
+             }
+        }
 
         servo.set(currentPosition);
 
