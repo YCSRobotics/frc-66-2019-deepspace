@@ -147,7 +147,12 @@ public class DriveTrain {
         double targetAngleVision = SensorData.angleToVisionTarget();
 
         //go straight if no target detected
-        if (!SensorData.tapeDetected()) {
+        if (!SensorData.tapeDetected() && isYawZeroed) {
+            goStraight();
+            return;
+        } else if (!SensorData.tapeDetected() && !isYawZeroed) {
+            SensorData.resetYaw();
+            isYawZeroed = true;
             goStraight();
             return;
         }

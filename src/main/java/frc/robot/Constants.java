@@ -98,5 +98,6 @@ public class Constants {
 
     public static final double kVisionGain = 0.4;
     public static final double kTurnVisionGain = 0.6;
+    public static final double kVisionOffset = 12;
 
 }

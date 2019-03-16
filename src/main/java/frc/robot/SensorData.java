@@ -46,25 +46,29 @@ public class SensorData {
 
     public static boolean getBallSensorState() { return bannerSensor.get(); }
 
+    private static boolean isZeroed = false;
+
     //TODO apply angle offset
     public static double angleToVisionTarget() {
-        double offset = 0;
-
         double currentDistance = distanceToVisionTarget();
 
-        if (currentDistance >= 120) {
-            offset = kThirdThreshold;
-        } else if( currentDistance >= 80) {
-            offset = kSecondThreshold;
-        } else {
-            offset = kFirstThreshold;
-        }
+        double offset =  Math.toDegrees(Math.atan(Constants.kVisionOffset/currentDistance));
 
         double data = table.getEntry("tapeYaw").getDouble(0.0);
 
-        data = data > 0 ? data + offset : data - offset;
+        double angle = data;
 
-        return data;
+        if (data > 0) {
+            angle = data - offset;
+
+        } else if (data < 0){
+            angle = data + offset;
+
+        } else {
+            //do nothing
+        }
+
+        return angle;
     }
 
     public static double distanceToVisionTarget() { return table.getEntry("tapeDistance").getDouble(0.0); }
