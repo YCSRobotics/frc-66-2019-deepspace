@@ -52,23 +52,11 @@ public class SensorData {
     public static double angleToVisionTarget() {
         double currentDistance = distanceToVisionTarget();
 
-        double offset =  Math.toDegrees(Math.atan(Constants.kVisionOffset/currentDistance));
+        double offset = Math.toDegrees(Math.atan(Constants.kVisionOffset/currentDistance));
 
         double data = table.getEntry("tapeYaw").getDouble(0.0);
 
-        double angle = data;
-
-        if (data > 0) {
-            angle = data - offset;
-
-        } else if (data < 0){
-            angle = data + offset;
-
-        } else {
-            //do nothing
-        }
-
-        return angle;
+        return data - offset;
     }
 
     public static double distanceToVisionTarget() { return table.getEntry("tapeDistance").getDouble(0.0); }

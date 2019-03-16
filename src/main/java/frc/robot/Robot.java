@@ -36,6 +36,8 @@ public class Robot extends TimedRobot {
     m_chooser.setName("Sandstorm Auto");
     m_chooser.addOption("Center - Ship Right", kCenterFrontBayRight);
     m_chooser.addOption("Center - Ship Left", kCenterFrontBayLeft);
+    m_chooser.addOption("Left Rocket Lvl 1", kLftRocketLvl1);
+    m_chooser.addOption("Right Rocket Lvl 1", kRgtRocketLvl1);
 
     Dashboard.driverDisplayTab.add(m_chooser).withSize(2,1).withPosition(0,0);
   }
@@ -61,6 +63,12 @@ public class Robot extends TimedRobot {
         break;
       case kCenterFrontBayLeft:
         autonomous.setSelectedAutonRoutine(AutoRoutine.CENTER_LEFT);
+        break;
+      case kLftRocketLvl1:
+        autonomous.setSelectedAutonRoutine(AutoRoutine.LEFT_ROCKET);
+        break;
+      case kRgtRocketLvl1:
+        autonomous.setSelectedAutonRoutine(AutoRoutine.RIGHT_ROCKET);
         break;
       case kDefaultAuto:
       default:
