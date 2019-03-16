@@ -26,6 +26,10 @@ public class SensorData {
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
     private static NetworkTable table = instance.getTable("ChickenVision");
 
+    private static final double kThirdThreshold = 5;
+    private static final double kSecondThreshold = 10;
+    private static final double kFirstThreshold = 14;
+
     public static void resetYaw() { navSensor.reset(); }
 
     public static double getYaw() {
@@ -43,7 +47,25 @@ public class SensorData {
     public static boolean getBallSensorState() { return bannerSensor.get(); }
 
     //TODO apply angle offset
-    public static double angleToVisionTarget() { return table.getEntry("tapeYaw").getDouble(0.0); }
+    public static double angleToVisionTarget() {
+        double offset = 0;
+
+        double currentDistance = distanceToVisionTarget();
+
+        if (currentDistance >= 120) {
+            offset = kThirdThreshold;
+        } else if( currentDistance >= 80) {
+            offset = kSecondThreshold;
+        } else {
+            offset = kFirstThreshold;
+        }
+
+        double data = table.getEntry("tapeYaw").getDouble(0.0);
+
+        data = data > 0 ? data + offset : data - offset;
+
+        return data;
+    }
 
     public static double distanceToVisionTarget() { return table.getEntry("tapeDistance").getDouble(0.0); }
 

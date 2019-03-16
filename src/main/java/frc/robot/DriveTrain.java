@@ -137,10 +137,20 @@ public class DriveTrain {
 
     private void goStraightVisionTarget() {
         throttleValue = getThrottleInput();
+        double turnGain = 1;
+
+        if (!SensorData.tapeDetected()) {
+            goStraight();
+            return;
+        }
+
+        if (throttleValue <= Constants.kDeadZone) {
+            turnGain = Constants.kTurnVisionGain;
+        }
 
         double targetAngleVision = SensorData.angleToVisionTarget();
 
-        turnValue = -((0 - targetAngleVision) * Constants.kGyroGain);
+        turnValue = -((0 - targetAngleVision) * Constants.kGyroGain * turnGain);
 
     }
 

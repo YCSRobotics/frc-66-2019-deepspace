@@ -31,7 +31,6 @@ public class CameraTurret {
     private MjpegServer server = CameraServer.getInstance().addServer("Server");
 
     public CameraTurret() {
-
         //don't initialize camera server in initialization
         //causes crashes
         if (RobotBase.isSimulation()) {
