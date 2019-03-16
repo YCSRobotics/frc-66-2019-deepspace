@@ -10,6 +10,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -39,6 +40,7 @@ public class DriveTrain {
 
     private static boolean invertMode = false;
     private static boolean isYawZeroed = false;
+    
     private static boolean isMovingDistance = false;
     private static boolean isTurning = false;
 
@@ -82,6 +84,8 @@ public class DriveTrain {
         boolean shiftState = driverController.getRawAxis(Constants.kRightTrigger) > 0;
         boolean invertButtonPressed = driverController.getRawButton(Constants.kSelectButton);
 
+        SmartDashboard.putNumber("turnValue", turnValue);
+
         if (shiftState) {
             setSpeedyMode(true);
         } else {
@@ -106,6 +110,7 @@ public class DriveTrain {
             goStraightVisionTarget();
 
         } else {
+            //enableDrivetrainDynamicBraking(false);
             throttleValue = getThrottleInput();//Scaled Throttle Input
             turnValue = getTurnInput();//Scaled Turn Input
             isYawZeroed = false;
@@ -137,20 +142,17 @@ public class DriveTrain {
 
     private void goStraightVisionTarget() {
         throttleValue = getThrottleInput();
-        double turnGain = 1;
+        enableDrivetrainDynamicBraking(false);
 
+        double targetAngleVision = SensorData.angleToVisionTarget();
+
+        //go straight if no target detected
         if (!SensorData.tapeDetected()) {
             goStraight();
             return;
         }
 
-        if (throttleValue <= Constants.kDeadZone) {
-            turnGain = Constants.kTurnVisionGain;
-        }
-
-        double targetAngleVision = SensorData.angleToVisionTarget();
-
-        turnValue = -((0 - targetAngleVision) * Constants.kGyroGain * turnGain);
+        turnValue = -((0 - targetAngleVision) * Constants.kGyroGain);
 
     }
 
@@ -220,6 +222,7 @@ public class DriveTrain {
 
     public static void goStraight() {
         //sets throttle value based on throttle input and turn value based on heading error
+        enableDrivetrainDynamicBraking(false);
         throttleValue = getThrottleInput();
         turnValue = (0 - SensorData.getYaw() ) * Constants.kGyroGain;
     }
@@ -254,12 +257,15 @@ public class DriveTrain {
 
     public static void setMoveDistance(double distance, double throttle){
 		
-		leftMaster.setSelectedSensorPosition(0, 0, 0);
+        SensorData.resetYaw();
+        
+        leftMaster.setSelectedSensorPosition(0, 0, 0);
 		rightMaster.setSelectedSensorPosition(0, 0, 0);
 		
-		targetDistance = distance;
+        
+        targetDistance = distance;
 		
-		//enableDrivetrainDynamicBraking(true);
+		enableDrivetrainDynamicBraking(true);
 		
 		if(Math.abs(targetDistance) > Constants.kTargetDistanceThreshold) {
     		isMovingDistance = true;
@@ -272,7 +278,9 @@ public class DriveTrain {
     }
 
     public static void setTurnToTarget(double turn_power, double angle){
-		isTurning = true;
+        SensorData.resetYaw();
+        
+        isTurning = true;
 		turnAngle = Math.abs(angle);//angle must always be positive 
 		turnPower = turn_power;//Turn power
 	}
@@ -282,7 +290,8 @@ public class DriveTrain {
 		
 		if(isMovingDistance){
 			//Move distance without tracking vision target
-			distance_error = targetDistance - getAverageDistance();
+            //distance_error = targetDistance - getAverageDistance();
+            distance_error = targetDistance - getLeftWheelDistance();
 			
 			//Check Distance
 			if((targetDistance > 0) && 
@@ -318,6 +327,30 @@ public class DriveTrain {
 			throttleValue = 0.0;
 			turnValue = 0.0;
 		}
+    }
+    
+    public static boolean isMovingDistance(){
+        return(isMovingDistance);
+    }
+
+    public static boolean isTurning(){
+        return(isTurning);
+    }
+
+    public static void enableDrivetrainDynamicBraking(boolean enable){
+		if(enable){
+			leftMaster.setNeutralMode(NeutralMode.Brake);
+			leftFollower.setNeutralMode(NeutralMode.Brake);
+			rightMaster.setNeutralMode(NeutralMode.Brake);
+			rightFollower.setNeutralMode(NeutralMode.Brake);
+		}
+		else{
+			leftMaster.setNeutralMode(NeutralMode.Coast);
+			leftFollower.setNeutralMode(NeutralMode.Coast);
+			rightMaster.setNeutralMode(NeutralMode.Coast);
+			rightFollower.setNeutralMode(NeutralMode.Coast);
+		}
+		
 	}
 
 }

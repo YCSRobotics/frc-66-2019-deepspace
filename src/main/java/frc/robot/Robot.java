@@ -56,6 +56,12 @@ public class Robot extends TimedRobot {
     System.out.println("Auto selected: " + m_autonSelected);
 
     switch(m_autonSelected){
+      case kCenterFrontBayRight:
+        autonomous.setSelectedAutonRoutine(AutoRoutine.CENTER_RIGHT);
+        break;
+      case kCenterFrontBayLeft:
+        autonomous.setSelectedAutonRoutine(AutoRoutine.CENTER_LEFT);
+        break;
       case kDefaultAuto:
       default:
 			  autonomous.setSelectedAutonRoutine(AutoRoutine.DO_NOTHING);
@@ -67,6 +73,7 @@ public class Robot extends TimedRobot {
   //called every 20ms during auton, after auto init
   @Override
   public void autonomousPeriodic() {
+    autonomous.updateAutoRoutine();
     driveTrain.updateDrivetrain();
     fourBarControl.updateFourBarTeleop();
     elevatorControl.updateLiftTeleop();
