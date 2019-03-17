@@ -20,7 +20,7 @@ public class AutoRoutine {
 	final static int TURN_LEFT					  = 2;
 	final static int TURN_RIGHT					  = 3;
 	final static int MOVE_VISION_TARGET           = 4;
-	final static int AUTO_DELAY                   = 5;
+	final static int AUTO_TURN_DELAY    		  = 5;
 	final static int STOP						  = 255;
 
 	public static double alarmTime;
@@ -56,8 +56,8 @@ public class AutoRoutine {
             case MOVE_VISION_TARGET:
                 stateActionMoveVisionTarget();
                 break;
-            case AUTO_DELAY:
-                stateAutoDelay();
+            case AUTO_TURN_DELAY:
+                stateAutoTurnDelay();
                 break;
             case STOP:
             default:
@@ -71,7 +71,7 @@ public class AutoRoutine {
 			if((selectedAutonRoutine==CENTER_LEFT)||(selectedAutonRoutine==CENTER_RIGHT)){
 				DriveTrain.setMoveDistance(100.0, 0.3);
 				currentAutonState = MOVE_DISTANCE;
-			} else if(selectedAutonRoutine==LEFT_ROCKET){
+			} else if(selectedAutonRoutine==LEFT_ROCKET){//CL - Can probably combine L/R rocket transitions but we will see
 				DriveTrain.setMoveDistance(30.0, 0.3);
 				currentAutonState = MOVE_DISTANCE;
 			} else if(selectedAutonRoutine==RIGHT_ROCKET){
@@ -89,7 +89,11 @@ public class AutoRoutine {
 
 	private void stateActionMoveDistance(){
 		if(!DriveTrain.isMovingDistance()){
-		    if (selectedAutonRoutine == RIGHT_ROCKET) {
+			if((selectedAutonRoutine==CENTER_LEFT)||(selectedAutonRoutine==CENTER_RIGHT)){
+				//CL - Added this since not sure if this is final action before stop or not
+				currentAutonState = STOP;
+			}
+			else if (selectedAutonRoutine == RIGHT_ROCKET) {
 		        DriveTrain.setTurnToTarget(0.3, 30);
                 currentAutonState = TURN_RIGHT;
 
@@ -109,12 +113,13 @@ public class AutoRoutine {
 	private void stateActionTurn() {
 	    if(!DriveTrain.isTurning()) {
 	        if (selectedAutonRoutine == LEFT_ROCKET || selectedAutonRoutine == RIGHT_ROCKET) {
-	            DriveTrain.moveToVisionTarget(0.3);
-	            currentAutonState = AUTO_DELAY;
-	            System.out.println("Moving to Vision Target");
+				//Reached target angle but still turning due to inertia, give time to stop
+				//DriveTrain.moveToVisionTarget(0.3); - CL shouldn't start moving until after the turn delay
+				setAutonDelay(0.5);
+	            currentAutonState = AUTO_TURN_DELAY;
+	            //System.out.println("Moving to Vision Target");
             } else {
 	            currentAutonState = STOP;
-
             }
         } else {
 	        //wait for turn to complete
@@ -129,8 +134,8 @@ public class AutoRoutine {
         }
     }
 
-    private void stateAutoDelay() {
-	    if (selectedAutonRoutine == LEFT_ROCKET || selectedAutonRoutine == RIGHT_ROCKET) {
+    private void stateAutoTurnDelay() {
+	    /*if (selectedAutonRoutine == LEFT_ROCKET || selectedAutonRoutine == RIGHT_ROCKET) {
             if (!delaySet) {
                 timer.reset();
                 timer.start();
@@ -140,12 +145,32 @@ public class AutoRoutine {
             if (timer.get() > 0.5) {
                 selectedAutonRoutine = MOVE_VISION_TARGET;
             }
-        }
+		}*/
+		
+		if(timer.get() >= alarmTime) {
+			if((selectedAutonRoutine == LEFT_ROCKET)||(selectedAutonRoutine == LEFT_ROCKET)){
+				DriveTrain.moveToVisionTarget(0.3);
+				selectedAutonRoutine = MOVE_VISION_TARGET;
+				System.out.println("Moving to Vision Target");
+			}
+			else{
+				//Should never get here, but if we do Stop
+				selectedAutonRoutine = STOP;
+			}
+		}
+		else{
+			//Wait for timer to expire
+		}
 
     }
 	
 	private void stateActionStop(){
 		DriveTrain.setMoveDistance(0.0, 0.0);
+	}
+
+	private void setAutonDelay(double delay){
+		//Method to make delay timer generic
+		alarmTime = timer.get() + delay;
 	}
 	
 }

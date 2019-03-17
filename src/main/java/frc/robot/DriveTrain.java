@@ -289,7 +289,7 @@ public class DriveTrain {
     }
 
     public static void moveToVisionTarget(double throttle) {
-        enableDrivetrainDynamicBraking(false);
+        enableDrivetrainDynamicBraking(true);//CL - enable brake to limit coast after turning
 
         throttleValue = throttle;
 
