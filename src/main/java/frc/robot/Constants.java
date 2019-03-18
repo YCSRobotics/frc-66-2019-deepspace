@@ -34,6 +34,10 @@ public class Constants {
     public static final double kPi = 3.14159265;
     public static final double kMagMultiplier = ((kEncoderDistancePerRevolution*kEncoderRotationRate)/(kPi * kWheelDiameter));
 
+    public static final double kMotorOutputTreshold = 0.05;
+    public static final double kEncoderDelta = 1;
+    public static final int kEncoderFaultThreshold = 25; // .5/.02 = 25
+
     //joystick constants
     public final static int kDriverController = 0;
     public final static int kOperatorController = 1;

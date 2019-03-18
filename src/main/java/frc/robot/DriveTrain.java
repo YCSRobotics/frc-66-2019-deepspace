@@ -49,11 +49,22 @@ public class DriveTrain {
     private static double turnValue;
 
     private static double targetDistance;
-    private static double turnPower;
     private static double turnAngle;
 
     private static double leftOutput;
     private static double rightOutput;
+
+    //Encoder Monitor variables
+    private enum encoderFaultState{PASSING,DETECTING,FAULTED};
+    private static int leftEncoderFaultCount = 0;
+    private static double leftEncoderValuePrev = 0.0;
+    private static encoderFaultState leftEncoderFaultState = encoderFaultState.PASSING;
+    private static boolean isLeftEncoderValid = true;
+
+    private static int rightEncoderFaultCount = 0;
+    private static double rightEncoderValuePrev = 0.0;
+    private static encoderFaultState rightEncoderFaultState = encoderFaultState.PASSING;
+    private static boolean isRightEncoderValid = true;
 
     public DriveTrain(){
         //set brake mode
@@ -87,6 +98,8 @@ public class DriveTrain {
 
         SmartDashboard.putNumber("turnValue", turnValue);
 
+        monitorEncoderInputs();
+        
         if (shiftState) {
             setSpeedyMode(true);
         } else {
@@ -387,6 +400,74 @@ public class DriveTrain {
 			rightFollower.setNeutralMode(NeutralMode.Coast);
 		}
 		
-	}
+    }
+    
+    private void monitorEncoderInputs(){
+        double left_encoder_value = getLeftWheelDistance();
+        double left_encoder_delta;
+        double right_encoder_value = getRightWheelDistance();
+        double right_encoder_delta;
+
+        //Left Encoder
+        if(Math.abs(leftOutput) > Constants.kMotorOutputTreshold){
+            left_encoder_delta = Math.abs(left_encoder_value - leftEncoderValuePrev);
+            
+            //Check if encoder value has changed more than a given delta
+            if((left_encoder_delta > Constants.kEncoderDelta) && (leftEncoderFaultState != encoderFaultState.FAULTED)){
+                //Encoder value is changing so it's OK, reset monitors
+                leftEncoderFaultCount = 0;
+                leftEncoderValuePrev = left_encoder_value;
+                leftEncoderFaultState = encoderFaultState.PASSING;
+                isLeftEncoderValid = true;
+            }
+            else if(leftEncoderFaultCount < Constants.kEncoderFaultThreshold){
+                //Encoder value has not changed but too soon to set fault, just increment fault count
+                leftEncoderFaultCount++;
+                leftEncoderFaultState = encoderFaultState.DETECTING;
+            }
+            else {
+                //Time to set the fault
+                leftEncoderFaultState = encoderFaultState.FAULTED;
+                isLeftEncoderValid = false; 
+            }
+
+        } else {
+            //Motor is off so reset monitor
+            leftEncoderFaultCount = 0;
+            leftEncoderValuePrev = left_encoder_value;
+            leftEncoderFaultState = encoderFaultState.PASSING;
+            isLeftEncoderValid = true;
+        }
+
+        //Right Encoder
+        if(Math.abs(rightOutput) > Constants.kMotorOutputTreshold){
+            right_encoder_delta = Math.abs(right_encoder_value - rightEncoderValuePrev);
+            
+            //Check if encoder value has changed more than a given delta
+            if((right_encoder_delta > Constants.kEncoderDelta) && (rightEncoderFaultState != encoderFaultState.FAULTED)){
+                //Encoder value is changing so it's OK, reset monitors
+                rightEncoderFaultCount = 0;
+                rightEncoderValuePrev = right_encoder_value;
+                rightEncoderFaultState = encoderFaultState.PASSING;
+                isRightEncoderValid = true;
+            }
+            else if(rightEncoderFaultCount < Constants.kEncoderFaultThreshold){
+                //Encoder value has not changed but too soon to set fault, just increment fault count
+                rightEncoderFaultCount++;
+                rightEncoderFaultState = encoderFaultState.DETECTING;
+            }
+            else {
+                //Time to set the fault
+                rightEncoderFaultState = encoderFaultState.FAULTED;
+                isRightEncoderValid = false; 
+            }
+        } else {
+            //Motor is off so reset monitor
+            rightEncoderFaultCount = 0;
+            rightEncoderValuePrev = right_encoder_value;
+            rightEncoderFaultState = encoderFaultState.PASSING;
+            isRightEncoderValid = true;
+        }
+    }
 
 }
