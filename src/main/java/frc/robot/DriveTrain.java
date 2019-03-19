@@ -307,6 +307,7 @@ public class DriveTrain {
         throttleValue = throttle;
 
         isFollowingTarget = true;
+        AutoRoutine.isWithinTargetRange = false;
 
     }
 
@@ -363,6 +364,7 @@ public class DriveTrain {
             //follow until within range of target
             if (SensorData.distanceToVisionTarget() < 45) {
                 isFollowingTarget = false;
+                AutoRoutine.isWithinTargetRange = true;
             }
 
             turnValue = -((0 - targetAngleVision) * Constants.kGyroGain);

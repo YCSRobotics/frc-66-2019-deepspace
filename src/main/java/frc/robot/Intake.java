@@ -20,7 +20,7 @@ public class Intake {
     private final static TalonSRX intakeMotor = new TalonSRX(Constants.kIntakeMotor);
     private Joystick operatorController = DriveTrain.operatorController;
 
-    private Solenoid gearIntakeBoi = new Solenoid(Constants.kGearIntakeSolenoid);
+    private final static Solenoid gearIntakeBoi = new Solenoid(Constants.kGearIntakeSolenoid);
 
     private static boolean manualControl = true;
 
@@ -68,6 +68,10 @@ public class Intake {
     public static void setIntakeState(double power) {
         intakeMotor.set(ControlMode.PercentOutput, power);
 
+    }
+
+    public static void setHatchState(boolean state) {
+        gearIntakeBoi.set(state);
     }
 
     public static void setControlState(boolean manualControlEnabled) {

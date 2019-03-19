@@ -21,12 +21,16 @@ public class AutoRoutine {
 	final static int TURN_RIGHT					  = 3;
 	final static int MOVE_VISION_TARGET           = 4;
 	final static int AUTO_TURN_DELAY    		  = 5;
+	final static int RELEASE_HATCH                = 6;
+	final static int MOVE_DISTANCE_TARGET         = 7;
+	final static int BACK_TARGET                  = 8;
 	final static int STOP						  = 255;
 
 	public static double alarmTime;
 
 	public static int selectedAutonRoutine;
 	public static int currentAutonState = START;
+	public static boolean isWithinTargetRange = false;
 
 	private boolean delaySet = false;
 
@@ -37,7 +41,10 @@ public class AutoRoutine {
 	public void setSelectedAutonRoutine(int routine){
 		selectedAutonRoutine = routine;
 	}
-	
+
+	/**
+	 * Autonomous State Machine
+	 */
 	public void updateAutoRoutine(){
         SmartDashboard.putNumber("Current Auto Routine", currentAutonState);
 		switch(currentAutonState){
@@ -59,6 +66,15 @@ public class AutoRoutine {
             case AUTO_TURN_DELAY:
                 stateAutoTurnDelay();
                 break;
+			case MOVE_DISTANCE_TARGET:
+				stateMoveDistanceTarget();
+				break;
+			case RELEASE_HATCH:
+				stateReleaseHatch();
+				break;
+			case BACK_TARGET:
+				stateBackFromTarget();
+				break;
             case STOP:
             default:
                 stateActionStop();
@@ -81,8 +97,8 @@ public class AutoRoutine {
 				//Should never get here
 				currentAutonState = STOP;
 			}
-		}
-		else{
+
+		} else{
 			currentAutonState = STOP;
 		}
 	}
@@ -91,9 +107,10 @@ public class AutoRoutine {
 		if(!DriveTrain.isMovingDistance()){
 			if((selectedAutonRoutine==CENTER_LEFT)||(selectedAutonRoutine==CENTER_RIGHT)){
 				//CL - Added this since not sure if this is final action before stop or not
-				currentAutonState = STOP;
-			}
-			else if (selectedAutonRoutine == RIGHT_ROCKET) {
+				DriveTrain.moveToVisionTarget(0.3);
+				currentAutonState = MOVE_VISION_TARGET;
+
+			} else if (selectedAutonRoutine == RIGHT_ROCKET) {
 		        DriveTrain.setTurnToTarget(0.3, 30);
                 currentAutonState = TURN_RIGHT;
 
@@ -101,7 +118,7 @@ public class AutoRoutine {
 		        DriveTrain.setTurnToTarget(-0.3, 30);
                 currentAutonState = TURN_LEFT;
 
-            }else {
+            } else {
                 currentAutonState = STOP;
             }
 
@@ -128,27 +145,69 @@ public class AutoRoutine {
         }
     }
 
+    private void stateMoveDistanceTarget() {
+		if (!DriveTrain.isMovingDistance()) {
+			currentAutonState = RELEASE_HATCH;
+
+		}
+	}
+
+	private void stateBackFromTarget() {
+		if(!DriveTrain.isMovingDistance()) {
+			currentAutonState = STOP;
+
+		} else {
+			//wait to finish backing up
+
+		}
+	}
+
+	private void stateReleaseHatch() {
+		Intake.setHatchState(true);
+		DriveTrain.setMoveDistance(30, -0.5);
+		currentAutonState = BACK_TARGET;
+	}
+
 	private void stateActionMoveVisionTarget() {
-        if (!DriveTrain.isFollowingTarget()) {
-            DriveTrain.setMoveDistance(150, 0.5);
-            selectedAutonRoutine = STOP;
+		if (selectedAutonRoutine == CENTER_LEFT || selectedAutonRoutine == CENTER_RIGHT) {
+			if (!DriveTrain.isFollowingTarget()) {
+				if (isWithinTargetRange) {
+					currentAutonState = RELEASE_HATCH;
+				} else {
+					currentAutonState = STOP;
+					//TODO dead reckoning place on target
+				}
+			}
 
-        } else {
-            //Waiting to finish trackingTarget
+		} else if (selectedAutonRoutine == LEFT_ROCKET || selectedAutonRoutine == RIGHT_ROCKET) {
+			if (!DriveTrain.isFollowingTarget()) {
+				if (isWithinTargetRange) {
+					//ram that BOI
+					DriveTrain.setMoveDistance(60, 0.5);
+					currentAutonState = MOVE_DISTANCE_TARGET;
+				} else {
+					//not within range, go forward a little bit
+					DriveTrain.setMoveDistance(150, 0.5);
+					currentAutonState = STOP;
+				}
 
-        }
+			} else {
+				//Waiting to finish trackingTarget
+
+			}
+		}
     }
 
     private void stateAutoTurnDelay() {
 		if(timer.get() >= alarmTime) {
 			if((selectedAutonRoutine == LEFT_ROCKET)||(selectedAutonRoutine == RIGHT_ROCKET)){
 				DriveTrain.moveToVisionTarget(0.3);
-				selectedAutonRoutine = MOVE_VISION_TARGET;
+				currentAutonState = MOVE_VISION_TARGET;
 				System.out.println("Moving to Vision Target");
 
 			} else{
 				//Should never get here, but if we do Stop
-				selectedAutonRoutine = STOP;
+				currentAutonState = STOP;
 
 			}
 
