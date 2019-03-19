@@ -114,58 +114,53 @@ public class AutoRoutine {
 	    if(!DriveTrain.isTurning()) {
 	        if (selectedAutonRoutine == LEFT_ROCKET || selectedAutonRoutine == RIGHT_ROCKET) {
 				//Reached target angle but still turning due to inertia, give time to stop
-				//DriveTrain.moveToVisionTarget(0.3); - CL shouldn't start moving until after the turn delay
 				setAutonDelay(0.5);
 	            currentAutonState = AUTO_TURN_DELAY;
-	            //System.out.println("Moving to Vision Target");
+
             } else {
 	            currentAutonState = STOP;
+
             }
+
         } else {
 	        //wait for turn to complete
+
         }
     }
 
 	private void stateActionMoveVisionTarget() {
         if (!DriveTrain.isFollowingTarget()) {
-            currentAutonState = STOP;
+            DriveTrain.setMoveDistance(150, 0.5);
+            selectedAutonRoutine = STOP;
+
         } else {
             //Waiting to finish trackingTarget
+
         }
     }
 
     private void stateAutoTurnDelay() {
-	    /*if (selectedAutonRoutine == LEFT_ROCKET || selectedAutonRoutine == RIGHT_ROCKET) {
-            if (!delaySet) {
-                timer.reset();
-                timer.start();
-            }
-
-            //wait half a second
-            if (timer.get() > 0.5) {
-                selectedAutonRoutine = MOVE_VISION_TARGET;
-            }
-		}*/
-		
 		if(timer.get() >= alarmTime) {
-			if((selectedAutonRoutine == LEFT_ROCKET)||(selectedAutonRoutine == LEFT_ROCKET)){
+			if((selectedAutonRoutine == LEFT_ROCKET)||(selectedAutonRoutine == RIGHT_ROCKET)){
 				DriveTrain.moveToVisionTarget(0.3);
 				selectedAutonRoutine = MOVE_VISION_TARGET;
 				System.out.println("Moving to Vision Target");
-			}
-			else{
+
+			} else{
 				//Should never get here, but if we do Stop
 				selectedAutonRoutine = STOP;
+
 			}
-		}
-		else{
+
+		} else{
 			//Wait for timer to expire
 		}
 
     }
 	
 	private void stateActionStop(){
-		DriveTrain.setMoveDistance(0.0, 0.0);
+		//allow coast after stop
+		//DriveTrain.setMoveDistance(0.0, 0.0);
 	}
 
 	private void setAutonDelay(double delay){
