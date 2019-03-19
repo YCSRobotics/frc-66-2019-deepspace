@@ -104,4 +104,25 @@ public class Constants {
     public static final double kTurnVisionGain = 0.6;
     public static final double kVisionOffset = 12;
 
+    //autonomous constants
+    public static final int kCenterGoStraightInitDistance = 100;
+    public static final double kCenterGoStraightInitPower = 0.3;
+
+    public static final int kRocketInitDistance = 30;
+    public static final double kRocketInitPower = 0.3;
+
+    public static final double kVisionPower = 0.3;
+
+    public static final int kRocketTurnAngle = 30;
+    public static final double kRocketTurnPower = 0.3;
+
+    public static final int kBackupDistance = 30;
+    public static final double kBackupPower = 0.5;
+
+    public static final int kRammingDistance = 60;
+    public static final double kRammingPower = 0.3;
+
+    public static final int kRocketDeadReckoningDistance = 150;
+    public static final double kRocketDeadReckoningPower = 0.3;
+
 }

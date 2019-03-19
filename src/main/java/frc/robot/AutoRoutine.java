@@ -85,14 +85,17 @@ public class AutoRoutine {
 	private void stateActionStart(){
 		if(selectedAutonRoutine != DO_NOTHING){
 			if((selectedAutonRoutine==CENTER_LEFT)||(selectedAutonRoutine==CENTER_RIGHT)){
-				DriveTrain.setMoveDistance(100.0, 0.3);
+				DriveTrain.setMoveDistance(Constants.kCenterGoStraightInitDistance, Constants.kCenterGoStraightInitPower);
 				currentAutonState = MOVE_DISTANCE;
+
 			} else if(selectedAutonRoutine==LEFT_ROCKET){//CL - Can probably combine L/R rocket transitions but we will see
-				DriveTrain.setMoveDistance(30.0, 0.3);
+				DriveTrain.setMoveDistance(Constants.kRocketInitDistance, Constants.kRocketInitPower);
 				currentAutonState = MOVE_DISTANCE;
+
 			} else if(selectedAutonRoutine==RIGHT_ROCKET){
-				DriveTrain.setMoveDistance(30.0, 0.3);
+				DriveTrain.setMoveDistance(Constants.kRocketInitDistance, Constants.kRocketInitPower);
 				currentAutonState = MOVE_DISTANCE;
+
 			} else{
 				//Should never get here
 				currentAutonState = STOP;
@@ -107,15 +110,15 @@ public class AutoRoutine {
 		if(!DriveTrain.isMovingDistance()){
 			if((selectedAutonRoutine==CENTER_LEFT)||(selectedAutonRoutine==CENTER_RIGHT)){
 				//CL - Added this since not sure if this is final action before stop or not
-				DriveTrain.moveToVisionTarget(0.3);
+				DriveTrain.moveToVisionTarget(Constants.kVisionPower);
 				currentAutonState = MOVE_VISION_TARGET;
 
 			} else if (selectedAutonRoutine == RIGHT_ROCKET) {
-		        DriveTrain.setTurnToTarget(0.3, 30);
+		        DriveTrain.setTurnToTarget(Constants.kRocketTurnPower, Constants.kRocketTurnAngle);
                 currentAutonState = TURN_RIGHT;
 
             } else if(selectedAutonRoutine == LEFT_ROCKET) {
-		        DriveTrain.setTurnToTarget(-0.3, 30);
+		        DriveTrain.setTurnToTarget(-Constants.kRocketTurnPower, Constants.kRocketTurnAngle);
                 currentAutonState = TURN_LEFT;
 
             } else {
@@ -164,7 +167,7 @@ public class AutoRoutine {
 
 	private void stateReleaseHatch() {
 		Intake.setHatchState(true);
-		DriveTrain.setMoveDistance(30, -0.5);
+		DriveTrain.setMoveDistance(Constants.kBackupDistance, -Constants.kBackupPower);
 		currentAutonState = BACK_TARGET;
 	}
 
@@ -183,11 +186,11 @@ public class AutoRoutine {
 			if (!DriveTrain.isFollowingTarget()) {
 				if (isWithinTargetRange) {
 					//ram that BOI
-					DriveTrain.setMoveDistance(60, 0.5);
+					DriveTrain.setMoveDistance(Constants.kRammingDistance, Constants.kRammingPower);
 					currentAutonState = MOVE_DISTANCE_TARGET;
 				} else {
 					//not within range, go forward a little bit
-					DriveTrain.setMoveDistance(150, 0.5);
+					DriveTrain.setMoveDistance(Constants.kRocketDeadReckoningDistance, Constants.kRocketDeadReckoningPower);
 					currentAutonState = STOP;
 				}
 
@@ -201,7 +204,7 @@ public class AutoRoutine {
     private void stateAutoTurnDelay() {
 		if(timer.get() >= alarmTime) {
 			if((selectedAutonRoutine == LEFT_ROCKET)||(selectedAutonRoutine == RIGHT_ROCKET)){
-				DriveTrain.moveToVisionTarget(0.3);
+				DriveTrain.moveToVisionTarget(Constants.kVisionPower);
 				currentAutonState = MOVE_VISION_TARGET;
 				System.out.println("Moving to Vision Target");
 
