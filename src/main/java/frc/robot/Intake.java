@@ -56,7 +56,7 @@ public class Intake {
                 intakeValueSlow = intakeValue;
             }
 
-            if (SensorData.getBallSensorState()) {
+            if (!SensorData.getBallSensorState()) {
                 intakeValueSlow *= 0.2;
             }
 

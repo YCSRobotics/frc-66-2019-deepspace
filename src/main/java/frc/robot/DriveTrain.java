@@ -120,7 +120,6 @@ public class DriveTrain {
             goStraight();
 
         } else if (driverController.getRawButton(Constants.kBButton)) {
-            //go straight to vision target
             goStraightVisionTarget();
 
         } else {
@@ -163,20 +162,19 @@ public class DriveTrain {
         throttleValue = getThrottleInput();
         enableDrivetrainDynamicBraking(false);
 
-        double targetAngleVision = SensorData.angleToVisionTarget();
+        var targetAngleVision = SensorData.angleToVisionTarget();
 
-        //go straight if no target detected
-        if (!SensorData.tapeDetected() && isYawZeroed) {
+        //follow until within range of target
+        if (SensorData.distanceToVisionTarget() < Constants.kVisionDistanceLimit) {
+            isFollowingTarget = false;
+            AutoRoutine.isWithinTargetRange = true;
+
+        } else if (SensorData.distanceToVisionTarget() < Constants.kVisionDistanceLimit) {
             goStraight();
-            return;
-        } else if (!SensorData.tapeDetected() && !isYawZeroed) {
-            SensorData.resetYaw();
-            isYawZeroed = true;
-            goStraight();
-            return;
+
+        } else {
+            turnValue = -((0 - targetAngleVision) * Constants.kGyroGain);
         }
-
-        turnValue = -((0 - targetAngleVision) * Constants.kGyroGain);
 
     }
 
@@ -362,7 +360,7 @@ public class DriveTrain {
             }
 
             //follow until within range of target
-            if (SensorData.distanceToVisionTarget() < 45) {
+            if (SensorData.distanceToVisionTarget() < 70) {
                 isFollowingTarget = false;
                 AutoRoutine.isWithinTargetRange = true;
             }

@@ -9,6 +9,8 @@ package frc.robot;
 
 import edu.wpi.cscore.*;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Servo;
@@ -25,8 +27,10 @@ public class CameraTurret {
     private static boolean secondaryCamera = false;
 
     private Timer timer = new Timer();
-    private AxisCamera camera = CameraServer.getInstance().addAxisCamera("PiCam", "10.0.66.12:1181/stream.mjpg");
+    private AxisCamera camera = CameraServer.getInstance().addAxisCamera("PiCam", "10.0.66.12:1182/stream.mjpg");
     private AxisCamera camera2 = CameraServer.getInstance().addAxisCamera("PiCam2", "10.0.66.12:1182/stream.mjpg");
+
+    private NetworkTableEntry cameraSelect = NetworkTableInstance.getDefault().getEntry("cameraSwitch");
 
     private MjpegServer server = CameraServer.getInstance().addServer("Server");
 
@@ -68,9 +72,9 @@ public class CameraTurret {
             SmartDashboard.putBoolean("Primary Camera?", !secondaryCamera);
 
             if (secondaryCamera) {
-                server.setSource(camera2);
+                cameraSelect.setDouble(1);
             } else {
-                server.setSource(camera);
+                cameraSelect.setDouble(0);
              }
         }
 

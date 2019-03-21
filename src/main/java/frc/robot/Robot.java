@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonSelected = m_chooser.getSelected();
-    
+
     System.out.println("Auto selected: " + m_autonSelected);
 
     switch(m_autonSelected){
@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
         break;
       case kDefaultAuto:
       default:
-			  autonomous.setSelectedAutonRoutine(AutoRoutine.DO_NOTHING);
+              autonomous.setSelectedAutonRoutine(AutoRoutine.DO_NOTHING);
       break;
     }
 
