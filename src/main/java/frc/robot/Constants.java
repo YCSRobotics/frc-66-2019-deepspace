@@ -124,7 +124,7 @@ public class Constants {
     public static final int kRammingDistance = 60;
     public static final double kRammingPower = 0.3;
 
-    public static final int kRocketDeadReckoningDistance = 150;
+    public static final int kRocketDeadReckoningDistance = 60;
     public static final double kRocketDeadReckoningPower = 0.3;
 
 }

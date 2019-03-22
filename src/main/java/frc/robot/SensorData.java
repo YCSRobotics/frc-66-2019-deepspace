@@ -9,9 +9,10 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.hal.SPIJNI;
+import edu.wpi.first.hal.sim.mockdata.SPIDataJNI;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -20,7 +21,7 @@ import edu.wpi.first.wpilibj.SPI;
  * Contains static references to grab sensor data
  */
 public class SensorData {
-    private static AHRS navSensor = new AHRS(SPI.Port.kMXP);
+    private static AHRS navSensor = new AHRS(SPI.Port.kMXP, (byte) 100);
     private static DigitalInput bannerSensor = new DigitalInput(2);
 
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();

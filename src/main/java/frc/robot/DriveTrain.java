@@ -38,6 +38,8 @@ public class DriveTrain {
 
     private static Timer timer = new Timer();
 
+    public static boolean autonomousActive = false;
+
     private static boolean invertMode = false;
     private static boolean isYawZeroed = false;
     
@@ -107,7 +109,7 @@ public class DriveTrain {
         }
 
         
-        if ((isMovingDistance)||(isTurning) || (isFollowingTarget)){
+        if (((isMovingDistance)||(isTurning) || (isFollowingTarget)) && autonomousActive){
             driveAutonomous();
 
         } else if ((driverController.getRawButton(Constants.kAButton)) && (!isYawZeroed)) {
@@ -298,7 +300,7 @@ public class DriveTrain {
     		throttleValue = 0.0;
     	}
     }
-
+    //owo
     public static void moveToVisionTarget(double throttle) {
         enableDrivetrainDynamicBraking(true);//CL - enable brake to limit coast after turning
 

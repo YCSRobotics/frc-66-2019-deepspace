@@ -110,8 +110,13 @@ public class AutoRoutine {
         if(!DriveTrain.isMovingDistance()){
             if((selectedAutonRoutine==CENTER_LEFT)||(selectedAutonRoutine==CENTER_RIGHT)){
                 //CL - Added this since not sure if this is final action before stop or not
-                DriveTrain.moveToVisionTarget(Constants.kVisionPower);
-                currentAutonState = MOVE_VISION_TARGET;
+
+                if (SensorData.tapeDetected()) {
+                    DriveTrain.moveToVisionTarget(Constants.kVisionPower);
+                    currentAutonState = MOVE_VISION_TARGET;
+                } else {
+                    currentAutonState = STOP;
+                }
 
             } else if (selectedAutonRoutine == RIGHT_ROCKET) {
                 DriveTrain.setTurnToTarget(Constants.kRocketTurnPower, Constants.kRocketTurnAngle);
@@ -149,9 +154,18 @@ public class AutoRoutine {
     }
 
     private void stateMoveDistanceTarget() {
+        System.out.println("Is moving distance?" + DriveTrain.isMovingDistance());
         if (!DriveTrain.isMovingDistance()) {
-            currentAutonState = RELEASE_HATCH;
+            if (!isWithinTargetRange) {
+                currentAutonState = STOP;
 
+            } else {
+                currentAutonState = RELEASE_HATCH;
+
+            }
+
+        } else {
+            //wait to finish move distance
         }
     }
 
@@ -190,7 +204,7 @@ public class AutoRoutine {
                     currentAutonState = MOVE_DISTANCE_TARGET;
                 } else {
                     //not within range, go forward a little bit
-                    DriveTrain.setMoveDistance(Constants.kRocketDeadReckoningDistance, Constants.kRocketDeadReckoningPower);
+                    //DriveTrain.setMoveDistance(Constants.kRocketDeadReckoningDistance, Constants.kRocketDeadReckoningPower);
                     currentAutonState = STOP;
                 }
 
@@ -204,8 +218,17 @@ public class AutoRoutine {
     private void stateAutoTurnDelay() {
         if(timer.get() >= alarmTime) {
             if((selectedAutonRoutine == LEFT_ROCKET)||(selectedAutonRoutine == RIGHT_ROCKET)){
-                DriveTrain.moveToVisionTarget(Constants.kVisionPower);
-                currentAutonState = MOVE_VISION_TARGET;
+                if (SensorData.tapeDetected()) {
+                    DriveTrain.moveToVisionTarget(Constants.kVisionPower);
+                    currentAutonState = MOVE_VISION_TARGET;
+
+                } else {
+                    System.out.println("Using deadreckoning rocket distance");
+                    DriveTrain.setMoveDistance(Constants.kRocketDeadReckoningDistance, Constants.kRocketDeadReckoningPower);
+                    currentAutonState = MOVE_DISTANCE_TARGET;
+
+                }
+
                 System.out.println("Moving to Vision Target");
 
             } else{
@@ -222,11 +245,14 @@ public class AutoRoutine {
 
     private void stateActionStop(){
         //allow coast after stop
-        //DriveTrain.setMoveDistance(0.0, 0.0);
+        DriveTrain.autonomousActive = false;
+        DriveTrain.setMoveDistance(0.0, 0.0);
     }
 
     private void setAutonDelay(double delay){
         //Method to make delay timer generic
+        timer.reset();
+        timer.start();
         alarmTime = timer.get() + delay;
     }
 

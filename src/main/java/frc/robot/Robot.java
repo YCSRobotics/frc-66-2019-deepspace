@@ -57,6 +57,8 @@ public class Robot extends TimedRobot {
 
     System.out.println("Auto selected: " + m_autonSelected);
 
+    DriveTrain.autonomousActive = true;
+
     switch(m_autonSelected){
       case kCenterFrontBayRight:
         autonomous.setSelectedAutonRoutine(AutoRoutine.CENTER_RIGHT);
@@ -88,6 +90,11 @@ public class Robot extends TimedRobot {
     intake.updateIntake();
     turret.updateCameraTurretTeleop();
 
+  }
+
+  @Override
+  public void teleopInit() {
+    DriveTrain.autonomousActive = false;
   }
 
   //called every 20ms during teleop
