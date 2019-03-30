@@ -68,6 +68,8 @@ public class DriveTrain {
     private static encoderFaultState rightEncoderFaultState = encoderFaultState.PASSING;
     private static boolean isRightEncoderValid = true;
 
+    private static boolean isTargetFound = false;
+
     public DriveTrain(){
         //set brake mode
         rightMaster.setInverted(Constants.kInvertRightMotor);
@@ -101,15 +103,15 @@ public class DriveTrain {
         SmartDashboard.putNumber("turnValue", turnValue);
 
         monitorEncoderInputs();
-        
+
         if (shiftState) {
             setSpeedyMode(true);
         } else {
             setSpeedyMode(false);
         }
 
-        
-        if (((isMovingDistance)||(isTurning) || (isFollowingTarget)) && autonomousActive){
+
+        if (((isMovingDistance) || (isTurning) || (isFollowingTarget)) && autonomousActive) {
             driveAutonomous();
 
         } else if ((driverController.getRawButton(Constants.kAButton)) && (!isYawZeroed)) {
@@ -118,10 +120,20 @@ public class DriveTrain {
             isYawZeroed = true;
 
         } else if (driverController.getRawButton(Constants.kAButton)) {
-            //A-button still pressed, sensor now zeroed, calculate drive outputs for Go-Straight
+            //go straight since yaw is now zeroed
+            goStraight();
+
+        } else if ((driverController.getRawButton(Constants.kBButton)) && (!isTargetFound) && (!isYawZeroed)) {
+            //target not found and yaw is not zeroed
+            SensorData.resetYaw();
+            isYawZeroed = true;
+
+        } else if ((driverController.getRawButton(Constants.kBButton)) && (!isTargetFound)) {
+            //no target found, go straight
             goStraight();
 
         } else if (driverController.getRawButton(Constants.kBButton)) {
+            //target is found, go toward it until
             goStraightVisionTarget();
 
         } else {
@@ -134,6 +146,8 @@ public class DriveTrain {
             }
 
             isYawZeroed = false;
+
+            isTargetFound = SensorData.tapeDetected();
         }
 
         calculateMotorOutputs(throttleValue, turnValue);
@@ -160,19 +174,28 @@ public class DriveTrain {
         setMotorOutput(leftOutput, rightOutput);
     }
 
-    private void goStraightVisionTarget() {
+    private static void goStraightVisionTarget() {
         throttleValue = getThrottleInput();
         enableDrivetrainDynamicBraking(false);
 
         var targetAngleVision = SensorData.angleToVisionTarget();
 
-        //follow until within range of target
+        if (!SensorData.tapeDetected()) {
+            //stop running autonomous, lost target
+            //lost target go straight in manual control
+            isFollowingTarget = false;
+            AutoRoutine.isWithinTargetRange = false;
+            isTargetFound = false;
+            return;
+
+        }
+
         if (SensorData.distanceToVisionTarget() < Constants.kVisionDistanceLimit) {
+            //auto -> in range, go straight into target
+            //if manual control, trigger goStraightCheck
             isFollowingTarget = false;
             AutoRoutine.isWithinTargetRange = true;
-
-        } else if (SensorData.distanceToVisionTarget() < Constants.kVisionDistanceLimit) {
-            goStraight();
+            isTargetFound = false;
 
         } else {
             turnValue = -((0 - targetAngleVision) * Constants.kGyroGain);
@@ -355,19 +378,8 @@ public class DriveTrain {
             }
 
         } else if (isFollowingTarget) {
-            double targetAngleVision = SensorData.angleToVisionTarget();
-
-            if (!SensorData.tapeDetected()) {
-                isFollowingTarget = false;
-            }
-
-            //follow until within range of target
-            if (SensorData.distanceToVisionTarget() < 70) {
-                isFollowingTarget = false;
-                AutoRoutine.isWithinTargetRange = true;
-            }
-
-            turnValue = -((0 - targetAngleVision) * Constants.kGyroGain);
+		    throttleValue = Constants.kVisionPower;
+            goStraightVisionTarget();
 
 		} else {
 			//No Auton move in progress
@@ -403,7 +415,9 @@ public class DriveTrain {
 		}
 		
     }
-    
+
+    //are we ever going to use this?
+    @SuppressWarnings("Duplicates")
     private void monitorEncoderInputs(){
         double left_encoder_value = getLeftWheelDistance();
         double left_encoder_delta;
