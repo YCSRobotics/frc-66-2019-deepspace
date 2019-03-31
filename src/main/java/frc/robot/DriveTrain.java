@@ -70,6 +70,9 @@ public class DriveTrain {
 
     private static boolean isTargetFound = false;
 
+    private static double targetHeading = 0.0;
+    private static boolean grabbedTargetHeading = false;
+
     public DriveTrain(){
         //set brake mode
         rightMaster.setInverted(Constants.kInvertRightMotor);
@@ -123,12 +126,22 @@ public class DriveTrain {
             //go straight since yaw is now zeroed
             goStraight();
 
-        } else if ((driverController.getRawButton(Constants.kBButton)) && (!isTargetFound) && (!isYawZeroed)) {
+        } else if ((driverController.getRawButton(Constants.kXButton))) {
+            throttleValue = getThrottleInput();
+            setMotorOutput(throttleValue, 0);
+            return;
+
+        } else if ((driverController.getRawButton(Constants.kBButton))) {
+            throttleValue = getThrottleInput();
+            setMotorOutput(0, throttleValue);
+            return;
+
+        } else if ((driverController.getRawButton(Constants.kYButton)) && (!isTargetFound) && (!isYawZeroed)) {
             //target not found and yaw is not zeroed
             SensorData.resetYaw();
             isYawZeroed = true;
 
-        } else if ((driverController.getRawButton(Constants.kBButton)) && (!isTargetFound)) {
+        } else if ((driverController.getRawButton(Constants.kYButton)) && (!isTargetFound)) {
             //no target found, go straight
             goStraight();
 
@@ -148,6 +161,8 @@ public class DriveTrain {
             isYawZeroed = false;
 
             isTargetFound = SensorData.tapeDetected();
+
+            grabbedTargetHeading = false;
         }
 
         calculateMotorOutputs(throttleValue, turnValue);
@@ -175,17 +190,25 @@ public class DriveTrain {
     }
 
     private static void goStraightVisionTarget() {
+        if (autonomousActive) {
+            throttleValue = Constants.kVisionPower;
+        } else {
+            throttleValue = getThrottleInput() * 0.4;
+        }
+
         throttleValue = getThrottleInput();
         enableDrivetrainDynamicBraking(false);
 
         var targetAngleVision = SensorData.angleToVisionTarget();
+
+        getTargetHeading();
 
         if (!SensorData.tapeDetected()) {
             //stop running autonomous, lost target
             //lost target go straight in manual control
             isFollowingTarget = false;
             AutoRoutine.isWithinTargetRange = false;
-            isTargetFound = false;
+            //isTargetFound = false;
             return;
 
         }
@@ -198,9 +221,17 @@ public class DriveTrain {
             isTargetFound = false;
 
         } else {
+            //turnValue = -((targetHeading - SensorData.getYaw()) * Constants.kGyroGain);
             turnValue = -((0 - targetAngleVision) * Constants.kGyroGain);
         }
 
+    }
+
+    private static void getTargetHeading(){
+        if(!grabbedTargetHeading) {
+            targetHeading = SensorData.angleToVisionTarget();
+            grabbedTargetHeading = !grabbedTargetHeading;
+        }
     }
 
     private double trim(double input) {
@@ -226,14 +257,19 @@ public class DriveTrain {
         if (Math.abs(forwardValue) < Constants.kDeadZone) {
             return 0;
         }
-        
+
         //slow drivetrain when elevator lifted
         if (ElevatorControl.getLiftPosition() > Constants.kElevatorDriveFinesseLimit) {
             forwardValue = forwardValue * Constants.kElevatorDriveMaxSpeed;
 
+        } else if (driverController.getRawButton(Constants.kXButton) || driverController.getRawButton(Constants.kBButton)) {
+           //do nothing, continue
+
         } else if(!speedyMode) {
             forwardValue = forwardValue * Constants.kDriveSpeed;
 
+        } else {
+            //
         }
 
         return (Math.abs(forwardValue) > Constants.kDeadZone ? -forwardValue : 0.0);
@@ -378,7 +414,6 @@ public class DriveTrain {
             }
 
         } else if (isFollowingTarget) {
-		    throttleValue = Constants.kVisionPower;
             goStraightVisionTarget();
 
 		} else {
