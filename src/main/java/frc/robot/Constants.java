@@ -65,10 +65,6 @@ public class Constants {
     //gains
     public static final double kGyroGain = 0.02;
 
-    //autonomous constants
-    public static final String kVisionCam = "http://10.0.66.12:1181/stream.mjpg";
-    public static final double kTargetDistanceThreshold = 6.0;
-
     //solenoids
     public static final int kShifterSolenoid = 0;
     public static final int kGearIntakeSolenoid = 1;
@@ -126,5 +122,14 @@ public class Constants {
 
     public static final int kRocketDeadReckoningDistance = 60;
     public static final double kRocketDeadReckoningPower = 0.3;
+
+    public static final String kVisionCam = "http://10.0.66.12:1181/stream.mjpg";
+    public static final double kTargetDistanceThreshold = 6.0;
+
+    //sensor constants
+    public static final double kUltrasonicRatio = 0.977;
+    public static final double kMillimeterToInches = 25.4;
+    public static final double kUltrasonicRange = 0.5;
+    public static final double kUltrasonicAlignGain = 0.06;
 
 }

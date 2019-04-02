@@ -9,10 +9,9 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.hal.SPIJNI;
-import edu.wpi.first.hal.sim.mockdata.SPIDataJNI;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -22,14 +21,14 @@ import edu.wpi.first.wpilibj.SPI;
  */
 public class SensorData {
     private static AHRS navSensor = new AHRS(SPI.Port.kMXP, (byte) 100);
+
+    private static AnalogInput leftUltraSensor = new AnalogInput(0);
+    private static AnalogInput rightUltraSensor = new AnalogInput(1);
+
     private static DigitalInput bannerSensor = new DigitalInput(2);
 
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
     private static NetworkTable table = instance.getTable("ChickenVision");
-
-    private static final double kThirdThreshold = 5;
-    private static final double kSecondThreshold = 10;
-    private static final double kFirstThreshold = 14;
 
     public static void resetYaw() { navSensor.reset(); }
 
@@ -47,9 +46,6 @@ public class SensorData {
 
     public static boolean getBallSensorState() { return bannerSensor.get(); }
 
-    private static boolean isZeroed = false;
-
-    //TODO apply angle offset
     public static double angleToVisionTarget() {
         double currentDistance = distanceToVisionTarget();
 
@@ -63,5 +59,13 @@ public class SensorData {
     public static double distanceToVisionTarget() { return table.getEntry("tapeDistance").getDouble(0.0); }
 
     public static boolean tapeDetected() { return table.getEntry("tapeDetected").getBoolean(false); }
+
+    public static double getLeftUltraDistance() {
+        return ((leftUltraSensor.getVoltage() * 1000) * Constants.kUltrasonicRatio) / 25.4;
+    }
+
+    public static double getRightUltraDistance() {
+        return ((rightUltraSensor.getVoltage() * 1000) * Constants.kUltrasonicRatio) / 25.4;
+    }
 }
 

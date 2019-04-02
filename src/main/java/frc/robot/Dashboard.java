@@ -90,6 +90,16 @@ public class Dashboard {
                                     .withWidget("Text View")
                                     .getEntry();
 
+    private NetworkTableEntry leftUltraDistance = diagnosticsTab
+                                    .add("Left Ultrasonic Distance", 0)
+                                    .withWidget("Text View")
+                                    .getEntry();
+
+    private NetworkTableEntry rightUltraDistance = diagnosticsTab
+                                    .add("Right Ultrasonic Distance", 0)
+                                    .withWidget("Text View")
+                                    .getEntry();
+
     public Dashboard() {
 
     }
@@ -114,6 +124,9 @@ public class Dashboard {
         tapeDetected.setBoolean(SensorData.tapeDetected());
         tapeDistance.setNumber(SensorData.distanceToVisionTarget());
         tapeYaw.setNumber(SensorData.angleToVisionTarget());
+
+        leftUltraDistance.setNumber(SensorData.getLeftUltraDistance());
+        rightUltraDistance.setNumber(SensorData.getRightUltraDistance());
 
     }
 

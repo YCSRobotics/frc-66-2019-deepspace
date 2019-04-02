@@ -70,8 +70,7 @@ public class DriveTrain {
 
     private static boolean isTargetFound = false;
 
-    private static double targetHeading = 0.0;
-    private static boolean grabbedTargetHeading = false;
+    private static boolean motorOverride = false;
 
     public DriveTrain(){
         //set brake mode
@@ -113,6 +112,8 @@ public class DriveTrain {
             setSpeedyMode(false);
         }
 
+        //motor override is set to false at beginning of loop
+        motorOverride = false;
 
         if (((isMovingDistance) || (isTurning) || (isFollowingTarget)) && autonomousActive) {
             driveAutonomous();
@@ -129,12 +130,12 @@ public class DriveTrain {
         } else if ((driverController.getRawButton(Constants.kXButton))) {
             throttleValue = getThrottleInput();
             setMotorOutput(throttleValue, 0);
-            return;
+            motorOverride = true;
 
         } else if ((driverController.getRawButton(Constants.kBButton))) {
             throttleValue = getThrottleInput();
             setMotorOutput(0, throttleValue);
-            return;
+            motorOverride = true;
 
         } else if ((driverController.getRawButton(Constants.kYButton)) && (!isTargetFound) && (!isYawZeroed)) {
             //target not found and yaw is not zeroed
@@ -162,7 +163,11 @@ public class DriveTrain {
 
             isTargetFound = SensorData.tapeDetected();
 
-            grabbedTargetHeading = false;
+        }
+
+        //output is being overriden, do not continue
+        if (motorOverride) {
+            return;
         }
 
         calculateMotorOutputs(throttleValue, turnValue);
@@ -201,7 +206,7 @@ public class DriveTrain {
 
         var targetAngleVision = SensorData.angleToVisionTarget();
 
-        getTargetHeading();
+        double targetHeading = SensorData.angleToVisionTarget();
 
         if (!SensorData.tapeDetected()) {
             //stop running autonomous, lost target
@@ -217,8 +222,7 @@ public class DriveTrain {
             //auto -> in range, go straight into target
             //if manual control, trigger goStraightCheck
             isFollowingTarget = false;
-            AutoRoutine.isWithinTargetRange = true;
-            isTargetFound = false;
+            alignToTarget();
 
         } else {
             //turnValue = -((targetHeading - SensorData.getYaw()) * Constants.kGyroGain);
@@ -227,11 +231,41 @@ public class DriveTrain {
 
     }
 
-    private static void getTargetHeading(){
-        if(!grabbedTargetHeading) {
-            targetHeading = SensorData.angleToVisionTarget();
-            grabbedTargetHeading = !grabbedTargetHeading;
+    @SuppressWarnings("Duplicates")
+    private static void alignToTarget() {
+        var leftDistance = SensorData.getLeftUltraDistance();
+        var rightDistance = SensorData.getRightUltraDistance();
+
+        var leftMotorOutput = 0.0;
+        var rightMotorOutput = 0.0;
+
+        if (leftDistance > rightDistance) {
+            if ((leftDistance - rightDistance) < Constants.kUltrasonicRange && (leftDistance - rightDistance) > 0) {
+                isTargetFound = false;
+                AutoRoutine.isWithinTargetRange = true;
+            }
+
+            rightMotorOutput = (leftDistance - rightDistance) * Constants.kUltrasonicAlignGain;
+            motorOverride = true;
+
+        } else if (leftDistance < rightDistance) {
+            if ((rightDistance - leftDistance) < Constants.kUltrasonicRange && (rightDistance - leftDistance) > 0) {
+                isTargetFound = false;
+                AutoRoutine.isWithinTargetRange = true;
+            }
+
+            leftMotorOutput = (rightDistance - leftDistance) * Constants.kUltrasonicAlignGain;
+            motorOverride = true;
+
+        } else {
+            //they are exactly equal for some reason?
+            //log to console
+            System.out.println("Both sensors were exactly equal: left: " + leftDistance + " right: " + rightDistance);
+            isTargetFound = false;
+            AutoRoutine.isWithinTargetRange = true;
         }
+
+        setMotorOutput(leftMotorOutput, rightMotorOutput);
     }
 
     private double trim(double input) {

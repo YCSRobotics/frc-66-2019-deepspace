@@ -54,6 +54,8 @@ public class CameraTurret {
 
     }
 
+    //not actually being used since no camera turret is plugged into our robot
+    //code is here for "just-in-case" purposes
     public void updateCameraTurretTeleop() {
         boolean upwardThrottle = driverJoystick.getRawButton(Constants.kRightBumper);
         boolean downwardThrottle = driverJoystick.getRawButton(Constants.kLeftBumper);
