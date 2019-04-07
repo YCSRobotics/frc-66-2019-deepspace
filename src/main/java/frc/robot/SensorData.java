@@ -32,20 +32,42 @@ public class SensorData {
 
     public static void resetYaw() { navSensor.reset(); }
 
+    /**
+     * Gets the current robot yaw, left right
+     * @return double -180 to 180
+     */
     public static double getYaw() {
         return navSensor.getYaw();
     }
 
+    /**
+     * Gets the current robot pitch, up down
+     * @return double -180 to 180
+     */
     public static double getPitch() {
         return navSensor.getPitch();
     }
 
+    /**
+     * Gets the current robot roll
+     * @return double -180 to 180
+     */
     public static double getRoll() {
         return navSensor.getRoll();
     }
 
-    public static boolean getBallSensorState() { return bannerSensor.get(); }
+    /**
+     * Grabs the state of the ball sensor
+     * @return true/false
+     */
+    public static boolean getBallSensorState() { 
+        return bannerSensor.get(); 
+    }
 
+    /**
+     * Grabs the current angle of the vision target, after offset calculations
+     * @return double -90 to 90
+     */
     public static double angleToVisionTarget() {
         double currentDistance = distanceToVisionTarget();
 
@@ -56,16 +78,36 @@ public class SensorData {
         return data - offset;
     }
 
-    public static double distanceToVisionTarget() { return table.getEntry("tapeDistance").getDouble(0.0); }
-
-    public static boolean tapeDetected() { return table.getEntry("tapeDetected").getBoolean(false); }
-
-    public static double getLeftUltraDistance() {
-        return ((leftUltraSensor.getVoltage() * 1000) * Constants.kUltrasonicRatio) / 25.4;
+    /**
+     * Grabs the current distance of the vision target from the camera
+     * @return double distance in inches
+     */
+    public static double distanceToVisionTarget() { 
+        return table.getEntry("tapeDistance").getDouble(0.0); 
     }
 
-    public static double getRightUltraDistance() {
-        return ((rightUltraSensor.getVoltage() * 1000) * Constants.kUltrasonicRatio) / 25.4;
+    /**
+     * Is the tape detected?
+     * @return true/false
+     */
+    public static boolean tapeDetected() { 
+        return table.getEntry("tapeDetected").getBoolean(false); 
+    }
+
+    /**
+     * Get left infared distance in volts
+     * @return double volts
+     */
+    public static double getLeftIRDistance() {
+        return leftUltraSensor.getVoltage();
+    }
+
+    /**
+     * Get right infared distance in volts
+     * @return double voltss
+     */
+    public static double getRightIRDistance() {
+        return rightUltraSensor.getVoltage();
     }
 }
 

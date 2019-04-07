@@ -7,7 +7,7 @@ public class AutoRoutine {
     //Timer for timed delays
     private Timer timer = new Timer();
 
- //Autonomous Routines
+    //Autonomous Routines
     final static int DO_NOTHING           = 0;
     final static int CENTER_LEFT          = 1;
     final static int CENTER_RIGHT         = 2;
@@ -23,7 +23,8 @@ public class AutoRoutine {
     final static int AUTO_TURN_DELAY              = 5;
     final static int RELEASE_HATCH                = 6;
     final static int MOVE_DISTANCE_TARGET         = 7;
-    final static int BACK_TARGET                  = 8;
+    final static int MOVE_DISTANCE_ROCKET         = 8;
+    final static int BACK_TARGET                  = 9;
     final static int STOP                         = 255;
 
     public static double alarmTime;
@@ -31,12 +32,6 @@ public class AutoRoutine {
     public static int selectedAutonRoutine;
     public static int currentAutonState = START;
     public static boolean isWithinTargetRange = false;
-
-    private boolean delaySet = false;
-
-    public AutoRoutine(){
-
-    }
 
     public void setSelectedAutonRoutine(int routine){
         selectedAutonRoutine = routine;
@@ -52,13 +47,13 @@ public class AutoRoutine {
                 stateActionStart();
                 break;
             case MOVE_DISTANCE:
-                stateActionMoveDistance();
+                stateActionInitMoveDistance();
                 break;
             case TURN_LEFT:
-                stateActionTurn();
+                stateActionInitRocketTurn();
                 break;
             case TURN_RIGHT:
-                stateActionTurn();
+                stateActionInitRocketTurn();
                 break;
             case MOVE_VISION_TARGET:
                 stateActionMoveVisionTarget();
@@ -67,13 +62,16 @@ public class AutoRoutine {
                 stateAutoTurnDelay();
                 break;
             case MOVE_DISTANCE_TARGET:
-                stateMoveDistanceTarget();
+                stateActionRocketDeadReckoningMovement();
+                break;
+            case MOVE_DISTANCE_ROCKET:
+                stateActionRocketMoveDistance();
                 break;
             case RELEASE_HATCH:
-                stateReleaseHatch();
+                stateActionReleaseHatch();
                 break;
             case BACK_TARGET:
-                stateBackFromTarget();
+                stateActionBackFromRocket();
                 break;
             case STOP:
             default:
@@ -81,43 +79,46 @@ public class AutoRoutine {
             }
     }
 
-
+    //called at the beginning of every autonomous method
     private void stateActionStart(){
         if(selectedAutonRoutine != DO_NOTHING){
-            if((selectedAutonRoutine==CENTER_LEFT)||(selectedAutonRoutine==CENTER_RIGHT)){
+            //if center, move distance and set state to move distance
+            if((selectedAutonRoutine == CENTER_LEFT) || (selectedAutonRoutine == CENTER_RIGHT)) {
                 DriveTrain.setMoveDistance(Constants.kCenterGoStraightInitDistance, Constants.kCenterGoStraightInitPower);
                 currentAutonState = MOVE_DISTANCE;
-
-            } else if(selectedAutonRoutine==LEFT_ROCKET){//CL - Can probably combine L/R rocket transitions but we will see
+            
+            //if rocket, move rocket distance
+            } else if ((selectedAutonRoutine==LEFT_ROCKET) || (selectedAutonRoutine == RIGHT_ROCKET)) {
                 DriveTrain.setMoveDistance(Constants.kRocketInitDistance, Constants.kRocketInitPower);
                 currentAutonState = MOVE_DISTANCE;
 
-            } else if(selectedAutonRoutine==RIGHT_ROCKET){
-                DriveTrain.setMoveDistance(Constants.kRocketInitDistance, Constants.kRocketInitPower);
-                currentAutonState = MOVE_DISTANCE;
-
-            } else{
-                //Should never get here
+            } else {
+                //should never get here as this would mean we didn't account for a selected autonomous
                 currentAutonState = STOP;
             }
 
+        //go straight to stop if the selected auton routine was do nothing
         } else{
             currentAutonState = STOP;
         }
     }
 
-    private void stateActionMoveDistance(){
-        if(!DriveTrain.isMovingDistance()){
-            if((selectedAutonRoutine==CENTER_LEFT)||(selectedAutonRoutine==CENTER_RIGHT)){
-                //CL - Added this since not sure if this is final action before stop or not
-
+    //handles init robot movement off of hab
+    private void stateActionInitMoveDistance(){
+        //wait for the robot to finish moving, and then go to the next state
+        if(!DriveTrain.isMovingDistance()) {
+            //if center selected, move forward off of vision if target detected, else just stop
+            if((selectedAutonRoutine == CENTER_LEFT) || (selectedAutonRoutine == CENTER_RIGHT)) {
                 if (SensorData.tapeDetected()) {
                     DriveTrain.moveToVisionTarget(Constants.kVisionPower);
                     currentAutonState = MOVE_VISION_TARGET;
+
                 } else {
                     currentAutonState = STOP;
+
                 }
 
+            //if rocket selected, begin to turn
             } else if (selectedAutonRoutine == RIGHT_ROCKET) {
                 DriveTrain.setTurnToTarget(Constants.kRocketTurnPower, Constants.kRocketTurnAngle);
                 currentAutonState = TURN_RIGHT;
@@ -132,15 +133,17 @@ public class AutoRoutine {
 
         } else{
             //Wait for move to complete
+
         }
     }
 
-    private void stateActionTurn() {
+    //handles turning in the direction of the rocket
+    private void stateActionInitRocketTurn() {
+        //when finished turning, continue to next state
         if(!DriveTrain.isTurning()) {
             if (selectedAutonRoutine == LEFT_ROCKET || selectedAutonRoutine == RIGHT_ROCKET) {
-                //Reached target angle but still turning due to inertia, give time to stop
-                setAutonDelay(0.5);
-                currentAutonState = AUTO_TURN_DELAY;
+                DriveTrain.setMoveDistance(Constants.kRocketSecondDistance, Constants.kRocketSecondPower);
+                currentAutonState = MOVE_DISTANCE_ROCKET;
 
             } else {
                 currentAutonState = STOP;
@@ -153,14 +156,16 @@ public class AutoRoutine {
         }
     }
 
-    private void stateMoveDistanceTarget() {
-        System.out.println("Is moving distance?" + DriveTrain.isMovingDistance());
+    //handles movement toward the rocket if dead reckoning was triggered
+    private void stateActionRocketDeadReckoningMovement() {
         if (!DriveTrain.isMovingDistance()) {
             if (!isWithinTargetRange) {
                 currentAutonState = STOP;
 
             } else {
-                currentAutonState = RELEASE_HATCH;
+                //TODO - handle autonomously placing hatch panels
+                //currentAutonState = RELEASE_HATCH;
+                currentAutonState = STOP;
 
             }
 
@@ -169,7 +174,8 @@ public class AutoRoutine {
         }
     }
 
-    private void stateBackFromTarget() {
+    //back away from the rocket
+    private void stateActionBackFromRocket() {
         if(!DriveTrain.isMovingDistance()) {
             currentAutonState = STOP;
 
@@ -179,33 +185,33 @@ public class AutoRoutine {
         }
     }
 
-    private void stateReleaseHatch() {
+    //autonomously releases the hatch and begins to back away
+    private void stateActionReleaseHatch() {
         Intake.setHatchState(true);
         DriveTrain.setMoveDistance(Constants.kBackupDistance, -Constants.kBackupPower);
         currentAutonState = BACK_TARGET;
+
     }
 
     private void stateActionMoveVisionTarget() {
+        //if center selected, and no longer following target, stop
         if (selectedAutonRoutine == CENTER_LEFT || selectedAutonRoutine == CENTER_RIGHT) {
             if (!DriveTrain.isFollowingTarget()) {
-                if (isWithinTargetRange) {
-                    currentAutonState = RELEASE_HATCH;
-                } else {
-                    currentAutonState = STOP;
-                    //TODO dead reckoning place on target
-                }
+                currentAutonState = STOP;
             }
 
+        //if rocket selected, and no longer following target, move forward ramming distance
         } else if (selectedAutonRoutine == LEFT_ROCKET || selectedAutonRoutine == RIGHT_ROCKET) {
             if (!DriveTrain.isFollowingTarget()) {
                 if (isWithinTargetRange) {
                     //ram that BOI
                     DriveTrain.setMoveDistance(Constants.kRammingDistance, Constants.kRammingPower);
                     currentAutonState = MOVE_DISTANCE_TARGET;
+
                 } else {
-                    //not within range, go forward a little bit
-                    //DriveTrain.setMoveDistance(Constants.kRocketDeadReckoningDistance, Constants.kRocketDeadReckoningPower);
+                    //not within range, lost target, stop
                     currentAutonState = STOP;
+
                 }
 
             } else {
@@ -215,9 +221,22 @@ public class AutoRoutine {
         }
     }
 
+    //after turn, move forward a little bit to straighten the robot out
+    private void stateActionRocketMoveDistance() {
+        if (!DriveTrain.isMovingDistance()) {
+            setAutonDelay(0.5);
+            currentAutonState = AUTO_TURN_DELAY;
+
+        } else {
+            //wait to finish move distance
+        }
+    }
+
+    //once we wait a small amount of time, continue
     private void stateAutoTurnDelay() {
         if(timer.get() >= alarmTime) {
-            if((selectedAutonRoutine == LEFT_ROCKET)||(selectedAutonRoutine == RIGHT_ROCKET)){
+            //if rocket and target found, track using vision, otherwise use dead reckoning state
+            if((selectedAutonRoutine == LEFT_ROCKET) || (selectedAutonRoutine == RIGHT_ROCKET)){
                 if (SensorData.tapeDetected()) {
                     DriveTrain.moveToVisionTarget(Constants.kVisionPower);
                     currentAutonState = MOVE_VISION_TARGET;
@@ -228,8 +247,6 @@ public class AutoRoutine {
                     currentAutonState = MOVE_DISTANCE_TARGET;
 
                 }
-
-                System.out.println("Moving to Vision Target");
 
             } else{
                 //Should never get here, but if we do Stop

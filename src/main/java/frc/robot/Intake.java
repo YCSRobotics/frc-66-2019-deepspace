@@ -24,10 +24,9 @@ public class Intake {
 
     private static boolean manualControl = true;
 
-    public Intake() {
-
-    }
-
+    /**
+     * Periodic code to update intake for cargo/hatch
+     */
     public void updateIntake() {
         double intakeIn = operatorController.getRawAxis(Constants.kLeftTrigger);
         double intakeOut = operatorController.getRawAxis(Constants.kRightTrigger);
@@ -65,11 +64,19 @@ public class Intake {
 
     }
 
+    /**
+     * Sets the wheel intake speed
+     * @param power -1.0 to 1.0
+     */
     public static void setIntakeState(double power) {
         intakeMotor.set(ControlMode.PercentOutput, power);
 
     }
 
+    /**
+     * Sets the hatch claw grabber to on/off
+     * @param state on/off
+     */
     public static void setHatchState(boolean state) {
         gearIntakeBoi.set(state);
     }

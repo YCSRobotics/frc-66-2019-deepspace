@@ -25,6 +25,8 @@ public class FourBarControl {
     private double fourBarPosition = 0.0;
     private double setPosition = 0.0;
 
+    private static boolean override = false;
+
     public FourBarControl() {
         //configure sensor boiz
 		fourBarMotorMaster.setSensorPhase(true);
@@ -49,7 +51,16 @@ public class FourBarControl {
         fourBarMotorMaster.setNeutralMode(NeutralMode.Brake);
     }
 
-    public void updateFourBarTeleop() {
+    /**
+     * Periodic method to update fourbar
+     */
+    public void updateFourBar() {
+        if (override) {
+            //maintain current position
+            fourBarMotorMaster.set(ControlMode.Position, setPosition);
+            return;
+        }
+
         double fourBarThrottle = -operatorController.getRawAxis(Constants.kRightYAxis);
         SmartDashboard.putNumber("Current Fourbar Output", fourBarMotorMaster.getMotorOutputPercent());
         SmartDashboard.putNumber("Operator Fourbar", fourBarThrottle);
@@ -71,9 +82,11 @@ public class FourBarControl {
         if (Math.abs(fourBarThrottle) > Constants.kFourBarDeadZone) {
             setPosition = fourBarPosition;
             fourBarMotorMaster.set(ControlMode.PercentOutput, fourBarThrottle);
+
         } else if (operatorController.getRawButton(Constants.kAButton)) {
             setPosition = Constants.kFourBarPos1;
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
+
         } else if (operatorController.getRawButton(Constants.kBButton)) {
             setPosition = Constants.kFourBarPos2;
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
@@ -81,6 +94,7 @@ public class FourBarControl {
         } else if (operatorController.getRawButton(Constants.kYButton)) {
             setPosition = Constants.kFourBarPos3;
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
+
         } else {
             fourBarMotorMaster.set(ControlMode.Position, setPosition);
         }
@@ -90,6 +104,10 @@ public class FourBarControl {
 
     public static double getFourBarPosition() {
         return fourBarMotorMaster.getSelectedSensorPosition(0);
+    }
+
+    public static void setOverride(boolean state) {
+        override = state;
     }
 
 

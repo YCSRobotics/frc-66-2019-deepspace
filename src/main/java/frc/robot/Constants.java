@@ -22,6 +22,9 @@ public class Constants {
     public static final int kElevatorMotor = 4;
     public static final int kFourBarMotor = 5;
     public static final int kIntakeMotor = 6;
+    public static final int kClimberMotor = 7;
+    public static final int kPullMotor = 8;
+
     public static final boolean kInvertRightMotor = false;
     public static final boolean kInvertLeftMotor = true;
     public static final int kInvertRightMotorMultiplier = -1;
@@ -68,6 +71,7 @@ public class Constants {
     //solenoids
     public static final int kShifterSolenoid = 0;
     public static final int kGearIntakeSolenoid = 1;
+    public static final int kClimberSolenoid = 2;
     public static final double kIntakeSlowMaxSpeed = 0.1;
 
     //elevator
@@ -94,7 +98,7 @@ public class Constants {
     public static final double kSkimGain = 0.15;
     public static final double kDriveSpeed = 0.5;
     public static final double kTurnGain = 0.6;
-    public static final double kTurnFinesseGain = 0.4;
+    public static final double kTurnFinesseGain = 0.5;
 
     public static final double kVisionGain = 0.7;
     public static final double kTurnVisionGain = 0.6;
@@ -106,30 +110,31 @@ public class Constants {
     public static final int kCenterGoStraightInitDistance = 140;
     public static final double kCenterGoStraightInitPower = 0.4;
 
-    public static final int kRocketInitDistance = 30;
-    public static final double kRocketInitPower = 0.3;
+    public static final int kRocketInitDistance = 70;
+    public static final double kRocketInitPower = 0.42;
 
     public static final double kVisionPower = 0.3;
 
     public static final int kRocketTurnAngle = 30;
     public static final double kRocketTurnPower = 0.3;
 
+    public static final double kRocketSecondDistance = 50;
+    public static final double kRocketSecondPower = 0.3;
+
     public static final int kBackupDistance = 30;
     public static final double kBackupPower = 0.5;
 
-    public static final int kRammingDistance = 60;
+    public static final int kRammingDistance = 30;
     public static final double kRammingPower = 0.3;
 
     public static final int kRocketDeadReckoningDistance = 60;
     public static final double kRocketDeadReckoningPower = 0.3;
 
-    public static final String kVisionCam = "http://10.0.66.12:1181/stream.mjpg";
+    public static final String kVisionCam = "10.0.66.12:1182/stream.mjpg";
     public static final double kTargetDistanceThreshold = 6.0;
 
     //sensor constants
-    public static final double kUltrasonicRatio = 0.977;
-    public static final double kMillimeterToInches = 25.4;
-    public static final double kUltrasonicRange = 0.5;
-    public static final double kUltrasonicAlignGain = 0.06;
+    public static final double kInfaredRange = 0.35;
+    public static final double kInfaredAlignGain = 0.6;
 
 }

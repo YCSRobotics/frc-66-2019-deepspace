@@ -29,6 +29,8 @@ public class ElevatorControl {
     
     private boolean isOffsetPressed = false;
 
+    private boolean override = false;
+
     public ElevatorControl() {
         //configure sensor boiz
 		liftMotor.setSensorPhase(true);
@@ -50,7 +52,16 @@ public class ElevatorControl {
 
     }
 
-    public void updateLiftTeleop() {
+    /**
+     * Periodic method to update the elevator
+     */
+    public void updateLift() {
+
+        //being overriden, don't do normal control
+        if (override) {
+            return;
+        }
+
         double liftThrottle = -operatorController.getRawAxis(Constants.kLeftYAxis);
         liftPosition = getLiftPosition();
 
@@ -67,7 +78,6 @@ public class ElevatorControl {
                 liftMotor.set(ControlMode.Position, setElevatorPosition);
 
             }
-
         } else if (operatorController.getRawButton(Constants.kAButton)) {
             setElevatorPosition = Constants.kElevatorPos1;
             isOffsetPressed = false;
@@ -90,6 +100,18 @@ public class ElevatorControl {
 
     }
 
+    public static void setLiftPower(double power) {
+        liftMotor.set(ControlMode.PercentOutput, power);
+    }
+
+    public static void setLiftPosition(double position) {
+        liftMotor.set(ControlMode.Position, position);
+    }
+
+    /**
+     * Retrieves the current lift position
+     * @return double Gets the current lift position in [counts]
+     */
     public static double getLiftPosition() {
         return liftMotor.getSelectedSensorPosition(0);
     }

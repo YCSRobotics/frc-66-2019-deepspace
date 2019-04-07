@@ -24,7 +24,8 @@ public class Robot extends TimedRobot {
   private FourBarControl fourBarControl = new FourBarControl();
   private Intake intake = new Intake();
   private ElevatorControl elevatorControl = new ElevatorControl();
-  private CameraTurret turret = new CameraTurret();
+  private Camera camera = new Camera();
+  private Climber climber = new Climber();
 
   private String m_autonSelected = kDefaultAuto;
   private SendableChooser<String> m_chooser = new SendableChooser<>();
@@ -46,7 +47,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     dashboard.updateDiagDashboard();
-    dashboard.updateDriverDashboard();
 
   }
 
@@ -85,10 +85,9 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     autonomous.updateAutoRoutine();
     driveTrain.updateDrivetrain();
-    fourBarControl.updateFourBarTeleop();
-    elevatorControl.updateLiftTeleop();
+    fourBarControl.updateFourBar();
+    elevatorControl.updateLift();
     intake.updateIntake();
-    turret.updateCameraTurretTeleop();
 
   }
 
@@ -101,10 +100,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveTrain.updateDrivetrain();
-    fourBarControl.updateFourBarTeleop();
-    elevatorControl.updateLiftTeleop();
+    fourBarControl.updateFourBar();
+    elevatorControl.updateLift();
     intake.updateIntake();
-    turret.updateCameraTurretTeleop();
+    climber.updateClimber();
 
   }
 

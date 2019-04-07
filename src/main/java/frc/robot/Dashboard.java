@@ -10,13 +10,10 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Grizzly Robotics Dashboard Class
- * Handles creation of Shuffleboard UI
+ * Grizzly Robotics Dashboard Class - Handles creation of Shuffleboard UI
  */
-
 public class Dashboard {
 
     //driverdisplay tab keys
@@ -100,9 +97,12 @@ public class Dashboard {
                                     .withWidget("Text View")
                                     .getEntry();
 
-    public Dashboard() {
-
-    }
+    public static NetworkTableEntry climberReady = driverDisplayTab
+                                    .add("Climber Ready?", false)
+                                    .withWidget("Boolean Box")
+                                    .withSize(1, 1)
+                                    .withPosition(0, 1)
+                                    .getEntry();
 
     public void updateDiagDashboard() {
         Shuffleboard.selectTab("DriverDisplay");
@@ -125,13 +125,8 @@ public class Dashboard {
         tapeDistance.setNumber(SensorData.distanceToVisionTarget());
         tapeYaw.setNumber(SensorData.angleToVisionTarget());
 
-        leftUltraDistance.setNumber(SensorData.getLeftUltraDistance());
-        rightUltraDistance.setNumber(SensorData.getRightUltraDistance());
+        leftUltraDistance.setNumber(SensorData.getLeftIRDistance());
+        rightUltraDistance.setNumber(SensorData.getRightIRDistance());
 
     }
-
-    public void updateDriverDashboard() {
-
-    }
-  
 }
