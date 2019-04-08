@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
@@ -100,13 +101,26 @@ public class Dashboard {
     public static NetworkTableEntry climberReady = driverDisplayTab
                                     .add("Climber Ready?", false)
                                     .withWidget("Boolean Box")
-                                    .withSize(1, 1)
+                                    .withSize(2, 1)
                                     .withPosition(0, 1)
                                     .getEntry();
+
+    public static NetworkTableEntry matchTime = driverDisplayTab
+                                    .add("Current Match Time", 0.0)
+                                    .withWidget("Text Box")
+                                    .withSize(2, 1)
+                                    .withPosition(0, 2)
+                                    .getEntry();
+
+    public static NetworkTableEntry wenchPosition = driverDisplayTab
+            .add("Climber Position", 0.0)
+            .withWidget("Text Box")
+            .getEntry();
 
     public void updateDiagDashboard() {
         Shuffleboard.selectTab("DriverDisplay");
 
+        matchTime.setNumber(DriverStation.getInstance().getMatchTime());
         navYawKey.setNumber(SensorData.getYaw());
         navPitchKey.setNumber(SensorData.getPitch());
         navRollKey.setNumber(SensorData.getRoll());
@@ -127,6 +141,8 @@ public class Dashboard {
 
         leftUltraDistance.setNumber(SensorData.getLeftIRDistance());
         rightUltraDistance.setNumber(SensorData.getRightIRDistance());
+
+        wenchPosition.setNumber(Climber.getWenchPosition());
 
     }
 }

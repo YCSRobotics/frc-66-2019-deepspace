@@ -29,7 +29,7 @@ public class ElevatorControl {
     
     private boolean isOffsetPressed = false;
 
-    private boolean override = false;
+    private static boolean override = false;
 
     public ElevatorControl() {
         //configure sensor boiz
@@ -59,6 +59,7 @@ public class ElevatorControl {
 
         //being overriden, don't do normal control
         if (override) {
+
             return;
         }
 
@@ -116,5 +117,8 @@ public class ElevatorControl {
         return liftMotor.getSelectedSensorPosition(0);
     }
 
+    public static void setOverride(boolean state) {
+        override = state;
+    }
 
 }

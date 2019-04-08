@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber {
     private static TalonSRX backWenchMotor = new TalonSRX(Constants.kClimberMotor);
@@ -16,23 +17,37 @@ public class Climber {
     private static Joystick driverJoystick = DriveTrain.driverController;
     private static Joystick operatorJoystick = DriveTrain.operatorController;
 
-    private static final int kFirstWenchPosition = 0;
-    private static final int kSecondWenchPosition = 0;
-    private static final int kThirdWenchPosition = 0;
-
-    private static final int kFirstElevatorPosition = 0;
-    private static final int kSecondElevatorPosition = 0;
-    private static final int kThirdElevatorPosition = 0;
+    private static final int kElevatorMaxPosition = 20000;
+    private static final int kClimberDeployPosition = 14000;
 
     private static double wenchPosition = 0.0;
     private static double elevatorPosition = 0.0;
 
     private static boolean climberActive = false;
 
+    private static double kClimberIncrementValueLevel3 = 50;
+    private static double kElevatorIncrementValueLevel3 = 25;
+
+    private static double kClimberIncrementValueLevel2 = 50;
+    private static double kElevatorIncrementValueLevel2 = 50;
+
+    private static double climbValue = 50;
+    private static double elevatorValue = 50;
+
     public Climber() {
         backWenchMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         frontPullMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 
+        //Zero sensor position on initialization
+        backWenchMotor.setSelectedSensorPosition(0);
+
+        backWenchMotor.setSensorPhase(true);
+
+        backWenchMotor.selectProfileSlot(0, 0);
+        backWenchMotor.config_kP(0, 1.0, 10);
+        backWenchMotor.config_kI(0, 0, 10);
+        backWenchMotor.config_kD(0, 0, 10);
+        backWenchMotor.config_kF(0, 0, 10);
     }
 
     public void updateClimber() {
@@ -47,24 +62,60 @@ public class Climber {
         }
 
         var throttle = driverJoystick.getRawAxis(Constants.kRightYAxis);
+        var throttleClimb = driverJoystick.getRawAxis(Constants.kLeftYAxis);
 
-        if (operatorJoystick.getRawButton(Constants.kBButton) && !climberActive) {
-            climberSolenoid.set(true);
+        //activate climber for level 3
+        if (driverJoystick.getRawButton(Constants.kLeftBumper) && !climberActive) {
+            climbValue = kClimberIncrementValueLevel3;
+            elevatorValue = kElevatorIncrementValueLevel3;
 
-            climberActive = true;
+            enableClimber();
 
-            //disable fourbar output
-            FourBarControl.setOverride(true);
+        //activate climber for level 2
+        } else if (driverJoystick.getRawButton(Constants.kRightBumper) && !climberActive) {
+            climbValue = kClimberIncrementValueLevel2;
+            elevatorValue = kElevatorIncrementValueLevel2;
 
-            elevatorPosition = ElevatorControl.getLiftPosition();
-            wenchPosition = backWenchMotor.getSelectedSensorPosition(0);
+            enableClimber();
+
         }
 
-        backWenchMotor.set(ControlMode.Position, wenchPosition += 500);
-        ElevatorControl.setLiftPosition(elevatorPosition -= 500);
+        if (!climberActive) {
+            return;
+        }
 
-        if (throttle > Constants.kDeadZone) {
+        SmartDashboard.putNumber("Wench Power", wenchPosition);
+        if (Math.abs(throttleClimb) > Constants.kDeadZone + 0.3 && backWenchMotor.getSelectedSensorPosition() < kElevatorMaxPosition) {
+            backWenchMotor.set(ControlMode.Position, wenchPosition += climbValue);
+            //ElevatorControl.setLiftPosition(elevatorPosition -= elevatorValue);
+
+        } else {
+            System.out.println("Setting wench position to: " + wenchPosition);
+            backWenchMotor.set(ControlMode.Position, wenchPosition);
+            //ElevatorControl.setLiftPosition(elevatorPosition);
+        }
+
+        if (Math.abs(throttle) > Constants.kDeadZone) {
             frontPullMotor.set(ControlMode.PercentOutput, throttle);
         }
+    }
+
+    public static double getWenchPosition() {
+        return backWenchMotor.getSelectedSensorPosition(0);
+    }
+
+    private static void enableClimber() {
+        System.out.println("Set override!");
+
+        climberSolenoid.set(true);
+        climberActive = true;
+
+        wenchPosition = kClimberDeployPosition;
+
+        //disable robot outputs
+        //FourBarControl.setOverride(true);
+        ElevatorControl.setOverride(true);
+        DriveTrain.setOverride(true);
+
     }
 }
