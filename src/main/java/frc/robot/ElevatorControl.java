@@ -56,7 +56,6 @@ public class ElevatorControl {
      * Periodic method to update the elevator
      */
     public void updateLift() {
-
         //being overriden, don't do normal control
         if (override) {
 

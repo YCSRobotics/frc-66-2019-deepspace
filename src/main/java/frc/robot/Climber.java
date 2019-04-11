@@ -17,7 +17,7 @@ public class Climber {
     private static Joystick driverJoystick = DriveTrain.driverController;
     private static Joystick operatorJoystick = DriveTrain.operatorController;
 
-    private static final int kElevatorMaxPosition = 20000;
+    private static final int kClimbMaxPosition = 20000;
     private static final int kClimberDeployPosition = 14000;
 
     private static double wenchPosition = 0.0;
@@ -26,7 +26,7 @@ public class Climber {
     private static boolean climberActive = false;
 
     private static double kClimberIncrementValueLevel3 = 50;
-    private static double kElevatorIncrementValueLevel3 = 25;
+    private static double kElevatorIncrementValueLevel3 = 135;
 
     private static double kClimberIncrementValueLevel2 = 50;
     private static double kElevatorIncrementValueLevel2 = 50;
@@ -44,7 +44,7 @@ public class Climber {
         backWenchMotor.setSensorPhase(true);
 
         backWenchMotor.selectProfileSlot(0, 0);
-        backWenchMotor.config_kP(0, 1.0, 10);
+        backWenchMotor.config_kP(0, 1.2, 10);
         backWenchMotor.config_kI(0, 0, 10);
         backWenchMotor.config_kD(0, 0, 10);
         backWenchMotor.config_kF(0, 0, 10);
@@ -52,6 +52,7 @@ public class Climber {
 
     public void updateClimber() {
         //climber should not be deployed before 30s
+        /*
         if (DriverStation.getInstance().getMatchTime() > 30) {
             Dashboard.climberReady.setBoolean(false);
             return;
@@ -59,11 +60,13 @@ public class Climber {
         } else {
             Dashboard.climberReady.setBoolean(true);
 
-        }
+        }*/
 
         var throttle = driverJoystick.getRawAxis(Constants.kRightYAxis);
-        var throttleClimb = driverJoystick.getRawAxis(Constants.kLeftYAxis);
+        var throttleClimbForward = driverJoystick.getRawButton(Constants.kRightBumper);
+        var throttleClimbBackward = driverJoystick.getRawButton(Constants.kLeftBumper);
 
+        /*
         //activate climber for level 3
         if (driverJoystick.getRawButton(Constants.kLeftBumper) && !climberActive) {
             climbValue = kClimberIncrementValueLevel3;
@@ -83,21 +86,42 @@ public class Climber {
         if (!climberActive) {
             return;
         }
+        */
 
+        SmartDashboard.putNumber("Elevator Current Position: " , ElevatorControl.getLiftPosition());
+        SmartDashboard.putNumber("Elevator Set Position", elevatorPosition);
+
+        if (throttleClimbForward) {
+            wenchPosition += climbValue;
+            backWenchMotor.set(ControlMode.Position, wenchPosition);
+        } else if (throttleClimbBackward) {
+            wenchPosition -= climbValue;
+            backWenchMotor.set(ControlMode.Position, wenchPosition);
+        } else {
+            backWenchMotor.set(ControlMode.Position, wenchPosition);
+        }
+
+        /*
         SmartDashboard.putNumber("Wench Power", wenchPosition);
-        if (Math.abs(throttleClimb) > Constants.kDeadZone + 0.3 && backWenchMotor.getSelectedSensorPosition() < kElevatorMaxPosition) {
+        if (Math.abs(throttleClimb) > Constants.kDeadZone + 0.3 && backWenchMotor.getSelectedSensorPosition() < kClimbMaxPosition) {
             backWenchMotor.set(ControlMode.Position, wenchPosition += climbValue);
-            //ElevatorControl.setLiftPosition(elevatorPosition -= elevatorValue);
+
+            if (backWenchMotor.getSelectedSensorPosition() < kClimbMaxPosition - 3000) {
+                ElevatorControl.setLiftPosition(elevatorPosition -= elevatorValue);
+            } else {
+                ElevatorControl.setLiftPosition(elevatorPosition);
+            }
 
         } else {
             System.out.println("Setting wench position to: " + wenchPosition);
             backWenchMotor.set(ControlMode.Position, wenchPosition);
-            //ElevatorControl.setLiftPosition(elevatorPosition);
+            ElevatorControl.setLiftPosition(elevatorPosition);
         }
 
         if (Math.abs(throttle) > Constants.kDeadZone) {
             frontPullMotor.set(ControlMode.PercentOutput, throttle);
         }
+        */
     }
 
     public static double getWenchPosition() {
@@ -111,11 +135,12 @@ public class Climber {
         climberActive = true;
 
         wenchPosition = kClimberDeployPosition;
+        elevatorPosition = ElevatorControl.getLiftPosition();
 
         //disable robot outputs
         //FourBarControl.setOverride(true);
-        ElevatorControl.setOverride(true);
-        DriveTrain.setOverride(true);
+        //ElevatorControl.setOverride(true);
+        //DriveTrain.setOverride(true);
 
     }
 }
