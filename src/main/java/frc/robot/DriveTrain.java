@@ -47,8 +47,8 @@ public class DriveTrain {
     private static boolean isTurning = false;
     private static boolean isFollowingTarget = false;
 
-    private static double throttleValue;
-    private static double turnValue;
+    public static double throttleValue;
+    public static double turnValue;
 
     private static double targetDistance;
     private static double turnAngle;
@@ -101,8 +101,9 @@ public class DriveTrain {
 
         SmartDashboard.putNumber("turnValue", turnValue);
 
-        //do nothing climber active
-        if(override) {
+        if (override) {
+            calculateMotorOutputs(throttleValue, turnValue);
+            setMotorOutput(leftOutput, rightOutput);
             return;
         }
 
@@ -338,6 +339,7 @@ public class DriveTrain {
      * @param turn -1.0 to 1.0 turn value
      */
     private void calculateMotorOutputs(double throttle, double turn){
+        //being overriden by climber
         leftOutput = throttle + turn;
         rightOutput = throttle - turn;
 

@@ -22,8 +22,8 @@ import edu.wpi.first.wpilibj.SPI;
 public class SensorData {
     private static AHRS navSensor = new AHRS(SPI.Port.kMXP, (byte) 100);
 
-    private static AnalogInput leftUltraSensor = new AnalogInput(0);
-    private static AnalogInput rightUltraSensor = new AnalogInput(1);
+    private static AnalogInput leftUltraSensor = new AnalogInput(Constants.kLeftUltraSensor);
+    private static AnalogInput rightUltraSensor = new AnalogInput(Constants.kRightUltraSensor);
 
     private static DigitalInput bannerSensor = new DigitalInput(2);
 

@@ -41,6 +41,9 @@ public class Constants {
     public static final double kEncoderDelta = 1;
     public static final int kEncoderFaultThreshold = 25; // .5/.02 = 25
 
+    public static final int kLeftUltraSensor = 0;
+    public static final int kRightUltraSensor = 1;
+
     //joystick constants
     public final static int kDriverController = 0;
     public final static int kOperatorController = 1;
@@ -110,7 +113,7 @@ public class Constants {
     public static final int kCenterGoStraightInitDistance = 140;
     public static final double kCenterGoStraightInitPower = 0.4;
 
-    public static final int kRocketInitDistance = 70;
+    public static final int kRocketInitDistance = 50;
     public static final double kRocketInitPower = 0.42;
 
     public static final double kVisionPower = 0.3;
