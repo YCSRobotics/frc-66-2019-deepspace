@@ -16,7 +16,8 @@ public class Climber {
 
     private static Joystick driverJoystick = DriveTrain.driverController;
 
-    private static final int kClimbMaxPosition = 20000;
+    private static int kClimbMaxPosition = 20500;
+    private static final int kClimbMaxPositionSecond = 17500;
     private static final int kClimberDeployPosition = 14000;
 
     private static final int kElevatorClimbOffset = 1000;
@@ -30,11 +31,12 @@ public class Climber {
     private static boolean stopElevator = false;
 
     private static boolean climberActive = false;
+    private static boolean wenchDisabled = false;
 
     private static double kClimberIncrementValueLevel3 = 50;
-    private static double kElevatorIncrementValueLevel3 = 110;
+    private static double kElevatorIncrementValueLevel3 = 135;
 
-    private static double kClimberIncrementValueLevel2 = 50;
+    private static double kClimberIncrementValueLevel2 = 150;
     private static double kElevatorIncrementValueLevel2 = 50;
 
     private static double climbValue = 50;
@@ -82,6 +84,7 @@ public class Climber {
         } else if (climbLevelTwo && !climberActive) {
             climbValue = kClimberIncrementValueLevel2;
             elevatorValue = kElevatorIncrementValueLevel2;
+            kClimbMaxPosition = kClimbMaxPositionSecond;
 
             enableClimber();
 
@@ -129,13 +132,18 @@ public class Climber {
             }
 
         } else {
+            if (driverJoystick.getPOV() == 0 && !wenchDisabled) {
+                wenchPosition = wenchPosition - 1000;
+                wenchDisabled = !wenchDisabled;
+            }
+
             backWenchMotor.set(ControlMode.Position, wenchPosition);
             ElevatorControl.setLiftPosition(elevatorPosition);
         }
 
         if (Math.abs(throttle) > Constants.kDeadZone) {
-            frontPullMotor.set(ControlMode.PercentOutput, throttle);
-            DriveTrain.throttleValue = throttle * Constants.kDriveSpeed;
+            frontPullMotor.set(ControlMode.PercentOutput, -throttle);
+            DriveTrain.throttleValue = -(throttle * Constants.kDriveSpeed);
         } else {
             DriveTrain.throttleValue = 0;
             frontPullMotor.set(ControlMode.PercentOutput, 0);
