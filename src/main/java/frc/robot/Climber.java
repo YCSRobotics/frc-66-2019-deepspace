@@ -17,11 +17,13 @@ public class Climber {
     private static Joystick driverJoystick = DriveTrain.driverController;
 
     private static int kClimbMaxPosition = 20500;
-    private static final int kClimbMaxPositionSecond = 17500;
+    private static final int kClimbMaxPositionSecond = 16500;
     private static final int kClimberDeployPosition = 14000;
 
     private static final int kElevatorClimbOffset = 1000;
 
+    private static final int kBackDriveDistance = 5000;
+    
     private static final int kDeployRange = 600;
 
     private static double wenchPosition = 0.0;
@@ -133,7 +135,7 @@ public class Climber {
 
         } else {
             if (driverJoystick.getPOV() == 0 && !wenchDisabled) {
-                wenchPosition = wenchPosition - 1000;
+                wenchPosition = wenchPosition - kBackDriveDistance;
                 wenchDisabled = !wenchDisabled;
             }
 
