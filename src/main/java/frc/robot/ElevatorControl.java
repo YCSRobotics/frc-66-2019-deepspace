@@ -120,4 +120,7 @@ public class ElevatorControl {
         override = state;
     }
 
+    public static boolean bottomLimit() {
+        return liftMotor.getSensorCollection().isRevLimitSwitchClosed();
+    }
 }

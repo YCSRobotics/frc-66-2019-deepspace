@@ -16,13 +16,9 @@ public class Climber {
 
     private static Joystick driverJoystick = DriveTrain.driverController;
 
-    private static int kClimbMaxPosition = 20500;
-    private static final int kClimbMaxPositionSecond = 16500;
-    private static final int kClimberDeployPosition = 14000;
-
     private static final int kElevatorClimbOffset = 1000;
 
-    private static final int kBackDriveDistance = 5000;
+    private static final int kBackDriveDistance = 7000;
     
     private static final int kDeployRange = 600;
 
@@ -35,14 +31,22 @@ public class Climber {
     private static boolean climberActive = false;
     private static boolean wenchDisabled = false;
 
+    //rates for level three
     private static double kClimberIncrementValueLevel3 = 50;
-    private static double kElevatorIncrementValueLevel3 = 135;
+    private static double kElevatorIncrementValueLevel3 = 78;
 
-    private static double kClimberIncrementValueLevel2 = 150;
-    private static double kElevatorIncrementValueLevel2 = 50;
+    //rates for level two
+    private static double kClimberIncrementValueLevel2 = 45;
+    private static double kElevatorIncrementValueLevel2 = 350;
+
+    private static int kClimbMaxPosition = 24500;
+    private static final int kClimbMaxPositionSecond = 17000;
+    private static final int kClimberDeployPosition = 15000;
 
     private static double climbValue = 50;
     private static double elevatorValue = 50;
+
+    private static boolean stopElevatorTrigger = false;
 
     public Climber() {
         backWenchMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
@@ -62,7 +66,7 @@ public class Climber {
 
     public void updateClimber() {
         //climber should not be deployed before 30s
-        if (DriverStation.getInstance().getMatchTime() > 30) {
+        if (DriverStation.getInstance().getMatchTime() > 45) {
             Dashboard.climberReady.setBoolean(false);
             return;
 
@@ -122,6 +126,13 @@ public class Climber {
         }
 
         SmartDashboard.putNumber("Wench Power", wenchPosition);
+
+        if (ElevatorControl.bottomLimit() && !stopElevatorTrigger) {
+            elevatorPosition = ElevatorControl.getLiftPosition() + 80;
+            stopElevatorTrigger = true;
+            stopElevator = true;
+        }
+
         if ((climbLevelTwo || climbLevelThree) && backWenchMotor.getSelectedSensorPosition() < kClimbMaxPosition) {
             if (hasDeployed) {
                 backWenchMotor.set(ControlMode.Position, wenchPosition += climbValue);

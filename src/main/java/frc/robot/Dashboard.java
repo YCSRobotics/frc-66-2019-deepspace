@@ -117,6 +117,11 @@ public class Dashboard {
             .withWidget("Text Box")
             .getEntry();
 
+    public static NetworkTableEntry bottomLimitSwitch = driverDisplayTab
+            .add("Bottom Limit Switch", false)
+            .withWidget("Text Box")
+            .getEntry();
+
     public void updateDiagDashboard() {
         Shuffleboard.selectTab("DriverDisplay");
 
@@ -143,6 +148,7 @@ public class Dashboard {
         rightUltraDistance.setNumber(SensorData.getRightIRDistance());
 
         wenchPosition.setNumber(Climber.getWenchPosition());
+        bottomLimitSwitch.setBoolean(ElevatorControl.bottomLimit());
 
     }
 }
