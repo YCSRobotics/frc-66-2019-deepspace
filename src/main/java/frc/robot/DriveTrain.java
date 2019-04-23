@@ -369,23 +369,23 @@ public class DriveTrain {
     //sets the target for autonomous motion
     public static void setMoveDistance(double distance, double throttle){
         SensorData.resetYaw();
-        
+
         leftMaster.setSelectedSensorPosition(0, 0, 0);
-		rightMaster.setSelectedSensorPosition(0, 0, 0);
-		
-        
+        rightMaster.setSelectedSensorPosition(0, 0, 0);
+
+
         targetDistance = distance;
-		
-		enableDrivetrainDynamicBraking(true);
-		
-		if(Math.abs(targetDistance) > Constants.kTargetDistanceThreshold) {
-    		isMovingDistance = true;
-    		throttleValue = throttle;
-		}
-    	else {
-    		isMovingDistance = false;
-    		throttleValue = 0.0;
-    	}
+
+        enableDrivetrainDynamicBraking(true);
+
+        if(Math.abs(targetDistance) > Constants.kTargetDistanceThreshold) {
+            isMovingDistance = true;
+            throttleValue = throttle;
+        }
+        else {
+            isMovingDistance = false;
+            throttleValue = 0.0;
+        }
     }
     
     //set drivetrain variables to begin following via vision

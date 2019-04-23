@@ -49,10 +49,7 @@ public class Climber {
 
     private static boolean stopElevatorTrigger = false;
     private static double kElevatorBackDistance = 3000;
-    private static boolean secondaryClimberDeploy = false;
 
-    private static boolean prevClimbButtonPressed = false;
-    private static boolean finalClimbState = false;
 
     public Climber() {
         backWenchMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
@@ -85,21 +82,10 @@ public class Climber {
         var climbLevelTwo = driverJoystick.getRawButton(Constants.kRightBumper);
         var climbLevelThree = driverJoystick.getRawButton(Constants.kLeftBumper);
 
-        if (Math.abs(throttle) > Constants.kDeadZone) {
-            frontPullMotor.set(ControlMode.PercentOutput, -throttle);
-            DriveTrain.throttleValue = -(throttle * Constants.kDriveSpeed);
-        } else {
-            DriveTrain.throttleValue = 0;
-            frontPullMotor.set(ControlMode.PercentOutput, 0);
-        }
-
-        if ((climbLevelThree || climbLevelTwo)) {
-            prevClimbButtonPressed = true;
-        } else {
-            prevClimbButtonPressed = false;
-        }
+        handleDrivetrain(throttle);
 
         //activate climber for level 3
+        //set our various values, and then update positions
         if (climbLevelThree && !climberActive) {
             climbValue = kClimberIncrementValueLevel3;
             elevatorValue = kElevatorIncrementValueLevel3;
@@ -122,15 +108,18 @@ public class Climber {
             return;
         }
 
+        //deploy our climber
         climberSolenoid.set(true);
 
-        if ((backWenchMotor.getSelectedSensorPosition() > wenchPosition - kDeployRange) && (climbLevelTwo || climbLevelThree) && !hasDeployed) {
-            secondaryClimberDeploy = true;
+        //are we deployed, and should we disable elevator control?
+        if ((backWenchMotor.getSelectedSensorPosition() > wenchPosition - kDeployRange) &&
+           ((climbLevelTwo || climbLevelThree) && !hasDeployed)) {
             ElevatorControl.setOverride(true);
             enableClimber();
-            System.out.println("Enabled override");
+
             hasDeployed = true;
 
+        //user hasn't pressed wench button again and/or we haven't hit our deploy target
         } else if (!hasDeployed) {
             backWenchMotor.set(ControlMode.Position, wenchPosition);
             return;
@@ -139,41 +128,37 @@ public class Climber {
             //continue, we have deployed
         }
 
+        //debug information
         SmartDashboard.putNumber("Elevator Current Position: " , ElevatorControl.getLiftPosition());
         SmartDashboard.putNumber("Elevator Set Position", elevatorPosition);
-
-        /* //manual climb control
-        if (throttleClimbForward) {
-            wenchPosition += climbValue;
-            backWenchMotor.set(ControlMode.Position, wenchPosition);
-        } else if (throttleClimbBackward) {
-            wenchPosition -= climbValue;
-            backWenchMotor.set(ControlMode.Position, wenchPosition);
-        } else {
-            backWenchMotor.set(ControlMode.Position, wenchPosition);
-        }*/
-
-        DriveTrain.turnValue = 0;
-
-        if (backWenchMotor.getSelectedSensorPosition() > kClimbMaxPosition - kElevatorClimbOffset) {
-            stopElevator = true;
-        }
-
         SmartDashboard.putNumber("Wench Power", wenchPosition);
 
-        if (ElevatorControl.bottomLimit() && !stopElevatorTrigger) {
+        //disables the elevator if limit switch is hit, back off a limit bit
+        if ((ElevatorControl.bottomLimit() && !stopElevator)) {
             elevatorPosition = ElevatorControl.getLiftPosition() + 80;
-            stopElevatorTrigger = true;
             stopElevator = true;
+
+        //disable the elevator if wench hits target
+        } else if ((backWenchMotor.getSelectedSensorPosition() > kClimbMaxPosition - kElevatorClimbOffset) && !stopElevator) {
+            stopElevator = true;
+
+        } else {
+            //continue with our code
         }
 
+        //back off the wench
         if (driverJoystick.getPOV() == 0 && !wenchDisabled) {
             wenchPosition = wenchPosition - backDriveDistance;
             wenchDisabled = !wenchDisabled;
             elevatorPosition = ElevatorControl.getLiftPosition() + kElevatorBackDistance;
+
+        } else {
+            //back off was already pressed, or never pressed
         }
 
+        //if button is pressed and we aren't on our wench target
         if ((climbLevelTwo || climbLevelThree) && backWenchMotor.getSelectedSensorPosition() < kClimbMaxPosition) {
+            //only go if we have deployed, prevent the values from skyrocketing waiting for deploy to finish
             if (hasDeployed) {
                 backWenchMotor.set(ControlMode.Position, wenchPosition += climbValue);
 
@@ -185,6 +170,7 @@ public class Climber {
             }
 
         } else {
+            //hold position control
             backWenchMotor.set(ControlMode.Position, wenchPosition);
             ElevatorControl.setLiftPosition(elevatorPosition);
         }
@@ -203,9 +189,19 @@ public class Climber {
         elevatorPosition = ElevatorControl.getLiftPosition();
 
         //disable robot outputs
-        //FourBarControl.setOverride(true);
-        //ElevatorControl.setOverride(true);
+        FourBarControl.setOverride(true);
         DriveTrain.setOverride(true);
+        DriveTrain.turnValue = 0;
 
+    }
+
+    private void handleDrivetrain(double throttle) {
+        if (Math.abs(throttle) > Constants.kDeadZone) {
+            frontPullMotor.set(ControlMode.PercentOutput, -throttle);
+            DriveTrain.throttleValue = -(throttle * Constants.kDriveSpeed);
+        } else {
+            DriveTrain.throttleValue = 0;
+            frontPullMotor.set(ControlMode.PercentOutput, 0);
+        }
     }
 }
