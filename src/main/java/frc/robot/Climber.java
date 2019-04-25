@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber {
-    private static TalonSRX backWenchMotor = new TalonSRX(Constants.kClimberMotor);
+    public static TalonSRX backWenchMotor = new TalonSRX(Constants.kClimberMotor);
     private static TalonSRX frontPullMotor = new TalonSRX(Constants.kPullMotor);
 
     private static Solenoid climberSolenoid = new Solenoid(Constants.kClimberSolenoid);
@@ -34,15 +34,15 @@ public class Climber {
 
     //rates for level three
     private static double kClimberIncrementValueLevel3 = 50;
-    private static double kElevatorIncrementValueLevel3 = 78;
+    private static double kElevatorIncrementValueLevel3 = 95;
 
     //rates for level two
     private static double kClimberIncrementValueLevel2 = 50;
-    private static double kElevatorIncrementValueLevel2 = 200;
+    private static double kElevatorIncrementValueLevel2 = 225;
 
-    private static int kClimbMaxPosition = 24500;
-    private static final int kClimbMaxPositionSecond = 17000;
-    private static final int kClimberDeployPosition = 15000;
+    private static int kClimbMaxPosition = 26000;
+    private static final int kClimbMaxPositionSecond = 18200;
+    private static final int kClimberDeployPosition = 16000;
 
     private static double climbValue = 50;
     private static double elevatorValue = 50;
@@ -108,8 +108,11 @@ public class Climber {
             return;
         }
 
-        //deploy our climber
-        climberSolenoid.set(true);
+        if (climberActive) {
+            //deploy our climber
+            climberSolenoid.set(true);
+            FourBarControl.setPosition = 450;
+        }
 
         //are we deployed, and should we disable elevator control?
         if ((backWenchMotor.getSelectedSensorPosition() > wenchPosition - kDeployRange) &&

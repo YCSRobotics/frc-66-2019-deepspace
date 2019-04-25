@@ -23,7 +23,7 @@ public class FourBarControl {
     private Joystick operatorController = DriveTrain.operatorController;
 
     private double fourBarPosition = 0.0;
-    private double setPosition = 0.0;
+    public static double setPosition = 0.0;
 
     private static boolean override = false;
 

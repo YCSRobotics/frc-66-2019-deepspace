@@ -133,7 +133,7 @@ public class Constants {
     public static final int kRocketDeadReckoningDistance = 60;
     public static final double kRocketDeadReckoningPower = 0.3;
 
-    public static final String kVisionCam = "10.0.66.12:1182/stream.mjpg";
+    public static final String kVisionCam = "10.0.66.12:1181/stream.mjpg";
     public static final double kTargetDistanceThreshold = 6.0;
 
     //sensor constants

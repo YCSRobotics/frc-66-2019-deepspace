@@ -113,7 +113,7 @@ public class Dashboard {
                                     .getEntry();
 
     public static NetworkTableEntry wenchPosition = driverDisplayTab
-            .add("Climber Position", 0.0)
+            .add("Wench Position", 0.0)
             .withWidget("Text Box")
             .getEntry();
 
@@ -122,8 +122,23 @@ public class Dashboard {
             .withWidget("Text Box")
             .getEntry();
 
+
+    public static NetworkTableEntry climberLimitSwitchForward = driverDisplayTab
+            .add("Climber Limit Forward", false)
+            .withWidget("Text Box")
+            .getEntry();
+
+    public static NetworkTableEntry climberLimitSwitchBack = driverDisplayTab
+            .add("Climber Limit Back", false)
+            .withWidget("Text Box")
+            .getEntry();
+
+
     public void updateDiagDashboard() {
         Shuffleboard.selectTab("DriverDisplay");
+
+        climberLimitSwitchForward.setBoolean(Climber.backWenchMotor.getSensorCollection().isFwdLimitSwitchClosed());
+        climberLimitSwitchBack.setBoolean(Climber.backWenchMotor.getSensorCollection().isRevLimitSwitchClosed());
 
         matchTime.setNumber(DriverStation.getInstance().getMatchTime());
         navYawKey.setNumber(SensorData.getYaw());
